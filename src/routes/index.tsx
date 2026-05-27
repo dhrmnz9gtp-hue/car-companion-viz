@@ -17,10 +17,26 @@ import {
   Camera,
   Cpu,
   Waypoints,
-  CircleDot,
   Brain,
   Activity,
 } from "lucide-react";
+import bydYuanUp from "@/assets/byd-yuan-up.jpg";
+
+// Custom pretty wheel icon
+const WheelIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="2.2" fill="currentColor" />
+    <path d="M12 4.5 L12 9.8" />
+    <path d="M12 14.2 L12 19.5" />
+    <path d="M4.5 12 L9.8 12" />
+    <path d="M14.2 12 L19.5 12" />
+    <path d="M6.7 6.7 L10.4 10.4" />
+    <path d="M13.6 13.6 L17.3 17.3" />
+    <path d="M17.3 6.7 L13.6 10.4" />
+    <path d="M10.4 13.6 L6.7 17.3" />
+  </svg>
+);
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -54,8 +70,8 @@ const HOTSPOTS: Hotspot[] = [
     title: "Motor eléctrico",
     short: "Empuje instantáneo y silencioso",
     icon: Zap,
-    top: "55%",
-    left: "18%",
+    top: "58%",
+    left: "86%",
     body: "Un motor eléctrico delantero entrega potencia desde el primer toque del acelerador. Sin cambios, sin ruido, sin vibración. En el Yuan UP rinde alrededor de 70 kW (95 hp), suficiente para ciudad y trochas suaves.",
     tags: ["Sin cambios", "Silencioso", "Torque instantáneo"],
   },
@@ -64,7 +80,7 @@ const HOTSPOTS: Hotspot[] = [
     title: "Batería Blade",
     short: "El corazón del carro",
     icon: Battery,
-    top: "68%",
+    top: "73%",
     left: "50%",
     body: "Batería Blade de BYD con química LFP (litio-ferrofosfato), conocida por ser más segura frente a incendios y por durar muchos más ciclos de carga. Va en el piso del carro, lo que baja el centro de gravedad y mejora la estabilidad.",
     tags: ["LFP", "Larga vida", "Más segura"],
@@ -74,8 +90,8 @@ const HOTSPOTS: Hotspot[] = [
     title: "Suspensión",
     short: "Cómoda para huecos colombianos",
     icon: Waypoints,
-    top: "72%",
-    left: "30%",
+    top: "68%",
+    left: "28%",
     body: "Suspensión McPherson adelante y de barra de torsión atrás. Está calibrada para absorber huecos y reductores, algo clave en las vías de nuestras ciudades. El peso de la batería abajo ayuda a que se sienta plantado en curvas.",
     tags: ["McPherson", "Confort urbano", "Estable"],
   },
@@ -83,9 +99,9 @@ const HOTSPOTS: Hotspot[] = [
     id: "llantas",
     title: "Llantas y rines",
     short: "Rines de 16\" con llantas eco",
-    icon: CircleDot,
-    top: "78%",
-    left: "72%",
+    icon: WheelIcon,
+    top: "82%",
+    left: "78%",
     body: "Rines de aleación de 16 pulgadas con llantas de baja resistencia a la rodadura. Esto significa menos esfuerzo del motor y, por tanto, más autonomía. Repuestos y mantenimiento de llantas son estándar en cualquier montallantas.",
     tags: ["Rin 16\"", "Baja rodadura", "Repuestos fáciles"],
   },
@@ -94,8 +110,8 @@ const HOTSPOTS: Hotspot[] = [
     title: "Puerto de carga",
     short: "Casa o estación pública",
     icon: Plug,
-    top: "48%",
-    left: "85%",
+    top: "60%",
+    left: "68%",
     body: "Tiene puerto AC para carga lenta en casa (Tipo 2) y puerto DC para carga rápida en estaciones públicas. En casa cargas mientras duermes; en una estación rápida recuperas el 30–80% en cerca de 30–40 minutos.",
     tags: ["AC Tipo 2", "DC rápida", "Carga en casa"],
   },
@@ -104,8 +120,8 @@ const HOTSPOTS: Hotspot[] = [
     title: "Sistema de frenos",
     short: "Disco + regenerativo",
     icon: Gauge,
-    top: "75%",
-    left: "20%",
+    top: "70%",
+    left: "22%",
     body: "Frenos de disco adelante y tambor atrás, apoyados por el frenado regenerativo del motor. Al usar mucho el regenerativo, las pastillas se desgastan muy poco, así que el mantenimiento de frenos es más espaciado que en un carro de gasolina.",
     tags: ["ABS", "EBD", "Regenerativo"],
   },
@@ -114,8 +130,8 @@ const HOTSPOTS: Hotspot[] = [
     title: "Cabina y pantalla",
     short: "Pantalla giratoria de 10.1\"",
     icon: MonitorSmartphone,
-    top: "38%",
-    left: "48%",
+    top: "45%",
+    left: "55%",
     body: "Pantalla central rotatoria (horizontal o vertical) con navegación, apps, cámara 360° y conexión al celular. Tablero digital para el conductor, climatización automática y materiales suaves al tacto. Todo pensado como una tablet sobre ruedas.",
     tags: ["Rotatoria", "Cámara 360°", "Conectividad"],
   },
@@ -124,8 +140,8 @@ const HOTSPOTS: Hotspot[] = [
     title: "Sensores y cámaras",
     short: "Ojos alrededor del carro",
     icon: Camera,
-    top: "30%",
-    left: "75%",
+    top: "52%",
+    left: "92%",
     body: "Cámaras perimetrales (vista 360°), sensores de parqueo y radares para asistencias de conducción. Te ayudan a parquear en espacios apretados y a detectar peatones o ciclistas que no ves directamente.",
     tags: ["360°", "Sensores", "Radar"],
   },
@@ -134,8 +150,8 @@ const HOTSPOTS: Hotspot[] = [
     title: "Carrocería y peso",
     short: "SUV compacto, ~1.500 kg",
     icon: Car,
-    top: "32%",
-    left: "25%",
+    top: "38%",
+    left: "40%",
     body: "SUV compacto de unos 4.31 m de largo y aproximadamente 1.500 kg. La estructura usa aceros de alta resistencia en zonas clave para proteger la batería y a los ocupantes en caso de choque.",
     tags: ["SUV compacto", "Acero alta resistencia", "~1.500 kg"],
   },
@@ -263,12 +279,14 @@ function Index() {
         {/* Car diagram */}
         <div className="relative mx-auto w-full max-w-4xl">
           <div className="relative rounded-3xl bg-white/60 backdrop-blur-md p-4 md:p-6 shadow-[0_20px_60px_-20px_oklch(0.5_0.15_240/0.35)] ring-1 ring-white/60">
-            {/* IMAGE PLACEHOLDER: full car photo */}
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 border-2 border-dashed border-slate-300 flex items-center justify-center">
-              <div className="text-center text-slate-400">
-                <p className="text-sm font-semibold">📸 Imagen del BYD Yuan UP</p>
-                <p className="text-xs mt-1">(reemplaza este espacio con la foto del carro)</p>
-              </div>
+            {/* Car image */}
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white">
+              <img
+                src={bydYuanUp}
+                alt="BYD Yuan UP — vista lateral"
+                className="absolute inset-0 h-full w-full object-contain"
+              />
+
 
               {/* Hotspots overlay */}
               {HOTSPOTS.map((h, i) => {
