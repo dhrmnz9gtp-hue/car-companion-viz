@@ -279,12 +279,14 @@ function Index() {
         {/* Car diagram */}
         <div className="relative mx-auto w-full max-w-4xl">
           <div className="relative rounded-3xl bg-white/60 backdrop-blur-md p-4 md:p-6 shadow-[0_20px_60px_-20px_oklch(0.5_0.15_240/0.35)] ring-1 ring-white/60">
-            {/* IMAGE PLACEHOLDER: full car photo */}
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 border-2 border-dashed border-slate-300 flex items-center justify-center">
-              <div className="text-center text-slate-400">
-                <p className="text-sm font-semibold">📸 Imagen del BYD Yuan UP</p>
-                <p className="text-xs mt-1">(reemplaza este espacio con la foto del carro)</p>
-              </div>
+            {/* Car image */}
+            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white">
+              <img
+                src={bydYuanUp}
+                alt="BYD Yuan UP — vista lateral"
+                className="absolute inset-0 h-full w-full object-contain"
+              />
+
 
               {/* Hotspots overlay */}
               {HOTSPOTS.map((h, i) => {
