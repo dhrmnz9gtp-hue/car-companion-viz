@@ -13,7 +13,6 @@ import {
   Sparkles,
   ChevronDown,
   X,
-  Disc3,
   Car,
   Camera,
   Cpu,
