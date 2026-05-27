@@ -277,14 +277,14 @@ function Index() {
         </motion.div>
 
         {/* Car diagram */}
-        <div className="relative mx-auto w-full max-w-4xl">
-          <div className="relative rounded-3xl bg-white/60 backdrop-blur-md p-4 md:p-6 shadow-[0_20px_60px_-20px_oklch(0.5_0.15_240/0.35)] ring-1 ring-white/60">
+        <div className="relative mx-auto w-full max-w-5xl">
+          <div className="relative rounded-3xl bg-white/60 backdrop-blur-md p-2 md:p-3 shadow-[0_20px_60px_-20px_oklch(0.5_0.15_240/0.35)] ring-1 ring-white/60">
             {/* Car image */}
-            <div className="relative aspect-[16/9] w-full overflow-hidden rounded-2xl bg-white">
+            <div className="relative min-h-[340px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[560px] w-full overflow-hidden rounded-2xl bg-white">
               <img
                 src={bydYuanUp}
                 alt="BYD Yuan UP — vista lateral"
-                className="absolute inset-0 h-full w-full object-contain"
+                className="absolute inset-0 h-full w-full object-cover object-center"
               />
 
 
