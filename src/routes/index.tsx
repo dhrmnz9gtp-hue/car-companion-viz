@@ -17,10 +17,26 @@ import {
   Camera,
   Cpu,
   Waypoints,
-  CircleDot,
   Brain,
   Activity,
 } from "lucide-react";
+import bydYuanUp from "@/assets/byd-yuan-up.jpg";
+
+// Custom pretty wheel icon
+const WheelIcon = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className={className}>
+    <circle cx="12" cy="12" r="9" />
+    <circle cx="12" cy="12" r="2.2" fill="currentColor" />
+    <path d="M12 4.5 L12 9.8" />
+    <path d="M12 14.2 L12 19.5" />
+    <path d="M4.5 12 L9.8 12" />
+    <path d="M14.2 12 L19.5 12" />
+    <path d="M6.7 6.7 L10.4 10.4" />
+    <path d="M13.6 13.6 L17.3 17.3" />
+    <path d="M17.3 6.7 L13.6 10.4" />
+    <path d="M10.4 13.6 L6.7 17.3" />
+  </svg>
+);
 
 export const Route = createFileRoute("/")({
   component: Index,
