@@ -71,6 +71,8 @@ type Hotspot = {
   left: string;
   body: string;
   tags: string[];
+  image: string;
+
 };
 
 const HOTSPOTS: Hotspot[] = [
