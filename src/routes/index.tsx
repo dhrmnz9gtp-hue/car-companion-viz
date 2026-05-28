@@ -373,12 +373,13 @@ function Index() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1, duration: 0.4 }}
-                    className="aspect-square w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 border-2 border-dashed border-slate-300 flex items-center justify-center"
+                    className="aspect-square w-full overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200"
                   >
-                    <div className="text-center text-slate-400 px-4">
-                      <p className="text-xs font-semibold">📸 Imagen: {activeSpot.title}</p>
-                      <p className="text-[10px] mt-1">(espacio para tu foto)</p>
-                    </div>
+                    <img
+                      src={activeSpot.image}
+                      alt={activeSpot.title}
+                      className="h-full w-full object-cover object-center"
+                    />
                   </motion.div>
 
                   <motion.div
