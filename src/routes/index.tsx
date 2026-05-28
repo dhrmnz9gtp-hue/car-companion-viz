@@ -30,6 +30,7 @@ import imgFrenos from "@/assets/hotspot-frenos.png";
 import imgCabina from "@/assets/hotspot-cabina.png";
 import imgSensores from "@/assets/hotspot-sensores.png";
 import imgCarroceria from "@/assets/hotspot-carroceria.png";
+import imgRegen from "@/assets/card-regen.png";
 
 // Custom pretty wheel icon
 const WheelIcon = ({ className }: { className?: string }) => (
@@ -183,6 +184,7 @@ type Card = {
   icon: React.ComponentType<{ className?: string }>;
   summary: string;
   details: string[];
+  image?: string;
 };
 
 const CARDS: Card[] = [
@@ -196,6 +198,7 @@ const CARDS: Card[] = [
       "Resultado práctico: más autonomía en ciudad y pastillas de freno que duran mucho más.",
       "El Yuan UP permite elegir el nivel de regeneración para que se sienta más suave o más fuerte.",
     ],
+    image: imgRegen,
   },
   {
     id: "autonoma",
@@ -442,12 +445,16 @@ function Index() {
                   className="group relative overflow-hidden rounded-3xl bg-white p-5 shadow-md ring-1 ring-slate-200 transition-shadow hover:shadow-xl cursor-pointer"
                   onClick={() => setOpenCard(isOpen ? null : c.id)}
                 >
-                  {/* IMAGE PLACEHOLDER on card */}
-                  <div className="mb-4 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 border-2 border-dashed border-slate-300 flex items-center justify-center">
-                    <div className="text-center text-slate-400 px-2">
-                      <p className="text-[11px] font-semibold">📸 {c.title}</p>
-                      <p className="text-[9px] mt-0.5">(espacio para imagen)</p>
-                    </div>
+                  {/* Card image */}
+                  <div className="mb-4 aspect-[16/10] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center">
+                    {c.image ? (
+                      <img src={c.image} alt={c.title} className="h-full w-full object-cover object-center" />
+                    ) : (
+                      <div className="text-center text-slate-400 px-2 border-2 border-dashed border-slate-300 rounded-2xl py-8 w-full h-full flex flex-col items-center justify-center">
+                        <p className="text-[11px] font-semibold">📸 {c.title}</p>
+                        <p className="text-[9px] mt-0.5">(espacio para imagen)</p>
+                      </div>
+                    )}
                   </div>
 
                   <div className="flex items-start gap-3">
