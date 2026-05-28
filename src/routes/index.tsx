@@ -300,7 +300,7 @@ function Index() {
         <div className="relative mx-auto w-full max-w-5xl">
           <div className="relative rounded-3xl bg-white/60 backdrop-blur-md p-2 md:p-3 shadow-[0_20px_60px_-20px_oklch(0.5_0.15_240/0.35)] ring-1 ring-white/60">
             {/* Car image */}
-            <div className="relative min-h-[340px] sm:min-h-[400px] md:min-h-[500px] lg:min-h-[560px] w-full overflow-hidden rounded-2xl bg-white">
+            <div className="relative min-h-[410px] sm:min-h-[480px] md:min-h-[600px] lg:min-h-[672px] w-full overflow-hidden rounded-2xl bg-white">
               <img
                 src={bydYuanUp}
                 alt="BYD Yuan UP — vista lateral"
@@ -373,7 +373,7 @@ function Index() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1, duration: 0.4 }}
-                    className="aspect-square w-full overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200"
+                    className="aspect-square w-[85%] mx-auto overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200"
                   >
                     <img
                       src={activeSpot.image}
