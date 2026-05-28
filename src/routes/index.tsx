@@ -21,6 +21,15 @@ import {
   Activity,
 } from "lucide-react";
 import bydYuanUp from "@/assets/byd-yuan-up.jpg";
+import imgMotor from "@/assets/hotspot-motor.png";
+import imgBateria from "@/assets/hotspot-bateria.png";
+import imgSuspension from "@/assets/hotspot-suspension.png";
+import imgLlantas from "@/assets/hotspot-llantas.png";
+import imgCarga from "@/assets/hotspot-carga.png";
+import imgFrenos from "@/assets/hotspot-frenos.png";
+import imgCabina from "@/assets/hotspot-cabina.png";
+import imgSensores from "@/assets/hotspot-sensores.png";
+import imgCarroceria from "@/assets/hotspot-carroceria.png";
 
 // Custom pretty wheel icon
 const WheelIcon = ({ className }: { className?: string }) => (
@@ -62,6 +71,8 @@ type Hotspot = {
   left: string;
   body: string;
   tags: string[];
+  image: string;
+
 };
 
 const HOTSPOTS: Hotspot[] = [
@@ -74,6 +85,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "88%",
     body: "Un motor eléctrico delantero entrega potencia desde el primer toque del acelerador. Sin cambios, sin ruido, sin vibración. En el Yuan UP rinde alrededor de 70 kW (95 hp), suficiente para ciudad y trochas suaves.",
     tags: ["Sin cambios", "Silencioso", "Torque instantáneo"],
+    image: imgMotor,
   },
   {
     id: "bateria",
@@ -84,6 +96,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "50%",
     body: "Batería Blade de BYD con química LFP (litio-ferrofosfato), conocida por ser más segura frente a incendios y por durar muchos más ciclos de carga. Va en el piso del carro, lo que baja el centro de gravedad y mejora la estabilidad.",
     tags: ["LFP", "Larga vida", "Más segura"],
+    image: imgBateria,
   },
   {
     id: "suspension",
@@ -94,6 +107,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "30%",
     body: "Suspensión McPherson adelante y de barra de torsión atrás. Está calibrada para absorber huecos y reductores, algo clave en las vías de nuestras ciudades. El peso de la batería abajo ayuda a que se sienta plantado en curvas.",
     tags: ["McPherson", "Confort urbano", "Estable"],
+    image: imgSuspension,
   },
   {
     id: "llantas",
@@ -104,6 +118,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "74%",
     body: "Rines de aleación de 16 pulgadas con llantas de baja resistencia a la rodadura. Esto significa menos esfuerzo del motor y, por tanto, más autonomía. Repuestos y mantenimiento de llantas son estándar en cualquier montallantas.",
     tags: ["Rin 16\"", "Baja rodadura", "Repuestos fáciles"],
+    image: imgLlantas,
   },
   {
     id: "carga",
@@ -114,6 +129,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "70%",
     body: "Tiene puerto AC para carga lenta en casa (Tipo 2) y puerto DC para carga rápida en estaciones públicas. En casa cargas mientras duermes; en una estación rápida recuperas el 30–80% en cerca de 30–40 minutos.",
     tags: ["AC Tipo 2", "DC rápida", "Carga en casa"],
+    image: imgCarga,
   },
   {
     id: "frenos",
@@ -124,6 +140,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "20%",
     body: "Frenos de disco adelante y tambor atrás, apoyados por el frenado regenerativo del motor. Al usar mucho el regenerativo, las pastillas se desgastan muy poco, así que el mantenimiento de frenos es más espaciado que en un carro de gasolina.",
     tags: ["ABS", "EBD", "Regenerativo"],
+    image: imgFrenos,
   },
   {
     id: "cabina",
@@ -134,6 +151,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "52%",
     body: "Pantalla central rotatoria (horizontal o vertical) con navegación, apps, cámara 360° y conexión al celular. Tablero digital para el conductor, climatización automática y materiales suaves al tacto. Todo pensado como una tablet sobre ruedas.",
     tags: ["Rotatoria", "Cámara 360°", "Conectividad"],
+    image: imgCabina,
   },
   {
     id: "sensores",
@@ -144,6 +162,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "58%",
     body: "Cámaras perimetrales (vista 360°), sensores de parqueo y radares para asistencias de conducción. Te ayudan a parquear en espacios apretados y a detectar peatones o ciclistas que no ves directamente.",
     tags: ["360°", "Sensores", "Radar"],
+    image: imgSensores,
   },
   {
     id: "carroceria",
@@ -154,6 +173,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "35%",
     body: "SUV compacto de unos 4.31 m de largo y aproximadamente 1.500 kg. La estructura usa aceros de alta resistencia en zonas clave para proteger la batería y a los ocupantes en caso de choque.",
     tags: ["SUV compacto", "Acero alta resistencia", "~1.500 kg"],
+    image: imgCarroceria,
   },
 ];
 
@@ -353,12 +373,13 @@ function Index() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1, duration: 0.4 }}
-                    className="aspect-square w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-slate-200 border-2 border-dashed border-slate-300 flex items-center justify-center"
+                    className="aspect-square w-full overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200"
                   >
-                    <div className="text-center text-slate-400 px-4">
-                      <p className="text-xs font-semibold">📸 Imagen: {activeSpot.title}</p>
-                      <p className="text-[10px] mt-1">(espacio para tu foto)</p>
-                    </div>
+                    <img
+                      src={activeSpot.image}
+                      alt={activeSpot.title}
+                      className="h-full w-full object-cover object-center"
+                    />
                   </motion.div>
 
                   <motion.div
