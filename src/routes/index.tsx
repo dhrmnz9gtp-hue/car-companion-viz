@@ -21,6 +21,15 @@ import {
   Activity,
 } from "lucide-react";
 import bydYuanUp from "@/assets/byd-yuan-up.jpg";
+import imgMotor from "@/assets/hotspot-motor.png";
+import imgBateria from "@/assets/hotspot-bateria.png";
+import imgSuspension from "@/assets/hotspot-suspension.png";
+import imgLlantas from "@/assets/hotspot-llantas.png";
+import imgCarga from "@/assets/hotspot-carga.png";
+import imgFrenos from "@/assets/hotspot-frenos.png";
+import imgCabina from "@/assets/hotspot-cabina.png";
+import imgSensores from "@/assets/hotspot-sensores.png";
+import imgCarroceria from "@/assets/hotspot-carroceria.png";
 
 // Custom pretty wheel icon
 const WheelIcon = ({ className }: { className?: string }) => (
