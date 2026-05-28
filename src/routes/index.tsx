@@ -184,6 +184,7 @@ type Card = {
   icon: React.ComponentType<{ className?: string }>;
   summary: string;
   details: string[];
+  image?: string;
 };
 
 const CARDS: Card[] = [
@@ -197,17 +198,17 @@ const CARDS: Card[] = [
       "Resultado práctico: más autonomía en ciudad y pastillas de freno que duran mucho más.",
       "El Yuan UP permite elegir el nivel de regeneración para que se sienta más suave o más fuerte.",
     ],
+    image: imgRegen,
   },
   {
     id: "autonoma",
-type Card = {
-  id: string;
-  title: string;
-  icon: React.ComponentType<{ className?: string }>;
-  summary: string;
-  details: string[];
-  image?: string;
-};
+    title: "Conducción autónoma",
+    icon: Brain,
+    summary: "Asistida nivel 2: ayuda, pero tú sigues manejando.",
+    details: [
+      "El Yuan UP ofrece asistencias de Nivel 2 (SAE): el carro puede acelerar, frenar y mantener carril por sí solo en ciertas condiciones.",
+      "No es un carro autónomo: el conductor debe mantener las manos en el volante y la atención en la vía.",
+      "Pensado para aliviar trancones largos y carretera, no para dejar de conducir.",
     ],
   },
   {
