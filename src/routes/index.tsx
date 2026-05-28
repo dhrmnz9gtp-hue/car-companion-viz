@@ -30,6 +30,7 @@ import imgFrenos from "@/assets/hotspot-frenos.png";
 import imgCabina from "@/assets/hotspot-cabina.png";
 import imgSensores from "@/assets/hotspot-sensores.png";
 import imgCarroceria from "@/assets/hotspot-carroceria.png";
+import imgRegen from "@/assets/card-regen.png";
 
 // Custom pretty wheel icon
 const WheelIcon = ({ className }: { className?: string }) => (
