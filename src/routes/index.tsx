@@ -85,6 +85,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "88%",
     body: "Un motor eléctrico delantero entrega potencia desde el primer toque del acelerador. Sin cambios, sin ruido, sin vibración. En el Yuan UP rinde alrededor de 70 kW (95 hp), suficiente para ciudad y trochas suaves.",
     tags: ["Sin cambios", "Silencioso", "Torque instantáneo"],
+    image: imgMotor,
   },
   {
     id: "bateria",
@@ -95,6 +96,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "50%",
     body: "Batería Blade de BYD con química LFP (litio-ferrofosfato), conocida por ser más segura frente a incendios y por durar muchos más ciclos de carga. Va en el piso del carro, lo que baja el centro de gravedad y mejora la estabilidad.",
     tags: ["LFP", "Larga vida", "Más segura"],
+    image: imgBateria,
   },
   {
     id: "suspension",
@@ -105,6 +107,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "30%",
     body: "Suspensión McPherson adelante y de barra de torsión atrás. Está calibrada para absorber huecos y reductores, algo clave en las vías de nuestras ciudades. El peso de la batería abajo ayuda a que se sienta plantado en curvas.",
     tags: ["McPherson", "Confort urbano", "Estable"],
+    image: imgSuspension,
   },
   {
     id: "llantas",
@@ -115,6 +118,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "74%",
     body: "Rines de aleación de 16 pulgadas con llantas de baja resistencia a la rodadura. Esto significa menos esfuerzo del motor y, por tanto, más autonomía. Repuestos y mantenimiento de llantas son estándar en cualquier montallantas.",
     tags: ["Rin 16\"", "Baja rodadura", "Repuestos fáciles"],
+    image: imgLlantas,
   },
   {
     id: "carga",
@@ -125,6 +129,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "70%",
     body: "Tiene puerto AC para carga lenta en casa (Tipo 2) y puerto DC para carga rápida en estaciones públicas. En casa cargas mientras duermes; en una estación rápida recuperas el 30–80% en cerca de 30–40 minutos.",
     tags: ["AC Tipo 2", "DC rápida", "Carga en casa"],
+    image: imgCarga,
   },
   {
     id: "frenos",
@@ -135,6 +140,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "20%",
     body: "Frenos de disco adelante y tambor atrás, apoyados por el frenado regenerativo del motor. Al usar mucho el regenerativo, las pastillas se desgastan muy poco, así que el mantenimiento de frenos es más espaciado que en un carro de gasolina.",
     tags: ["ABS", "EBD", "Regenerativo"],
+    image: imgFrenos,
   },
   {
     id: "cabina",
@@ -145,6 +151,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "52%",
     body: "Pantalla central rotatoria (horizontal o vertical) con navegación, apps, cámara 360° y conexión al celular. Tablero digital para el conductor, climatización automática y materiales suaves al tacto. Todo pensado como una tablet sobre ruedas.",
     tags: ["Rotatoria", "Cámara 360°", "Conectividad"],
+    image: imgCabina,
   },
   {
     id: "sensores",
@@ -155,6 +162,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "58%",
     body: "Cámaras perimetrales (vista 360°), sensores de parqueo y radares para asistencias de conducción. Te ayudan a parquear en espacios apretados y a detectar peatones o ciclistas que no ves directamente.",
     tags: ["360°", "Sensores", "Radar"],
+    image: imgSensores,
   },
   {
     id: "carroceria",
@@ -165,6 +173,7 @@ const HOTSPOTS: Hotspot[] = [
     left: "35%",
     body: "SUV compacto de unos 4.31 m de largo y aproximadamente 1.500 kg. La estructura usa aceros de alta resistencia en zonas clave para proteger la batería y a los ocupantes en caso de choque.",
     tags: ["SUV compacto", "Acero alta resistencia", "~1.500 kg"],
+    image: imgCarroceria,
   },
 ];
 
