@@ -373,7 +373,7 @@ function Index() {
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.1, duration: 0.4 }}
-                    className="aspect-square w-full overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200"
+                    className="aspect-square w-[85%] mx-auto overflow-hidden rounded-2xl bg-white ring-1 ring-slate-200"
                   >
                     <img
                       src={activeSpot.image}
