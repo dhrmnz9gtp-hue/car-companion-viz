@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "BYD_Yuan_UP_interactivo" },
+      { name: "description", content: "Interactive application showcasing the BYD Yuan UP electric vehicle with detailed feature hotspots." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "BYD_Yuan_UP_interactivo" },
+      { property: "og:description", content: "Interactive application showcasing the BYD Yuan UP electric vehicle with detailed feature hotspots." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "BYD_Yuan_UP_interactivo" },
+      { name: "twitter:description", content: "Interactive application showcasing the BYD Yuan UP electric vehicle with detailed feature hotspots." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c5c758d7-751c-41eb-ab31-5f60b7954732/id-preview-9c0fae46--03b154e9-927c-4710-bf13-6902313d49e6.lovable.app-1780039341609.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/c5c758d7-751c-41eb-ab31-5f60b7954732/id-preview-9c0fae46--03b154e9-927c-4710-bf13-6902313d49e6.lovable.app-1780039341609.png" },
     ],
     links: [
       {
