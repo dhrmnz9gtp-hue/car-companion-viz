@@ -31,6 +31,12 @@ import imgCabina from "@/assets/hotspot-cabina.png";
 import imgSensores from "@/assets/hotspot-sensores.png";
 import imgCarroceria from "@/assets/hotspot-carroceria.png";
 import imgRegen from "@/assets/card-regen.png";
+import imgAdas from "@/assets/card-adas.png";
+import imgAutonoma from "@/assets/card-autonoma.png";
+import imgClima from "@/assets/card-clima.png";
+import imgMantenimiento from "@/assets/card-mantenimiento.png";
+import imgIA from "@/assets/card-ia.png";
+import imgSeguridad from "@/assets/card-seguridad.png";
 
 // Custom pretty wheel icon
 const WheelIcon = ({ className }: { className?: string }) => (
