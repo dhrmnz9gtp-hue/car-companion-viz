@@ -216,6 +216,7 @@ const CARDS: Card[] = [
       "No es un carro autónomo: el conductor debe mantener las manos en el volante y la atención en la vía.",
       "Pensado para aliviar trancones largos y carretera, no para dejar de conducir.",
     ],
+    image: imgAutonoma,
   },
   {
     id: "adas",
@@ -227,6 +228,7 @@ const CARDS: Card[] = [
       "Control crucero adaptativo: mantiene distancia con el carro de adelante en autopista.",
       "Cámara 360° y sensores de parqueo facilitan maniobras en parqueaderos estrechos.",
     ],
+    image: imgAdas,
   },
   {
     id: "clima",
@@ -238,6 +240,7 @@ const CARDS: Card[] = [
       "Frío de páramo o noches en Bogotá: el rango baja un poco al inicio porque la batería se calienta sola.",
       "Subidas largas (La Línea, La Calera): gasta más batería, pero al bajar el regenerativo recupera buena parte.",
     ],
+    image: imgClima,
   },
   {
     id: "mantenimiento",
@@ -249,6 +252,7 @@ const CARDS: Card[] = [
       "Las pastillas de freno duran mucho más gracias al frenado regenerativo.",
       "Las revisiones son básicamente líquido de frenos, refrigerante de batería, llantas y actualizaciones de software.",
     ],
+    image: imgMantenimiento,
   },
   {
     id: "ia",
@@ -260,6 +264,7 @@ const CARDS: Card[] = [
       "Actualizaciones OTA (por internet): el carro recibe mejoras como un celular, sin ir al taller.",
       "Integración con apps del celular y conexión a la nube de BYD para diagnóstico remoto.",
     ],
+    image: imgIA,
   },
   {
     id: "seguridad-bateria",
