@@ -276,6 +276,7 @@ const CARDS: Card[] = [
       "BYD hace una prueba famosa: clavar un clavo en la celda Blade sin que se prenda fuego.",
       "Está sellada y refrigerada, y va protegida por la propia estructura del piso del carro.",
     ],
+    image: imgSeguridad,
   },
 ];
 
