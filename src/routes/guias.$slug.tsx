@@ -19,7 +19,7 @@ import {
   Activity,
   ClipboardList,
 } from "lucide-react";
-import { getGuideBySlug, vehicleGuides } from "@/data/vehicleGuides";
+import { getGuideBySlug, vehicleGuides, type VehicleGuide } from "@/data/vehicleGuides";
 
 export const Route = createFileRoute("/guias/$slug")({
   component: GuidePage,
@@ -108,7 +108,7 @@ function StatRow({ label, value }: { label: string; value: string }) {
 }
 
 function GuidePage() {
-  const { guide } = Route.useLoaderData();
+  const { guide } = Route.useLoaderData() as { guide: VehicleGuide };
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   const accent = guide.accentColor ?? "oklch(0.65 0.2 220)";
