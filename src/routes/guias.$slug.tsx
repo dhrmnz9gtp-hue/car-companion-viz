@@ -48,7 +48,7 @@ export const Route = createFileRoute("/guias/$slug")({
       <div className="text-center">
         <h1 className="text-3xl font-bold">Guía no encontrada</h1>
         <p className="mt-2 text-slate-400">Esa guía aún no existe en EV Explainers.</p>
-        <Link to="/guias" className="inline-flex mt-6 px-5 py-2.5 rounded-full bg-cyan-500 text-slate-900 font-semibold">
+        <Link to="/guias" className="inline-flex mt-6 px-5 py-2.5 rounded-full bg-emerald-500 text-slate-900 font-semibold">
           Ver guías disponibles
         </Link>
       </div>
@@ -78,7 +78,7 @@ function Section({
       transition={{ duration: 0.5 }}
       className="scroll-mt-24"
     >
-      <div className="flex items-center gap-2 text-cyan-400">
+      <div className="flex items-center gap-2 text-emerald-400">
         <Icon className="h-4 w-4" />
         <span className="text-[11px] font-semibold uppercase tracking-[0.18em]">{eyebrow}</span>
       </div>
@@ -126,7 +126,7 @@ function GuidePage() {
       {/* Nav */}
       <div className="relative z-10 mx-auto max-w-6xl px-4 pt-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-sm text-slate-300 hover:text-white">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-cyan-400 to-violet-500 text-slate-950 font-black text-xs">PC</span>
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-green-500 text-slate-950 font-black text-xs">PC</span>
           <span className="font-semibold tracking-tight">PURA CORRIENTE</span>
           <span className="text-slate-500">/</span>
           <span className="text-slate-400">EV Explainers</span>
@@ -432,7 +432,7 @@ function GuidePage() {
                   <div className="text-[11px] uppercase tracking-wider text-slate-400">{v.brand}</div>
                   <div className="text-white font-bold mt-0.5">{v.model}</div>
                   <div className="text-xs text-slate-400 mt-2 line-clamp-2">{v.shortDescription}</div>
-                  <div className="mt-3 inline-flex items-center gap-1 text-xs text-cyan-400 group-hover:gap-2 transition-all">
+                  <div className="mt-3 inline-flex items-center gap-1 text-xs text-emerald-400 group-hover:gap-2 transition-all">
                     Ver guía <ArrowRight className="h-3 w-3" />
                   </div>
                 </Link>

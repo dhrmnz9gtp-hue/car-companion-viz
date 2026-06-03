@@ -414,6 +414,354 @@ export const vehicleGuides: VehicleGuide[] = [
     ],
     cta: defaultCTA,
   },
+  {
+    slug: "tesla-model-3",
+    brand: "Tesla",
+    model: "Model 3",
+    type: "EV",
+    market: "Global",
+    shortDescription:
+      "Sedán eléctrico premium, eficiente y deportivo. El EV más vendido del mundo y referencia obligada del segmento.",
+    accentColor: "oklch(0.62 0.2 25)",
+    battery: {
+      chemistry: "LFP (RWD estándar) o NMC (Long Range / Performance)",
+      capacity: "~ 60–82 kWh, autonomía 513–629 km WLTP según versión",
+      safetyNotes:
+        "Pack con gestión térmica líquida activa. Estructura con calificaciones máximas en Euro NCAP e IIHS.",
+      careTips: [
+        "Versión LFP: cargar al 100% al menos una vez por semana.",
+        "Versión NMC: mantener entre 20% y 80% para el día a día.",
+        "Activa el precondicionamiento de batería antes de Supercargar.",
+      ],
+    },
+    charging: {
+      ac: "Hasta 11 kW AC",
+      dc: "Hasta 250 kW en V3 Supercharger",
+      connector: "NACS (EE.UU.) / Tipo 2 + CCS2 (Europa y LatAm)",
+      homeChargingAdvice:
+        "Con Wall Connector de 11 kW recargas completo en una noche.",
+      publicChargingAdvice:
+        "10–80% en aprox. 25 minutos en Supercharger V3.",
+    },
+    drivetrain: {
+      motor: "Motor trasero (RWD) o dual (AWD)",
+      traction: "RWD o AWD",
+      performance: "0–100 km/h en 3.1 s (Performance) a 6.1 s (RWD)",
+    },
+    regen: {
+      explanation:
+        "Regeneración fuerte fija con one-pedal driving.",
+      userTip:
+        "En ciudad casi no necesitas el pedal de freno.",
+    },
+    adas: [
+      "Autopilot estándar",
+      "Enhanced Autopilot / FSD (opcional)",
+      "8 cámaras 360°",
+      "Pantalla central de 15.4\"",
+      "Llaves vía app móvil o tarjeta NFC",
+    ],
+    maintenance: [
+      "Filtro de cabina, líquido de frenos y rotación de llantas.",
+      "Actualizaciones OTA frecuentes con nuevas funciones.",
+      "Servicio móvil disponible para muchas reparaciones.",
+    ],
+    buyingChecklist: [
+      "Confirma cobertura de Supercargadores en tu ruta.",
+      "Revisa versión de batería (LFP vs NMC).",
+      "Verifica si incluye FSD o es suscripción aparte.",
+      "Inspecciona ajustes de paneles y pintura.",
+    ],
+    faqs: [
+      {
+        question: "¿Cuánto dura realmente la batería?",
+        answer:
+          "Tesla garantiza 8 años o 192.000 km con al menos 70% de capacidad. En la práctica suelen durar más.",
+      },
+    ],
+    warnings: [
+      "Autopilot/FSD es Nivel 2 — tú sigues siendo responsable.",
+    ],
+    cta: defaultCTA,
+  },
+  {
+    slug: "kia-ev5",
+    brand: "KIA",
+    model: "EV5",
+    type: "EV",
+    market: "Global / LatAm",
+    shortDescription:
+      "SUV eléctrico familiar con diseño moderno, espacio generoso y la garantía KIA. Pensado para uso diario sin complicaciones.",
+    accentColor: "oklch(0.62 0.18 35)",
+    battery: {
+      chemistry: "LFP (Standard) o NMC (Long Range)",
+      capacity: "~ 64–88 kWh, autonomía 400–720 km CLTC",
+      safetyNotes:
+        "Pack con gestión térmica activa y monitoreo por celda.",
+      careTips: [
+        "LFP tolera cargar al 100% sin problema.",
+        "NMC: mantén entre 20% y 80% para uso diario.",
+        "Aprovecha el precondicionamiento previo a carga rápida.",
+      ],
+    },
+    charging: {
+      ac: "Hasta 11 kW AC",
+      dc: "Hasta 140 kW DC",
+      connector: "Tipo 2 + CCS2",
+      homeChargingAdvice:
+        "Con cargador de pared de 11 kW recargas completo en ~7 horas.",
+      publicChargingAdvice:
+        "30–80% en aprox. 30 minutos en cargador rápido CCS.",
+    },
+    drivetrain: {
+      motor: "Single Motor (FWD) o Dual Motor (AWD)",
+      traction: "FWD o AWD según versión",
+      performance: "0–100 km/h en 6.1 s (AWD) a 8.9 s (FWD)",
+    },
+    regen: {
+      explanation:
+        "4 niveles de regeneración + modo i-Pedal (one-pedal driving).",
+      userTip:
+        "Usa las paletas detrás del volante para cambiar regeneración al vuelo.",
+    },
+    adas: [
+      "Crucero adaptativo con stop & go",
+      "Mantenimiento de carril (LFA)",
+      "Frenado autónomo de emergencia",
+      "Cámara 360° y monitor de punto ciego",
+      "Pantalla curva dual de 12.3\"",
+    ],
+    maintenance: [
+      "Servicio cada 15.000 km o 1 año.",
+      "Sin aceite, sin bujías, sin correas.",
+      "Garantía de batería KIA de 7 años / 150.000 km.",
+    ],
+    buyingChecklist: [
+      "Confirma versión (Standard, Long Range, AWD).",
+      "Revisa cobertura de la red de servicio KIA.",
+      "Verifica capacidad V2L (cargar electrodomésticos desde el carro).",
+      "Prueba espacio en segunda fila y baúl.",
+    ],
+    faqs: [
+      {
+        question: "¿Sirve V2L para acampar?",
+        answer:
+          "Sí. Con el adaptador V2L puedes conectar electrodomésticos hasta 3.6 kW directamente al carro.",
+      },
+    ],
+    warnings: [
+      "Disponibilidad de versiones varía por mercado.",
+    ],
+    cta: defaultCTA,
+  },
+  {
+    slug: "chery-icar",
+    brand: "Chery",
+    model: "iCAR",
+    type: "EV",
+    market: "China / Global emergente",
+    shortDescription:
+      "SUV eléctrico compacto con diseño retro-futurista cuadrado, pensado para jóvenes y uso urbano con personalidad.",
+    accentColor: "oklch(0.7 0.17 145)",
+    battery: {
+      chemistry: "LFP",
+      capacity: "~ 50–70 kWh, autonomía 401–501 km CLTC",
+      safetyNotes:
+        "Pack LFP con buena tolerancia térmica y monitoreo integrado.",
+      careTips: [
+        "Cargar al 100% no daña la batería LFP.",
+        "Evita dejarla descargada por días largos.",
+      ],
+    },
+    charging: {
+      ac: "Hasta 11 kW AC",
+      dc: "Hasta 80 kW DC",
+      connector: "Tipo 2 + CCS2 (mercados internacionales)",
+      homeChargingAdvice:
+        "Carga completa en casa en ~6–7 horas con cargador de 11 kW.",
+      publicChargingAdvice:
+        "30–80% en aprox. 35 minutos en cargador rápido.",
+    },
+    drivetrain: {
+      motor: "Single Motor (RWD) o Dual Motor (AWD)",
+      traction: "RWD o AWD",
+      performance: "0–100 km/h en ~6.6 s (AWD) a 8.6 s (RWD)",
+    },
+    regen: {
+      explanation:
+        "Regeneración ajustable en varios niveles.",
+      userTip:
+        "Modo alto en ciudad mejora autonomía y reduce desgaste de frenos.",
+    },
+    adas: [
+      "Crucero adaptativo",
+      "Cámara 360°",
+      "Asistente de mantenimiento de carril",
+      "Pantalla central de 15.6\"",
+      "Techo panorámico opcional",
+    ],
+    maintenance: [
+      "Mantenimiento mínimo, similar a otros EV.",
+      "Actualizaciones OTA según mercado.",
+    ],
+    buyingChecklist: [
+      "Confirma disponibilidad oficial y servicio en tu país.",
+      "Revisa repuestos y tiempos de espera.",
+      "Verifica compatibilidad con cargadores locales.",
+      "Prueba interior — el diseño cuadrado da mucho espacio útil.",
+    ],
+    faqs: [
+      {
+        question: "¿Chery es la misma marca de antes?",
+        answer:
+          "Sí, pero su línea EV (iCAR, Omoda) usa plataformas y tecnología nuevas, muy distintas a sus modelos a gasolina anteriores.",
+      },
+    ],
+    warnings: [
+      "Red de servicio y respaldo varía mucho según país.",
+    ],
+    cta: defaultCTA,
+  },
+  {
+    slug: "zeekr-001",
+    brand: "Zeekr",
+    model: "001",
+    type: "EV",
+    market: "Global",
+    shortDescription:
+      "Shooting brake eléctrico de alto rendimiento, plataforma SEA de Geely, autonomía premium y carga ultra rápida.",
+    accentColor: "oklch(0.55 0.2 280)",
+    battery: {
+      chemistry: "NMC de alta densidad (Qilin / CATL en versiones top)",
+      capacity: "~ 95–100 kWh, autonomía 656–741 km CLTC",
+      safetyNotes:
+        "Pack estructural con gestión térmica avanzada y batería 800V en versiones nuevas.",
+      careTips: [
+        "Mantén entre 20% y 80% para uso diario.",
+        "Carga al 100% solo antes de viajes largos.",
+        "Aprovecha el precondicionamiento de batería.",
+      ],
+    },
+    charging: {
+      ac: "Hasta 22 kW AC trifásico",
+      dc: "Hasta 360 kW DC (arquitectura 800V)",
+      connector: "Tipo 2 + CCS2",
+      homeChargingAdvice:
+        "Con AC trifásico de 22 kW carga completa en ~5 horas.",
+      publicChargingAdvice:
+        "10–80% en aprox. 15 minutos en cargador ultra rápido compatible.",
+    },
+    drivetrain: {
+      motor: "Single Motor (RWD) o Dual Motor (AWD)",
+      traction: "RWD o AWD",
+      performance: "0–100 km/h en 3.8 s (AWD) a 5.6 s (RWD)",
+    },
+    regen: {
+      explanation:
+        "Regeneración ajustable + modo one-pedal.",
+      userTip:
+        "Combínalo con modo Eco en ciudad para máxima autonomía.",
+    },
+    adas: [
+      "Zeekr Assisted Driving (ZAD)",
+      "Crucero adaptativo con cambio de carril",
+      "Cámara 360° transparente",
+      "Pantalla central de 15.4\" + HUD AR",
+      "Sistema de sonido Yamaha de 25 altavoces",
+    ],
+    maintenance: [
+      "Servicio Zeekr cada 20.000 km o 1 año.",
+      "Actualizaciones OTA constantes.",
+      "Garantía de batería extensa (varía por mercado).",
+    ],
+    buyingChecklist: [
+      "Confirma disponibilidad oficial y servicio en tu país.",
+      "Revisa qué versión de batería trae (400V vs 800V).",
+      "Verifica compatibilidad con cargadores ultra rápidos locales.",
+      "Prueba ZAD en carretera antes de comprar.",
+    ],
+    faqs: [
+      {
+        question: "¿Es un sedán o un wagon?",
+        answer:
+          "Es un shooting brake: combina silueta de sedán deportivo con baúl tipo wagon, muy práctico.",
+      },
+    ],
+    warnings: [
+      "Sin red local en muchos mercados de LatAm — verifica respaldo.",
+    ],
+    cta: defaultCTA,
+  },
+  {
+    slug: "zeekr-7x",
+    brand: "Zeekr",
+    model: "7X",
+    type: "EV",
+    market: "Global",
+    shortDescription:
+      "SUV mediano premium con arquitectura 800V, carga ultra rápida y enfoque tecnológico. El rival directo del Tesla Model Y.",
+    accentColor: "oklch(0.6 0.18 260)",
+    battery: {
+      chemistry: "LFP Golden Battery (Standard) o NMC (Long Range / AWD)",
+      capacity: "~ 75–100 kWh, autonomía 480–780 km CLTC",
+      safetyNotes:
+        "Arquitectura 800V con celdas de carga ultra rápida y monitoreo avanzado.",
+      careTips: [
+        "LFP: puedes cargar al 100% sin problema.",
+        "NMC: mantén entre 20% y 80% diariamente.",
+        "Aprovecha el precondicionamiento automático antes de carga rápida.",
+      ],
+    },
+    charging: {
+      ac: "Hasta 22 kW AC trifásico",
+      dc: "Hasta 480 kW DC (arquitectura 800V)",
+      connector: "Tipo 2 + CCS2",
+      homeChargingAdvice:
+        "Con AC trifásico de 22 kW recargas completo en ~4 horas.",
+      publicChargingAdvice:
+        "10–80% en aprox. 13 minutos en cargador ultra rápido compatible.",
+    },
+    drivetrain: {
+      motor: "Single Motor (RWD) o Dual Motor (AWD)",
+      traction: "RWD o AWD",
+      performance: "0–100 km/h en 3.8 s (AWD Performance) a 6.0 s (RWD)",
+    },
+    regen: {
+      explanation:
+        "Regeneración ajustable + modo one-pedal opcional.",
+      userTip:
+        "El modo Eco con regen alta optimiza autonomía en trancón.",
+    },
+    adas: [
+      "Conducción asistida ZAD con LiDAR",
+      "Crucero adaptativo con cambio de carril",
+      "Cámara 360° con visión transparente del chasis",
+      "Pantalla central de 16\" + HUD AR",
+      "Parqueo automático con memoria de rutas",
+    ],
+    maintenance: [
+      "Servicio Zeekr cada 20.000 km o 1 año.",
+      "Actualizaciones OTA frecuentes.",
+      "Sin mantenimiento de motor térmico.",
+    ],
+    buyingChecklist: [
+      "Confirma versión (Standard, Long Range, AWD Performance).",
+      "Verifica disponibilidad de carga ultra rápida en tu ruta.",
+      "Revisa red de servicio Zeekr en tu país.",
+      "Prueba el sistema asistido en carretera.",
+    ],
+    faqs: [
+      {
+        question: "¿Para qué sirve la arquitectura 800V?",
+        answer:
+          "Permite cargar mucho más rápido y reducir pérdidas de energía. En la práctica: menos tiempo enchufado en viajes largos.",
+      },
+    ],
+    warnings: [
+      "Necesita cargadores DC potentes para aprovechar la arquitectura 800V.",
+    ],
+    cta: defaultCTA,
+  },
 ];
 
 export function getGuideBySlug(slug: string): VehicleGuide | undefined {

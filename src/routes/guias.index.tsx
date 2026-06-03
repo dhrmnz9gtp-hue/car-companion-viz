@@ -24,13 +24,13 @@ function GuidesIndex() {
 
       <div className="relative z-10 mx-auto max-w-6xl px-4 pt-6 flex items-center justify-between">
         <Link to="/" className="flex items-center gap-2 text-sm">
-          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-cyan-400 to-violet-500 text-slate-950 font-black text-xs">PC</span>
+          <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-green-500 text-slate-950 font-black text-xs">PC</span>
           <span className="font-semibold tracking-tight">PURA CORRIENTE</span>
         </Link>
       </div>
 
       <header className="relative z-10 mx-auto max-w-6xl px-4 pt-12 pb-10 text-center">
-        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-cyan-300">
+        <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-300">
           <Sparkles className="h-3 w-3" /> EV Explainers
         </span>
         <h1 className="mt-4 text-4xl md:text-6xl font-black tracking-tight">
@@ -66,10 +66,17 @@ function GuidesIndex() {
                     <div className="text-[11px] uppercase tracking-wider text-slate-400">{g.brand} · {g.type}</div>
                     <div className="mt-1 text-2xl font-black">{g.model}</div>
                     <p className="mt-3 text-sm text-slate-300 leading-relaxed line-clamp-3">{g.shortDescription}</p>
-                    <div className="mt-5 inline-flex items-center gap-1 text-sm text-cyan-300 group-hover:gap-2 transition-all">
+
+                    {/* Placeholder de trabajos interactivos — completar luego */}
+                    <div className="mt-4 rounded-xl border border-dashed border-emerald-400/30 bg-white/[0.02] px-3 py-3 text-[11px] uppercase tracking-wider text-emerald-300/70">
+                      Trabajos interactivos · próximamente
+                    </div>
+
+                    <div className="mt-4 inline-flex items-center gap-1 text-sm text-emerald-300 group-hover:gap-2 transition-all">
                       Abrir guía <ArrowRight className="h-4 w-4" />
                     </div>
                   </div>
+
                 </Link>
               </motion.div>
             );

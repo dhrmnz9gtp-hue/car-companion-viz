@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug } from "lucide-react";
+
 import { vehicleGuides } from "@/data/vehicleGuides";
 
 export const Route = createFileRoute("/")({
@@ -29,7 +30,7 @@ function Landing() {
       {/* Nav */}
       <nav className="relative z-10 mx-auto max-w-6xl px-4 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-cyan-400 to-violet-500 text-slate-950 font-black text-xs">PC</span>
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-green-500 text-slate-950 font-black text-xs">PC</span>
           <span className="font-semibold tracking-tight">PURA CORRIENTE</span>
         </div>
         <Link
@@ -45,7 +46,7 @@ function Landing() {
         <motion.span
           initial={{ opacity: 0, y: -8 }}
           animate={{ opacity: 1, y: 0 }}
-          className="inline-flex items-center gap-1.5 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-cyan-300"
+          className="inline-flex items-center gap-1.5 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-300"
         >
           <Sparkles className="h-3 w-3" /> EV Explainers
         </motion.span>
@@ -56,7 +57,7 @@ function Landing() {
           className="mt-5 text-5xl md:text-7xl font-black tracking-tight leading-[1.02]"
         >
           Entiende los carros{" "}
-          <span className="bg-gradient-to-r from-cyan-300 via-violet-300 to-fuchsia-300 bg-clip-text text-transparent">
+          <span className="bg-gradient-to-r from-emerald-300 via-green-300 to-lime-300 bg-clip-text text-transparent">
             eléctricos
           </span>
           <br />
@@ -78,18 +79,18 @@ function Landing() {
         >
           <Link
             to="/guias"
-            className="inline-flex items-center gap-2 rounded-full bg-white text-slate-900 font-semibold px-6 py-3 text-sm hover:bg-slate-100 transition"
+            className="group inline-flex items-center gap-2 rounded-full bg-emerald-400 text-slate-950 font-semibold px-6 py-3 text-sm hover:bg-emerald-300 transition"
           >
-            Explorar guías <ArrowRight className="h-4 w-4" />
+            <Car className="h-4 w-4" /> Guías de Vehículos EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link
-            to="/guias/$slug"
-            params={{ slug: "byd-yuan-up" }}
-            className="inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-white/20 text-white font-medium px-6 py-3 text-sm hover:bg-white/20 transition"
+            to="/guias"
+            className="group inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-emerald-400/40 text-white font-medium px-6 py-3 text-sm hover:bg-white/15 transition"
           >
-            Empezar con BYD Yuan UP
+            <Plug className="h-4 w-4 text-emerald-300" /> Guías de Cargadores EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </motion.div>
+
 
         {/* Feature bullets */}
         <div className="mt-14 grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
@@ -99,7 +100,7 @@ function Landing() {
             { icon: ShieldCheck, t: "Antes de comprar", d: "Checklist y advertencias claras." },
           ].map((x) => (
             <div key={x.t} className="rounded-2xl bg-white/[0.04] ring-1 ring-white/10 p-4 text-left">
-              <x.icon className="h-5 w-5 text-cyan-300" />
+              <x.icon className="h-5 w-5 text-emerald-300" />
               <div className="mt-2 text-sm font-bold">{x.t}</div>
               <div className="text-xs text-slate-400 mt-0.5">{x.d}</div>
             </div>
@@ -111,7 +112,7 @@ function Landing() {
       <section className="relative z-10 mx-auto max-w-6xl px-4 pb-24">
         <div className="flex items-end justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-extrabold">Guías disponibles</h2>
-          <Link to="/guias" className="text-sm text-cyan-300 hover:text-cyan-200 inline-flex items-center gap-1">
+          <Link to="/guias" className="text-sm text-emerald-300 hover:text-emerald-200 inline-flex items-center gap-1">
             Ver todas <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -139,11 +140,18 @@ function Landing() {
                     <div className="text-[11px] uppercase tracking-wider text-slate-400">{g.brand} · {g.type}</div>
                     <div className="mt-1 text-2xl font-black">{g.model}</div>
                     <p className="mt-3 text-sm text-slate-300 leading-relaxed line-clamp-3">{g.shortDescription}</p>
-                    <div className="mt-5 inline-flex items-center gap-1 text-sm text-cyan-300 group-hover:gap-2 transition-all">
+
+                    {/* Placeholder de trabajos interactivos — completar luego */}
+                    <div className="mt-4 rounded-xl border border-dashed border-emerald-400/30 bg-white/[0.02] px-3 py-3 text-[11px] uppercase tracking-wider text-emerald-300/70">
+                      Trabajos interactivos · próximamente
+                    </div>
+
+                    <div className="mt-4 inline-flex items-center gap-1 text-sm text-emerald-300 group-hover:gap-2 transition-all">
                       Abrir guía <ArrowRight className="h-4 w-4" />
                     </div>
                   </div>
                 </Link>
+
               </motion.div>
             );
           })}
