@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug } from "lucide-react";
+
 import { vehicleGuides } from "@/data/vehicleGuides";
 
 export const Route = createFileRoute("/")({
