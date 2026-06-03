@@ -140,11 +140,18 @@ function Landing() {
                     <div className="text-[11px] uppercase tracking-wider text-slate-400">{g.brand} · {g.type}</div>
                     <div className="mt-1 text-2xl font-black">{g.model}</div>
                     <p className="mt-3 text-sm text-slate-300 leading-relaxed line-clamp-3">{g.shortDescription}</p>
-                    <div className="mt-5 inline-flex items-center gap-1 text-sm text-emerald-300 group-hover:gap-2 transition-all">
+
+                    {/* Placeholder de trabajos interactivos — completar luego */}
+                    <div className="mt-4 rounded-xl border border-dashed border-emerald-400/30 bg-white/[0.02] px-3 py-3 text-[11px] uppercase tracking-wider text-emerald-300/70">
+                      Trabajos interactivos · próximamente
+                    </div>
+
+                    <div className="mt-4 inline-flex items-center gap-1 text-sm text-emerald-300 group-hover:gap-2 transition-all">
                       Abrir guía <ArrowRight className="h-4 w-4" />
                     </div>
                   </div>
                 </Link>
+
               </motion.div>
             );
           })}
