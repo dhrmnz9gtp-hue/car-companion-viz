@@ -79,18 +79,18 @@ function Landing() {
         >
           <Link
             to="/guias"
-            className="inline-flex items-center gap-2 rounded-full bg-white text-slate-900 font-semibold px-6 py-3 text-sm hover:bg-slate-100 transition"
+            className="group inline-flex items-center gap-2 rounded-full bg-emerald-400 text-slate-950 font-semibold px-6 py-3 text-sm hover:bg-emerald-300 transition"
           >
-            Explorar guías <ArrowRight className="h-4 w-4" />
+            <Car className="h-4 w-4" /> Guías de Vehículos EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
           <Link
-            to="/guias/$slug"
-            params={{ slug: "byd-yuan-up" }}
-            className="inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-white/20 text-white font-medium px-6 py-3 text-sm hover:bg-white/20 transition"
+            to="/guias"
+            className="group inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-emerald-400/40 text-white font-medium px-6 py-3 text-sm hover:bg-white/15 transition"
           >
-            Empezar con BYD Yuan UP
+            <Plug className="h-4 w-4 text-emerald-300" /> Guías de Cargadores EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </motion.div>
+
 
         {/* Feature bullets */}
         <div className="mt-14 grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
