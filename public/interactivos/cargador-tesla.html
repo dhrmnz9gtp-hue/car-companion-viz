@@ -1,0 +1,240 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Cargadores Eléctricos — Tesla Supercharger</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f9f9f8; color: #1a1a1a; padding: 2rem 1rem; }
+  .container { max-width: 720px; margin: 0 auto; }
+  h1 { font-size: 22px; font-weight: 500; margin-bottom: 4px; color: #1a1a1a; }
+  .subtitle { font-size: 14px; color: #888; margin-bottom: 1.5rem; }
+  .hint { font-size: 13px; color: #aaa; text-align: center; margin-bottom: 6px; }
+
+  /* Hotspots */
+  .hotspot { cursor: pointer; }
+  .hotspot:hover .dot { r: 10; }
+
+  /* Panel info cargador */
+  .panel { background: #fff; border: 0.5px solid #ddd; border-radius: 12px; padding: 1rem 1.25rem; margin-top: 1rem; display: none; }
+  .panel h3 { font-size: 16px; font-weight: 500; margin-bottom: 6px; color: #1a1a1a; }
+  .panel p { font-size: 14px; line-height: 1.7; color: #555; margin-bottom: 8px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 10px; border-radius: 999px; margin: 2px 2px 0 0; background: #e6f1fb; color: #185FA5; }
+  .ask-btn { margin-top: 10px; font-size: 13px; cursor: pointer; display: inline-flex; align-items: center; gap: 5px; background: transparent; border: 0.5px solid #ccc; border-radius: 8px; padding: 6px 14px; color: #1a1a1a; }
+  .ask-btn:hover { background: #f5f5f5; }
+
+  /* Tarjetas extra */
+  .sec-title { font-size: 18px; font-weight: 500; margin: 2.5rem 0 4px; color: #1a1a1a; }
+  .sec-sub { font-size: 13px; color: #888; margin-bottom: 1rem; }
+  .divider { border: none; border-top: 0.5px solid #e0e0e0; margin: 2.5rem 0 0; }
+  .extra-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-top: 1rem; }
+  .extra-card { background: #fff; border: 0.5px solid #e5e5e5; border-radius: 12px; padding: 1.25rem; cursor: pointer; transition: border-color 0.15s; }
+  .extra-card:hover { border-color: #aaa; }
+  .extra-card .icon { font-size: 32px; margin-bottom: 10px; }
+  .extra-card h4 { font-size: 15px; font-weight: 500; margin-bottom: 4px; color: #1a1a1a; }
+  .extra-card p { font-size: 13px; color: #777; margin-bottom: 10px; }
+  .extra-card button { font-size: 12px; cursor: pointer; background: transparent; border: 0.5px solid #ccc; border-radius: 6px; padding: 4px 10px; color: #555; }
+  .extra-panel { display: none; background: #f5f5f4; border-radius: 12px; padding: 1.25rem; margin-top: 12px; }
+  .extra-panel.open { display: block; }
+  .extra-panel h3 { font-size: 15px; font-weight: 500; margin-bottom: 8px; color: #1a1a1a; }
+  .extra-panel p { font-size: 13px; line-height: 1.7; color: #555; margin-bottom: 6px; }
+  .extra-panel ul { padding-left: 16px; }
+  .extra-panel ul li { font-size: 13px; color: #555; line-height: 1.7; }
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>Cargadores de Autos Eléctricos</h1>
+  <p class="subtitle">Guía visual e interactiva — Tesla Supercharger explicado para todos</p>
+
+  <p class="hint">Toca cualquier número <span style="color:#E24B4A;">●</span> para ver la explicación de esa parte</p>
+
+  <svg width="100%" viewBox="0 0 680 520" role="img">
+    <title>Cargador Tesla Supercharger blanco con puntos interactivos</title>
+    <desc>Ilustración de un Supercharger Tesla en color blanco con 7 puntos numerados de arriba a abajo en el lado izquierdo.</desc>
+
+    <rect x="290" y="55" width="115" height="330" rx="12" fill="#f5f5f5" stroke="#d0d0d0" stroke-width="1"/>
+    <rect x="301" y="67" width="93" height="58" rx="5" fill="#e8e8e8" stroke="#cccccc" stroke-width="0.5"/>
+    <rect x="306" y="72" width="83" height="48" rx="3" fill="#0d1f3c"/>
+    <text x="347" y="91" text-anchor="middle" font-size="8" fill="#378ADD" font-family="monospace">SUPERCHARGER</text>
+    <text x="347" y="106" text-anchor="middle" font-size="12" fill="#5DCAA5" font-weight="500" font-family="monospace">250 kW</text>
+    <text x="347" y="118" text-anchor="middle" font-size="7" fill="#888" font-family="monospace">V3  ●  LISTO</text>
+    <rect x="301" y="134" width="93" height="5" rx="2" fill="#ddd"/>
+    <rect x="301" y="134" width="70" height="5" rx="2" fill="#1D9E75"/>
+    <rect x="308" y="148" width="79" height="38" rx="3" fill="#ececec" stroke="#d0d0d0" stroke-width="0.5"/>
+    <text x="347" y="161" text-anchor="middle" font-size="7" fill="#888">Tipos de conector</text>
+    <rect x="316" y="165" width="15" height="15" rx="2" fill="#e0e0e0" stroke="#378ADD" stroke-width="0.5"/>
+    <rect x="336" y="165" width="15" height="15" rx="2" fill="#e0e0e0" stroke="#378ADD" stroke-width="0.5"/>
+    <rect x="356" y="165" width="15" height="15" rx="2" fill="#e0e0e0" stroke="#378ADD" stroke-width="0.5"/>
+    <text x="323" y="186" text-anchor="middle" font-size="6" fill="#888">NACS</text>
+    <text x="343" y="186" text-anchor="middle" font-size="6" fill="#888">CCS</text>
+    <text x="363" y="186" text-anchor="middle" font-size="6" fill="#888">CHD</text>
+    <rect x="301" y="196" width="93" height="75" rx="5" fill="#ebebeb" stroke="#d0d0d0" stroke-width="0.5"/>
+    <circle cx="332" cy="228" r="16" fill="#e0e0e0" stroke="#185FA5" stroke-width="1"/>
+    <circle cx="332" cy="228" r="9" fill="#c8d8ee"/>
+    <circle cx="362" cy="228" r="16" fill="#e0e0e0" stroke="#185FA5" stroke-width="1"/>
+    <circle cx="362" cy="228" r="9" fill="#c8d8ee"/>
+    <text x="347" y="266" text-anchor="middle" font-size="7" fill="#888">NACS · CCS · CHAdeMO</text>
+    <rect x="301" y="280" width="93" height="44" rx="4" fill="#ebebeb" stroke="#d0d0d0" stroke-width="0.5"/>
+    <line x1="310" y1="290" x2="385" y2="290" stroke="#ccc" stroke-width="0.5"/>
+    <line x1="310" y1="300" x2="385" y2="300" stroke="#ccc" stroke-width="0.5"/>
+    <line x1="310" y1="310" x2="385" y2="310" stroke="#ccc" stroke-width="0.5"/>
+    <line x1="310" y1="320" x2="385" y2="320" stroke="#ccc" stroke-width="0.5"/>
+    <rect x="283" y="382" width="129" height="8" rx="3" fill="#e0e0e0" stroke="#cccccc" stroke-width="0.5"/>
+    <rect x="270" y="376" width="155" height="10" rx="3" fill="#ececec" stroke="#d0d0d0" stroke-width="0.5"/>
+    <line x1="347" y1="386" x2="347" y2="430" stroke="#ccc" stroke-width="7"/>
+    <line x1="317" y1="428" x2="377" y2="428" stroke="#bbb" stroke-width="3"/>
+    <rect x="220" y="425" width="254" height="12" rx="3" fill="#e8e8e8" stroke="#d0d0d0" stroke-width="0.5"/>
+
+    <line x1="195" y1="78"  x2="290" y2="90"  stroke="#E24B4A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+    <line x1="195" y1="148" x2="290" y2="136" stroke="#E24B4A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+    <line x1="195" y1="218" x2="301" y2="167" stroke="#E24B4A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+    <line x1="195" y1="288" x2="301" y2="240" stroke="#E24B4A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+    <line x1="195" y1="358" x2="301" y2="302" stroke="#E24B4A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+    <line x1="195" y1="428" x2="283" y2="387" stroke="#E24B4A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+    <line x1="195" y1="498" x2="283" y2="431" stroke="#E24B4A" stroke-width="0.8" stroke-dasharray="4,3" opacity="0.6"/>
+
+    <g class="hotspot" onclick="pick(0)"><circle cx="178" cy="78"  r="18" fill="#E24B4A" opacity="0.12"/><circle cx="178" cy="78"  r="10" fill="#E24B4A" class="dot" id="d0"/><text x="178" y="82"  text-anchor="middle" font-size="11" fill="white" font-weight="500">1</text></g>
+    <g class="hotspot" onclick="pick(1)"><circle cx="178" cy="148" r="18" fill="#E24B4A" opacity="0.12"/><circle cx="178" cy="148" r="10" fill="#E24B4A" class="dot" id="d1"/><text x="178" y="152" text-anchor="middle" font-size="11" fill="white" font-weight="500">2</text></g>
+    <g class="hotspot" onclick="pick(2)"><circle cx="178" cy="218" r="18" fill="#E24B4A" opacity="0.12"/><circle cx="178" cy="218" r="10" fill="#E24B4A" class="dot" id="d2"/><text x="178" y="222" text-anchor="middle" font-size="11" fill="white" font-weight="500">3</text></g>
+    <g class="hotspot" onclick="pick(3)"><circle cx="178" cy="288" r="18" fill="#E24B4A" opacity="0.12"/><circle cx="178" cy="288" r="10" fill="#E24B4A" class="dot" id="d3"/><text x="178" y="292" text-anchor="middle" font-size="11" fill="white" font-weight="500">4</text></g>
+    <g class="hotspot" onclick="pick(4)"><circle cx="178" cy="358" r="18" fill="#E24B4A" opacity="0.12"/><circle cx="178" cy="358" r="10" fill="#E24B4A" class="dot" id="d4"/><text x="178" y="362" text-anchor="middle" font-size="11" fill="white" font-weight="500">5</text></g>
+    <g class="hotspot" onclick="pick(5)"><circle cx="178" cy="428" r="18" fill="#E24B4A" opacity="0.12"/><circle cx="178" cy="428" r="10" fill="#E24B4A" class="dot" id="d5"/><text x="178" y="432" text-anchor="middle" font-size="11" fill="white" font-weight="500">6</text></g>
+    <g class="hotspot" onclick="pick(6)"><circle cx="178" cy="498" r="18" fill="#E24B4A" opacity="0.12"/><circle cx="178" cy="498" r="10" fill="#E24B4A" class="dot" id="d6"/><text x="178" y="502" text-anchor="middle" font-size="11" fill="white" font-weight="500">7</text></g>
+
+    <text x="418" y="93"  font-size="11" fill="#888">Pantalla de estado</text>
+    <text x="418" y="139" font-size="11" fill="#888">Nivel de carga</text>
+    <text x="418" y="175" font-size="11" fill="#888">Tipos de conector</text>
+    <text x="418" y="232" font-size="11" fill="#888">Puerto de carga</text>
+    <text x="418" y="305" font-size="11" fill="#888">Electrónica interna</text>
+    <text x="418" y="390" font-size="11" fill="#888">Base y soporte</text>
+    <text x="418" y="434" font-size="11" fill="#888">Conexión a red eléctrica</text>
+  </svg>
+
+  <div id="main-panel" class="panel"></div>
+
+  <hr class="divider"/>
+  <p class="sec-title">Otros temas importantes</p>
+  <p class="sec-sub">Toca cualquier tarjeta para expandir la explicación</p>
+
+  <div class="extra-grid">
+    <div class="extra-card" onclick="toggleExtra(0)">
+      <div class="icon"><i class="ti ti-home" style="color:#185FA5; font-size:32px;" aria-hidden="true"></i></div>
+      <h4>Cargar en casa</h4>
+      <p>¿Qué necesito para tener mi propio cargador?</p>
+      <button>Ver más ↓</button>
+    </div>
+    <div class="extra-card" onclick="toggleExtra(1)">
+      <div class="icon"><i class="ti ti-map-pin" style="color:#1D9E75; font-size:32px;" aria-hidden="true"></i></div>
+      <h4>Cargadores públicos</h4>
+      <p>Cómo funcionan y dónde encontrarlos</p>
+      <button>Ver más ↓</button>
+    </div>
+    <div class="extra-card" onclick="toggleExtra(2)">
+      <div class="icon"><i class="ti ti-coin" style="color:#BA7517; font-size:32px;" aria-hidden="true"></i></div>
+      <h4>¿Cuánto cuesta cargar?</h4>
+      <p>Comparado con llenar un tanque de gasolina</p>
+      <button>Ver más ↓</button>
+    </div>
+    <div class="extra-card" onclick="toggleExtra(3)">
+      <div class="icon"><i class="ti ti-battery" style="color:#534AB7; font-size:32px;" aria-hidden="true"></i></div>
+      <h4>Cuidar la batería</h4>
+      <p>Hábitos que la hacen durar más años</p>
+      <button>Ver más ↓</button>
+    </div>
+    <div class="extra-card" onclick="toggleExtra(4)">
+      <div class="icon"><i class="ti ti-help-circle" style="color:#993C1D; font-size:32px;" aria-hidden="true"></i></div>
+      <h4>Preguntas frecuentes</h4>
+      <p>Las dudas más comunes resueltas</p>
+      <button>Ver más ↓</button>
+    </div>
+  </div>
+
+  <div id="ep0" class="extra-panel">
+    <h3><i class="ti ti-home" style="margin-right:6px; color:#185FA5;" aria-hidden="true"></i>Cargar en casa</h3>
+    <p>La opción más cómoda y económica. La mayoría de la gente carga su auto de noche, como el celular.</p>
+    <ul>
+      <li><strong>Enchufe normal (Nivel 1):</strong> no instalas nada, pero tarda 20–30 horas. Solo si manejas poco.</li>
+      <li><strong>Cargador de pared (Nivel 2):</strong> un electricista instala una caja en tu garaje. Carga en 3–8 horas. Costo de instalación: ~$200–$800 USD.</li>
+      <li><strong>Consejo de ahorro:</strong> programa la carga para la madrugada, cuando la electricidad es más barata.</li>
+    </ul>
+  </div>
+  <div id="ep1" class="extra-panel">
+    <h3><i class="ti ti-map-pin" style="margin-right:6px; color:#1D9E75;" aria-hidden="true"></i>Cargadores públicos</h3>
+    <p>Están en centros comerciales, hoteles, estacionamientos y autopistas. Cada vez hay más.</p>
+    <ul>
+      <li><strong>¿Cómo se paga?</strong> Con tarjeta de crédito, app del operador (Enel X, Terpel Voltex, Celsia) o tarjeta RFID.</li>
+      <li><strong>¿Dónde encontrarlos?</strong> Apps como PlugShare, ChargePoint o Google Maps ("cargador eléctrico cerca de mí").</li>
+      <li><strong>Tip:</strong> no esperes llegar al 10% para buscar uno. Planifica tu ruta antes de salir.</li>
+    </ul>
+  </div>
+  <div id="ep2" class="extra-panel">
+    <h3><i class="ti ti-coin" style="margin-right:6px; color:#BA7517;" aria-hidden="true"></i>¿Cuánto cuesta cargar?</h3>
+    <p>En la mayoría de los casos, cargar un eléctrico es más barato que llenar gasolina.</p>
+    <ul>
+      <li><strong>En casa:</strong> ~15 kWh/100 km. A $2 MXN/kWh = solo $30 MXN por 100 km. Un auto a gasolina pagaría $150–$200 MXN.</li>
+      <li><strong>Cargador público lento:</strong> $1,200–$1,800 COP/kWh o $3–$5 MXN/kWh. Sigue siendo más barato que gasolina.</li>
+      <li><strong>Carga rápida DC:</strong> la más cara. Úsala solo en viajes largos.</li>
+      <li><strong>Truco:</strong> carga de noche con tarifa nocturna y el costo puede bajar a la mitad.</li>
+    </ul>
+  </div>
+  <div id="ep3" class="extra-panel">
+    <h3><i class="ti ti-battery" style="margin-right:6px; color:#534AB7;" aria-hidden="true"></i>Cuidar la batería</h3>
+    <p>Con buenos hábitos, la batería puede durar 10–15 años o más de 200,000 km.</p>
+    <ul>
+      <li><strong>Carga entre 20% y 80%</strong> en el día a día.</li>
+      <li><strong>Usa carga lenta en casa</strong> como rutina; la rápida DC solo en viajes.</li>
+      <li><strong>No dejes la batería en 0%</strong> por días.</li>
+      <li><strong>Evita el sol extremo</strong> con poca batería.</li>
+      <li><strong>Del 80 al 100%</strong> carga más lento a propósito — el auto se protege solo.</li>
+    </ul>
+  </div>
+  <div id="ep4" class="extra-panel">
+    <h3><i class="ti ti-help-circle" style="margin-right:6px; color:#993C1D;" aria-hidden="true"></i>Preguntas frecuentes</h3>
+    <ul>
+      <li><strong>¿Me puedo quedar sin batería?</strong> Sí, igual que sin gasolina. Pero los autos avisan con mucha anticipación.</li>
+      <li><strong>¿Es peligroso cargar bajo la lluvia?</strong> No. Los conectores están diseñados para cualquier clima.</li>
+      <li><strong>¿Cuánto dura la batería?</strong> Garantías de 8–10 años o 160,000 km. En la práctica muchas duran más.</li>
+      <li><strong>¿Puedo usar cualquier cargador?</strong> Depende del conector. Verifica compatibilidad con PlugShare antes de llegar.</li>
+      <li><strong>¿Funciona en un apagón?</strong> No. Sin luz no puedes cargar.</li>
+    </ul>
+  </div>
+
+</div>
+
+<script>
+const pts = [
+  { title:"1 · Pantalla de estado", body:"La pantalla te muestra en tiempo real cuánta energía entra a tu auto, cuánto tiempo falta y el costo de la sesión. En los Superchargers más modernos también puedes ver si hay otras plazas ocupadas. Tu app de Tesla replica toda esa información en tu celular.", tags:["kW recibidos","Tiempo estimado","Costo de sesión"] },
+  { title:"2 · Nivel de carga", body:"La barra verde indica cuánta energía ha entrado ya. Los cargadores rápidos se detienen automáticamente al 80% para proteger la batería — igual que no conviene llenar un globo hasta que explote. El tramo del 80 al 100% siempre es más lento a propósito.", tags:["Se detiene al 80%","Protege la batería","Del 80→100% más lento"] },
+  { title:"3 · Tipos de conector", body:"Cada auto tiene su propio 'enchufe', como antes pasaba con los cargadores de celular. Tesla usa el NACS. Los europeos y americanos modernos usan CCS. Los japoneses más viejos usan CHAdeMO. Desde 2023, Ford, GM y otras marcas están adoptando el conector de Tesla como nuevo estándar.", tags:["NACS (Tesla)","CCS (europeo/americano)","CHAdeMO (japonés)","GBT (China)"] },
+  { title:"4 · Puerto de carga", body:"Es donde enchufas el cable al auto. Al insertar el conector, el auto y la estación se comunican en menos de un segundo: el auto le dice cuánta energía puede recibir y la estación ajusta la potencia. Nunca entra más energía de la que la batería puede soportar.", tags:["Comunicación auto↔estación","Potencia ajustada automáticamente","Seguro por diseño"] },
+  { title:"5 · Electrónica interna", body:"Aquí vive el cerebro del cargador: los convertidores que transforman la electricidad alterna (CA) de la red en corriente continua (CC) que necesita la batería. Como esto ocurre dentro de la estación y no del auto, puede hacerse a gran escala — de ahí la velocidad del Supercharger.", tags:["CA → CC","Conversión externa = más velocidad","Hasta 250 kW en V3"] },
+  { title:"6 · Base y soporte", body:"La base ancla el cargador al suelo y aloja los cables de alimentación. Está diseñada para soportar lluvia, calor extremo, frío y pequeños golpes. Los cargadores son IP54 o superior: resistentes al agua y al polvo.", tags:["Uso en exterior","Resistente al agua","Conexión a red subterránea"] },
+  { title:"7 · Conexión a la red eléctrica", body:"El Supercharger se conecta directamente a la red eléctrica de alta tensión — la misma que alimenta edificios o fábricas. Por eso puede entregar tanta energía tan rápido. Algunos sitios incluyen baterías de respaldo para reducir el impacto en la red.", tags:["Alta tensión","Red industrial","Algunos sitios con baterías de respaldo"] }
+];
+
+let active = null;
+function pick(i) {
+  if (active === i) { active=null; document.getElementById('main-panel').style.display='none'; resetDots(); return; }
+  active = i; resetDots();
+  document.getElementById('d'+i).setAttribute('fill','#A32D2D');
+  const d = pts[i];
+  document.getElementById('main-panel').innerHTML = '<h3>'+d.title+'</h3><p>'+d.body+'</p><div style="margin-bottom:6px;">'+d.tags.map(t=>'<span class="tag">'+t+'</span>').join('')+'</div>';
+  document.getElementById('main-panel').style.display='block';
+}
+function resetDots() { for(let j=0;j<7;j++){const e=document.getElementById('d'+j);if(e)e.setAttribute('fill','#E24B4A');} }
+
+let openExtra=null;
+function toggleExtra(i) {
+  const ids=['ep0','ep1','ep2','ep3','ep4'];
+  if(openExtra===i){document.getElementById(ids[i]).classList.remove('open');openExtra=null;return;}
+  ids.forEach(id=>document.getElementById(id).classList.remove('open'));
+  document.getElementById(ids[i]).classList.add('open');
+  openExtra=i;
+}
+</script>
+</body>
+</html>
