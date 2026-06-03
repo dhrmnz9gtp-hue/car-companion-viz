@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug } from "lucide-react";
+import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug, X } from "lucide-react";
+import { useState, useEffect } from "react";
 
 import { vehicleGuides } from "@/data/vehicleGuides";
 
@@ -19,6 +20,22 @@ export const Route = createFileRoute("/")({
 });
 
 function Landing() {
+  const [modalSrc, setModalSrc] = useState<string | null>(null);
+  const [modalTitle, setModalTitle] = useState<string>("");
+
+  useEffect(() => {
+    if (modalSrc) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [modalSrc]);
+
+  const openModal = (src: string, title: string) => {
+    setModalTitle(title);
+    setModalSrc(src);
+  };
   return (
     <div className="min-h-screen bg-slate-950 text-white overflow-hidden">
       {/* Background */}
@@ -77,19 +94,50 @@ function Landing() {
           transition={{ delay: 0.15 }}
           className="mt-8 flex flex-wrap justify-center gap-3"
         >
-          <Link
-            to="/guias"
+          <button
+            type="button"
+            onClick={() => openModal("/interactivos/tesla-model-3.html", "Guía de Vehículo EV — Tesla Model 3")}
             className="group inline-flex items-center gap-2 rounded-full bg-emerald-400 text-slate-950 font-semibold px-6 py-3 text-sm hover:bg-emerald-300 transition"
           >
-            <Car className="h-4 w-4" /> Guías de Vehículos EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
-          <Link
-            to="/guias"
+            <Car className="h-4 w-4" /> Guía de Vehículo EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+          </button>
+          <button
+            type="button"
+            onClick={() => openModal("/interactivos/cargador-tesla.html", "Guías de Cargadores EV — Tesla Supercharger")}
             className="group inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-emerald-400/40 text-white font-medium px-6 py-3 text-sm hover:bg-white/15 transition"
           >
             <Plug className="h-4 w-4 text-emerald-300" /> Guías de Cargadores EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-          </Link>
+          </button>
         </motion.div>
+
+        {modalSrc && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-2 sm:p-6"
+            onClick={() => setModalSrc(null)}
+          >
+            <div
+              className="relative w-full max-w-5xl h-[92vh] rounded-2xl bg-white overflow-hidden ring-1 ring-emerald-400/30 shadow-2xl flex flex-col"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <div className="flex items-center justify-between px-4 py-2 bg-slate-950 text-white border-b border-emerald-400/20">
+                <div className="text-sm font-semibold truncate">{modalTitle}</div>
+                <button
+                  type="button"
+                  onClick={() => setModalSrc(null)}
+                  className="inline-flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/10 transition"
+                  aria-label="Cerrar"
+                >
+                  <X className="h-4 w-4" />
+                </button>
+              </div>
+              <iframe
+                src={modalSrc}
+                title={modalTitle}
+                className="flex-1 w-full bg-white"
+              />
+            </div>
+          </div>
+        )}
 
 
         {/* Feature bullets */}
