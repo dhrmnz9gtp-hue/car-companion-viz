@@ -26,13 +26,22 @@ function Landing() {
   const [modalTitle, setModalTitle] = useState<string>("");
 
   useEffect(() => {
-    if (modalSrc) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
+    if (!modalSrc) return;
+    const scrollY = window.scrollY;
+    const { overflow, position, top, width } = document.body.style;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+      document.body.style.position = position;
+      document.body.style.top = top;
+      document.body.style.width = width;
+      window.scrollTo(0, scrollY);
+    };
   }, [modalSrc]);
+
 
   const openModal = (src: string, title: string) => {
     setModalTitle(title);
