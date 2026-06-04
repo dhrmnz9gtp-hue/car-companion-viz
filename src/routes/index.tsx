@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+
 
 import { vehicleGuides } from "@/data/vehicleGuides";
 
@@ -24,13 +26,22 @@ function Landing() {
   const [modalTitle, setModalTitle] = useState<string>("");
 
   useEffect(() => {
-    if (modalSrc) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => { document.body.style.overflow = ""; };
+    if (!modalSrc) return;
+    const scrollY = window.scrollY;
+    const { overflow, position, top, width } = document.body.style;
+    document.body.style.position = "fixed";
+    document.body.style.top = `-${scrollY}px`;
+    document.body.style.width = "100%";
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = overflow;
+      document.body.style.position = position;
+      document.body.style.top = top;
+      document.body.style.width = width;
+      window.scrollTo(0, scrollY);
+    };
   }, [modalSrc]);
+
 
   const openModal = (src: string, title: string) => {
     setModalTitle(title);
@@ -110,25 +121,36 @@ function Landing() {
           </button>
         </motion.div>
 
-        {modalSrc && (
+        {modalSrc && typeof document !== "undefined" && createPortal(
           <div
-            className="fixed inset-0 z-50 bg-slate-950"
+            role="dialog"
+            aria-modal="true"
+            aria-label={modalTitle}
+            onKeyDown={(e) => { if (e.key === "Escape") setModalSrc(null); }}
+            className="fixed inset-0 w-screen h-screen bg-slate-950"
+            style={{ zIndex: 2147483647 }}
           >
-            <iframe
-              src={modalSrc}
-              title={modalTitle}
-              className="absolute inset-0 w-full h-full border-0 bg-slate-950"
-            />
+            <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-md" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <iframe
+                src={modalSrc}
+                title={modalTitle}
+                className="w-full h-full border-0 bg-slate-950"
+              />
+            </div>
             <button
               type="button"
               onClick={() => setModalSrc(null)}
-              className="fixed top-4 right-4 z-[60] inline-flex items-center gap-2 rounded-full bg-slate-950/80 text-white ring-1 ring-emerald-400/40 backdrop-blur px-4 py-2 text-sm font-semibold hover:bg-emerald-400 hover:text-slate-950 transition"
+              className="fixed top-4 right-4 inline-flex items-center gap-2 rounded-full bg-slate-950/90 text-white ring-1 ring-emerald-400/50 backdrop-blur px-4 py-2 text-sm font-semibold hover:bg-emerald-400 hover:text-slate-950 transition shadow-2xl"
+              style={{ zIndex: 2147483647 }}
               aria-label="Cerrar"
             >
               <X className="h-4 w-4" /> Cerrar
             </button>
-          </div>
+          </div>,
+          document.body,
         )}
+
 
 
 
