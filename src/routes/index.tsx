@@ -2,6 +2,8 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
 import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug, X } from "lucide-react";
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
+
 
 import { vehicleGuides } from "@/data/vehicleGuides";
 
