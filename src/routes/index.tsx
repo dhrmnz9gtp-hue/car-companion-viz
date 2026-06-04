@@ -112,32 +112,24 @@ function Landing() {
 
         {modalSrc && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-2 sm:p-6"
-            onClick={() => setModalSrc(null)}
+            className="fixed inset-0 z-50 bg-slate-950"
           >
-            <div
-              className="relative w-full max-w-5xl h-[92vh] rounded-2xl bg-white overflow-hidden ring-1 ring-emerald-400/30 shadow-2xl flex flex-col"
-              onClick={(e) => e.stopPropagation()}
+            <iframe
+              src={modalSrc}
+              title={modalTitle}
+              className="absolute inset-0 w-full h-full border-0 bg-slate-950"
+            />
+            <button
+              type="button"
+              onClick={() => setModalSrc(null)}
+              className="fixed top-4 right-4 z-[60] inline-flex items-center gap-2 rounded-full bg-slate-950/80 text-white ring-1 ring-emerald-400/40 backdrop-blur px-4 py-2 text-sm font-semibold hover:bg-emerald-400 hover:text-slate-950 transition"
+              aria-label="Cerrar"
             >
-              <div className="flex items-center justify-between px-4 py-2 bg-slate-950 text-white border-b border-emerald-400/20">
-                <div className="text-sm font-semibold truncate">{modalTitle}</div>
-                <button
-                  type="button"
-                  onClick={() => setModalSrc(null)}
-                  className="inline-flex items-center justify-center h-8 w-8 rounded-full hover:bg-white/10 transition"
-                  aria-label="Cerrar"
-                >
-                  <X className="h-4 w-4" />
-                </button>
-              </div>
-              <iframe
-                src={modalSrc}
-                title={modalTitle}
-                className="flex-1 w-full bg-white"
-              />
-            </div>
+              <X className="h-4 w-4" /> Cerrar
+            </button>
           </div>
         )}
+
 
 
         {/* Feature bullets */}
