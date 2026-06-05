@@ -1,0 +1,217 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Carga AC y DC — EV Explainers</title>
+<style>
+  :root{
+    --bg:#070b14; --bg2:#0b1322; --fg:#fff; --muted:#94a3b8;
+    --accent:#34d399; --accent2:#a3e635; --line:rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:radial-gradient(80% 60% at 50% 0%, #0e2030 0%, var(--bg) 60%) fixed;color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;min-height:100vh}
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 18px 80px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.35);padding:6px 12px;border-radius:999px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .pill .dot{width:6px;height:6px;background:var(--accent);border-radius:999px;box-shadow:0 0 12px var(--accent);animation:pulse 1.6s infinite}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+  h1{font-size:clamp(30px,5vw,54px);font-weight:900;letter-spacing:-.02em;margin:6px 0 6px;line-height:1.02}
+  h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lead{color:var(--muted);max-width:720px;margin:0;font-size:15px}
+
+  .layout{display:grid;grid-template-columns:1.1fr 1fr;gap:22px;margin-top:24px;align-items:start}
+  @media (max-width: 960px){ .layout{grid-template-columns:1fr} }
+
+  .stage{position:relative;border-radius:24px;overflow:hidden;background:#08111e;box-shadow:0 30px 80px -30px rgba(52,211,153,.25), inset 0 0 0 1px var(--line)}
+  .stage img.hero{display:block;width:100%;height:auto}
+  .flow{position:absolute;left:14px;right:14px;bottom:14px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:#cbd5e1;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);padding:8px 12px;border-radius:14px;border:1px solid var(--line)}
+  .flow .chip{display:inline-flex;align-items:center;gap:6px;padding:3px 8px;border-radius:999px;background:rgba(52,211,153,.12);border:1px solid rgba(52,211,153,.3);color:#d1fae5;font-weight:700}
+  .flow .arrow{opacity:.7}
+
+  .panel{background:linear-gradient(180deg, rgba(52,211,153,.08), rgba(255,255,255,.02));border:1px solid var(--line);border-radius:24px;padding:22px;min-height:360px;position:sticky;top:18px;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .panel .tag{font-size:11px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+  .panel h3{margin:8px 0 4px;font-size:24px;font-weight:900;letter-spacing:-.01em}
+  .panel .icon{font-size:30px;margin-bottom:4px}
+  .panel p{color:#cbd5e1;font-size:14.5px;line-height:1.65;margin:10px 0 0}
+  .panel ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+  .panel li{color:#e2e8f0;font-size:13.5px;padding-left:22px;position:relative;line-height:1.55}
+  .panel li::before{content:"";position:absolute;left:6px;top:8px;width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+  .panel .sub{margin-top:14px;font-size:12px;color:var(--accent2);letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .panel .quote{margin-top:14px;background:rgba(163,230,53,.06);border:1px solid rgba(163,230,53,.25);border-radius:14px;padding:12px 14px;color:#ecfccb;font-size:13.5px;line-height:1.55}
+  .panel .formula{margin-top:12px;background:#0a1424;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);font-size:13.5px;overflow-x:auto}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  @media (max-width:520px){.grid2{grid-template-columns:1fr}}
+  .box{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:14px;padding:12px}
+  .box .k{font-size:11px;color:var(--accent);letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+  .box p{margin:6px 0 0;font-size:13px;color:#cbd5e1}
+
+  .nav{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .navbtn{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cbd5e1;font-size:12px;padding:8px 12px;border-radius:999px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+  .navbtn:hover{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35);color:#fff}
+  .navbtn.on{background:var(--accent);color:#0a0f1a;border-color:var(--accent);font-weight:700}
+  .navbtn .n{display:inline-flex;width:18px;height:18px;border-radius:999px;background:rgba(0,0,0,.18);align-items:center;justify-content:center;font-size:10px;font-weight:800}
+  .navbtn.on .n{background:rgba(0,0,0,.18);color:#0a0f1a}
+
+  footer{margin-top:40px;text-align:center;color:#64748b;font-size:12px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="pill"><span class="dot"></span> Carga AC y DC</span>
+    <span style="color:#64748b;font-size:12px">EV Explainers · PURA CORRIENTE · Colombia</span>
+  </div>
+  <h1>Cómo se <em>carga</em> un vehículo eléctrico</h1>
+  <p class="lead">Una guía visual para entender tipos de carga, conectores, tiempos y costos. Pensada para quienes nunca han tenido un EV.</p>
+
+  <div class="layout">
+    <div class="stage">
+      <img class="hero" src="./img/carga-ac-dc.jpg" alt="Vehículo eléctrico conectado a estación de carga" />
+      <div class="flow">
+        <span class="chip">⚡ Red</span><span class="arrow">→</span>
+        <span class="chip">🔌 Estación</span><span class="arrow">→</span>
+        <span class="chip">🚗 Cargador interno</span><span class="arrow">→</span>
+        <span class="chip">🔋 Batería</span>
+      </div>
+    </div>
+
+    <aside class="panel" id="panel">
+      <div class="icon" id="p-icon">⚡</div>
+      <span class="tag" id="p-tag">● Empieza aquí</span>
+      <h3 id="p-title">Carga AC y DC</h3>
+      <p id="p-body">Selecciona una sección abajo para descubrir cómo funciona la carga de un vehículo eléctrico paso a paso.</p>
+      <div id="p-extra"></div>
+    </aside>
+  </div>
+
+  <div class="nav" id="nav" style="margin-top:22px"></div>
+
+  <footer>EV Explainers by PURA CORRIENTE · Hecho para entender, no para vender.</footer>
+</div>
+
+<script>
+  const SECTIONS = [
+    {key:"que-es",icon:"🔌",tag:"1 · ¿Qué es cargar?",title:"¿Qué ocurre cuando cargas un EV?",
+      body:"Cargar un vehículo eléctrico es transferir energía desde la red hacia la batería del auto. Es parecido a cargar un teléfono, pero con una batería mucho más grande. La energía se almacena químicamente para que el motor la use después.",
+      sub:"Analogía sencilla",
+      list:["Gasolina → Tanque","Electricidad → Batería"],
+      quote:"🔋 La batería es tu nuevo tanque: en vez de llenarla en una estación, la cargas con electricidad."},
+    {key:"tipos",icon:"📊",tag:"2 · Tipos de carga",title:"No todas las cargas son iguales",
+      body:"Existen diferentes formas de cargar un EV, cada una con una velocidad distinta. Saber cuál te conviene depende de cuánto tiempo tengas y dónde estés.",
+      sub:"Clasificación",
+      list:["Carga doméstica lenta (Nivel 1)","Carga residencial acelerada (Nivel 2)","Carga pública rápida (DC)","Carga ultrarrápida (DC de alta potencia)"]},
+    {key:"nivel1",icon:"🏠",tag:"3 · Carga Nivel 1",title:"Carga doméstica básica",
+      body:"Usa un enchufe convencional de casa. No requiere instalación especial: literalmente conectas el cable al tomacorriente.",
+      sub:"Características",
+      list:["Potencia: 1 a 2 kW","Tiempo: 20 a 40 horas","Ideal para recorridos cortos diarios"],
+      sub2:"Ventajas y desventajas",
+      list2:["✅ Económica y fácil de usar","❌ Muy lenta para cargas completas"]},
+    {key:"nivel2",icon:"🏡",tag:"4 · Carga Nivel 2",title:"Carga residencial",
+      body:"Usa un cargador dedicado (wallbox) instalado en casa. Es la forma más utilizada por los propietarios de EV en el mundo.",
+      sub:"Características",
+      list:["Potencia: 3.7 a 22 kW","Tiempo: 3 a 10 horas","Perfecta para cargar durante la noche"],
+      quote:"🌙 Conectas al llegar a casa y al despertar el carro está lleno. Sin filas, sin estaciones."},
+    {key:"dc",icon:"⚡",tag:"5 · Carga rápida DC",title:"Carga rápida en corriente continua",
+      body:"La estación envía corriente continua (DC) directamente a la batería, saltándose el cargador interno del vehículo. Por eso es mucho más rápida.",
+      sub:"Potencias habituales",
+      list:["50 kW","100 kW","150 kW"],
+      sub2:"Tiempo y uso",
+      list2:["20 a 60 minutos para una recarga útil","Ideal para viajes largos en carretera"]},
+    {key:"ultra",icon:"🚀",tag:"6 · Ultrarrápida",title:"Carga de nueva generación",
+      body:"Las estaciones más modernas entregan enormes cantidades de energía en pocos minutos. Permiten recuperar cientos de kilómetros de autonomía mientras tomas un café.",
+      sub:"Potencias",
+      list:["250 kW","350 kW","Más de 500 kW en sistemas experimentales"],
+      quote:"☕ 15 minutos pueden darte más de 300 km de autonomía en los vehículos compatibles."},
+    {key:"acdc",icon:"🔁",tag:"7 · AC vs DC",title:"¿Cómo entra realmente la electricidad?",
+      body:"Hay dos tipos de corriente involucrados. Entenderlos te ayuda a saber por qué algunas cargas son tan rápidas y otras tan lentas.",
+      grid2:[
+        {k:"AC · Corriente alterna",v:"La que llega a las casas. El vehículo debe convertirla en DC antes de guardarla en la batería."},
+        {k:"DC · Corriente continua",v:"La que usa la batería. En carga rápida, la estación hace la conversión y envía DC directo."}
+      ],
+      sub:"Flujo visual",
+      list:["Carga lenta: Red → AC → Cargador interno → Batería","Carga rápida: Estación → DC → Batería"]},
+    {key:"obc",icon:"🧰",tag:"8 · Cargador interno",title:"On Board Charger (OBC)",
+      body:"Es el dispositivo dentro del vehículo que convierte la corriente alterna de la red en corriente continua para la batería. Su potencia limita la velocidad máxima en carga AC.",
+      sub:"Ejemplo práctico",
+      list:["Si tu EV tiene OBC de 7 kW, no podrá cargar más rápido que eso en AC, aunque el wallbox entregue 22 kW."],
+      quote:"💡 En DC el OBC no se usa: por eso la carga rápida puede superar fácilmente los 100 kW."},
+    {key:"conectores",icon:"🔗",tag:"9 · Conectores",title:"Los enchufes de los EV",
+      body:"No todos los vehículos usan el mismo conector. Conocer los más comunes te ayuda a saber dónde puedes cargar.",
+      sub:"Principales tipos",
+      list:["Tipo 1 — vehículos asiáticos y norteamericanos antiguos","Tipo 2 — estándar europeo, muy usado en Latinoamérica","CCS1 — carga rápida en Norteamérica","CCS2 — carga rápida común en Europa y Latinoamérica","NACS — desarrollado por Tesla, adoptado por varias marcas"]},
+    {key:"soc",icon:"📶",tag:"10 · SOC",title:"Estado de carga (State of Charge)",
+      body:"El SOC indica cuánta energía queda disponible en la batería, expresada como un porcentaje.",
+      sub:"Ejemplos",
+      list:["100% — batería completamente cargada","50% — batería a la mitad","20% — nivel recomendado para buscar un cargador"]},
+    {key:"curva",icon:"📈",tag:"11 · Curva de carga",title:"¿Por qué carga más lento al final?",
+      body:"La velocidad de carga no es constante. Al principio la batería acepta mucha energía, pero cuando se acerca al 100% el vehículo reduce la potencia para protegerla.",
+      quote:"⏱️ Por eso en viajes largos conviene cargar de 20% a 80% y seguir: es la franja más rápida."},
+    {key:"costo",icon:"💰",tag:"12 · Costo",title:"¿Cuánto cuesta cargar?",
+      body:"El costo depende del precio del kWh, el tamaño de la batería y la energía añadida en la sesión.",
+      formula:"Costo = kWh cargados × Precio por kWh",
+      sub:"Ejemplo en Colombia",
+      list:["Batería: 80 kWh","Carga de 20% a 80% → 48 kWh añadidos","Precio: 1.500 COP/kWh","Costo total: ~72.000 COP"]},
+    {key:"tiempo",icon:"⏳",tag:"13 · Tiempo de carga",title:"¿Qué afecta el tiempo de carga?",
+      body:"Varios factores influyen en cuánto tarda una sesión de carga. No solo importa el cargador, también el vehículo.",
+      sub:"Factores principales",
+      list:["Potencia del cargador","Temperatura de la batería","Estado de carga actual (SOC)","Capacidad y química de la batería","Potencia máxima que acepta el vehículo"],
+      quote:"⚠️ Un cargador de 350 kW no hará que todos los EV carguen a 350 kW. Cada vehículo tiene su propio límite."},
+    {key:"inteligente",icon:"🧠",tag:"14 · Carga inteligente",title:"Cargar de forma eficiente",
+      body:"Muchos vehículos permiten programar la carga para aprovechar horarios de menor costo eléctrico y cuidar la batería.",
+      sub:"Beneficios",
+      list:["Menor costo eléctrico","Menor desgaste de la batería","Aprovechar tarifas nocturnas"]},
+    {key:"mitos",icon:"❓",tag:"15 · Mitos y realidades",title:"Preguntas frecuentes",
+      body:"Estas son las dudas más comunes de personas que están considerando comprar su primer EV.",
+      grid2:[
+        {k:"¿Puedo cargar bajo la lluvia?",v:"Sí. Los conectores están diseñados para ello."},
+        {k:"¿Puedo sobrecargar la batería?",v:"No. El BMS detiene la carga cuando es necesario."},
+        {k:"¿La carga rápida daña la batería?",v:"No necesariamente, pero su uso excesivo puede acelerar ligeramente la degradación."},
+        {k:"¿Es seguro cargar en casa?",v:"Sí, siempre que la instalación eléctrica sea adecuada."}
+      ]}
+  ];
+
+  const el = id => document.getElementById(id);
+
+  function render(key){
+    const s = SECTIONS.find(x=>x.key===key); if(!s) return;
+    el('p-icon').textContent = s.icon;
+    el('p-tag').innerHTML = '● ' + s.tag;
+    el('p-title').textContent = s.title;
+    el('p-body').textContent = s.body;
+
+    let extra = '';
+    if(s.grid2){
+      extra += '<div class="grid2">' + s.grid2.map(b=>`<div class="box"><div class="k">${b.k}</div><p>${b.v}</p></div>`).join('') + '</div>';
+    }
+    if(s.formula){ extra += `<div class="formula">${s.formula}</div>`; }
+    if(s.sub){ extra += `<div class="sub">${s.sub}</div>`; }
+    if(s.list){ extra += '<ul>' + s.list.map(li=>`<li>${li}</li>`).join('') + '</ul>'; }
+    if(s.sub2){ extra += `<div class="sub">${s.sub2}</div>`; }
+    if(s.list2){ extra += '<ul>' + s.list2.map(li=>`<li>${li}</li>`).join('') + '</ul>'; }
+    if(s.quote){ extra += `<div class="quote">${s.quote}</div>`; }
+    el('p-extra').innerHTML = extra;
+
+    const p = document.getElementById('panel');
+    p.style.animation='none'; void p.offsetWidth; p.style.animation='';
+
+    document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.key===key));
+  }
+
+  el('nav').innerHTML = SECTIONS.map((s,i)=>`<button class="navbtn" data-key="${s.key}"><span class="n">${i+1}</span> ${s.title.split('(')[0].trim()}</button>`).join('');
+  document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.key)));
+
+  render('que-es');
+
+  window.addEventListener('keydown',(e)=>{
+    const active = document.querySelector('.navbtn.on');
+    const keys = SECTIONS.map(s=>s.key);
+    let idx = keys.indexOf(active?.dataset.key || 'que-es');
+    if(e.key==='ArrowRight'){idx=(idx+1)%keys.length;render(keys[idx]);}
+    if(e.key==='ArrowLeft'){idx=(idx-1+keys.length)%keys.length;render(keys[idx]);}
+  });
+</script>
+</body>
+</html>
