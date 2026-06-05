@@ -156,8 +156,21 @@ function Landing() {
 
         {/* Feature bullets */}
         <div className="mt-14 grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
+          <button
+            type="button"
+            onClick={() => openModal("/interactivos/bateria-en-simple.html", "Batería en simple — Guía interactiva")}
+            className="group text-left rounded-2xl bg-white/[0.04] ring-1 ring-emerald-400/30 p-4 hover:ring-emerald-400/70 hover:bg-white/[0.07] transition cursor-pointer relative overflow-hidden"
+          >
+            <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-400/20 blur-2xl opacity-60 group-hover:opacity-100 transition" />
+            <Battery className="h-5 w-5 text-emerald-300 relative" />
+            <div className="mt-2 text-sm font-bold relative inline-flex items-center gap-1">
+              Batería en simple
+              <ArrowRight className="h-3.5 w-3.5 text-emerald-300 transition-transform group-hover:translate-x-0.5" />
+            </div>
+            <div className="text-xs text-slate-400 mt-0.5 relative">Guía interactiva · 11 secciones para entenderla.</div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">▶ Abrir guía</div>
+          </button>
           {[
-            { icon: Battery, t: "Batería en simple", d: "Cómo cuidarla y cuánto dura." },
             { icon: Zap, t: "Carga AC y DC", d: "Tiempos, conectores y consejos." },
             { icon: ShieldCheck, t: "Antes de comprar", d: "Checklist y advertencias claras." },
           ].map((x) => (
