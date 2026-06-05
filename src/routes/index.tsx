@@ -170,16 +170,25 @@ function Landing() {
             <div className="text-xs text-slate-400 mt-0.5 relative">Guía interactiva · 11 secciones para entenderla.</div>
             <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">▶ Abrir guía</div>
           </button>
-          {[
-            { icon: Zap, t: "Carga AC y DC", d: "Tiempos, conectores y consejos." },
-            { icon: ShieldCheck, t: "Antes de comprar", d: "Checklist y advertencias claras." },
-          ].map((x) => (
-            <div key={x.t} className="rounded-2xl bg-white/[0.04] ring-1 ring-white/10 p-4 text-left">
-              <x.icon className="h-5 w-5 text-emerald-300" />
-              <div className="mt-2 text-sm font-bold">{x.t}</div>
-              <div className="text-xs text-slate-400 mt-0.5">{x.d}</div>
+          <button
+            type="button"
+            onClick={() => openModal("/interactivos/carga-ac-dc.html", "Carga AC y DC — Guía interactiva")}
+            className="group text-left rounded-2xl bg-white/[0.04] ring-1 ring-emerald-400/30 p-4 hover:ring-emerald-400/70 hover:bg-white/[0.07] transition cursor-pointer relative overflow-hidden"
+          >
+            <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-400/20 blur-2xl opacity-60 group-hover:opacity-100 transition" />
+            <Zap className="h-5 w-5 text-emerald-300 relative" />
+            <div className="mt-2 text-sm font-bold relative inline-flex items-center gap-1">
+              Carga AC y DC
+              <ArrowRight className="h-3.5 w-3.5 text-emerald-300 transition-transform group-hover:translate-x-0.5" />
             </div>
-          ))}
+            <div className="text-xs text-slate-400 mt-0.5 relative">Guía interactiva · 15 secciones sobre carga.</div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">▶ Abrir guía</div>
+          </button>
+          <div className="rounded-2xl bg-white/[0.04] ring-1 ring-white/10 p-4 text-left">
+            <ShieldCheck className="h-5 w-5 text-emerald-300" />
+            <div className="mt-2 text-sm font-bold">Antes de comprar</div>
+            <div className="text-xs text-slate-400 mt-0.5">Checklist y advertencias claras.</div>
+          </div>
         </div>
       </header>
 
