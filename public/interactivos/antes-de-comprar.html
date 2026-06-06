@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Antes de comprar — EV Explainers</title>
+<style>
+  :root{
+    --bg:#070b14; --bg2:#0b1322; --fg:#fff; --muted:#94a3b8;
+    --accent:#34d399; --accent2:#a3e635; --ev:#60a5fa; --ice:#f97316;
+    --line:rgba(255,255,255,.08);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:radial-gradient(80% 60% at 50% 0%, #0e2030 0%, var(--bg) 60%) fixed;color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;min-height:100vh}
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 18px 80px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.35);padding:6px 12px;border-radius:999px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .pill .dot{width:6px;height:6px;background:var(--accent);border-radius:999px;box-shadow:0 0 12px var(--accent)}
+  h1{font-size:clamp(30px,5vw,54px);font-weight:900;letter-spacing:-.02em;margin:6px 0 6px;line-height:1.02}
+  h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lead{color:var(--muted);max-width:760px;margin:0;font-size:15px}
+
+  .layout{display:grid;grid-template-columns:1.05fr 1fr;gap:22px;margin-top:24px;align-items:start}
+  @media (max-width: 960px){ .layout{grid-template-columns:1fr} }
+
+  .stage{position:relative;border-radius:24px;overflow:hidden;background:#08111e;box-shadow:0 30px 80px -30px rgba(52,211,153,.25), inset 0 0 0 1px var(--line)}
+  .stage img.hero{display:block;width:100%;height:auto}
+  .hint{position:absolute;left:14px;bottom:14px;font-size:11px;color:#cbd5e1;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
+  .badges{position:absolute;top:14px;left:14px;right:14px;display:flex;justify-content:space-between;gap:10px}
+  .badge{font-size:11px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.55);backdrop-filter:blur(6px);border:1px solid var(--line)}
+  .badge.ev{color:var(--ev);border-color:rgba(96,165,250,.5)}
+  .badge.ice{color:var(--ice);border-color:rgba(249,115,22,.5)}
+
+  .panel{background:linear-gradient(180deg, rgba(52,211,153,.08), rgba(255,255,255,.02));border:1px solid var(--line);border-radius:24px;padding:22px;min-height:380px;position:sticky;top:18px;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .panel .tag{font-size:11px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+  .panel h3{margin:8px 0 4px;font-size:24px;font-weight:900;letter-spacing:-.01em}
+  .panel .icon{font-size:30px;margin-bottom:4px}
+  .panel p{color:#cbd5e1;font-size:14.5px;line-height:1.65;margin:10px 0 0}
+  .panel ul{margin:12px 0 0;padding:0;list-style:none;display:grid;gap:8px}
+  .panel li{color:#e2e8f0;font-size:13.5px;padding-left:22px;position:relative;line-height:1.55}
+  .panel li::before{content:"";position:absolute;left:6px;top:8px;width:7px;height:7px;border-radius:999px;background:var(--accent);box-shadow:0 0 10px var(--accent)}
+  .panel .sub{margin-top:14px;font-size:12px;color:var(--accent2);letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .panel .quote{margin-top:14px;background:rgba(163,230,53,.06);border:1px solid rgba(163,230,53,.25);border-radius:14px;padding:12px 14px;color:#ecfccb;font-size:13.5px;line-height:1.55}
+
+  .vs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  @media (max-width:520px){.vs{grid-template-columns:1fr}}
+  .vs .col{border-radius:14px;padding:12px;border:1px solid var(--line);background:rgba(255,255,255,.03)}
+  .vs .col.ev{border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.07)}
+  .vs .col.ice{border-color:rgba(249,115,22,.35);background:rgba(249,115,22,.07)}
+  .vs .col .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;font-weight:800}
+  .vs .col.ev .k{color:var(--ev)}
+  .vs .col.ice .k{color:var(--ice)}
+  .vs .col p{margin:6px 0 0;font-size:13px;color:#cbd5e1;line-height:1.55}
+  .vs .col ul{margin-top:8px}
+  .vs .col li{font-size:12.5px;padding-left:18px}
+  .vs .col li::before{width:5px;height:5px;left:5px;top:9px;background:currentColor;box-shadow:none}
+  .vs .col.ev li{color:#dbeafe}
+  .vs .col.ice li{color:#fed7aa}
+
+  /* Calc */
+  .calc{margin-top:14px;background:#0a1424;border:1px solid var(--line);border-radius:14px;padding:14px}
+  .calc h4{margin:0 0 10px;font-size:13px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent2)}
+  .calc .row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;margin-bottom:8px}
+  .calc label{font-size:12.5px;color:#cbd5e1}
+  .calc input{background:#0e1a2d;border:1px solid var(--line);color:#fff;border-radius:8px;padding:6px 10px;width:110px;font-family:inherit;font-size:13px}
+  .calc .result{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .calc .result .box{border-radius:10px;padding:10px;text-align:center}
+  .calc .result .box.ev{background:rgba(96,165,250,.12);border:1px solid rgba(96,165,250,.35)}
+  .calc .result .box.ice{background:rgba(249,115,22,.12);border:1px solid rgba(249,115,22,.35)}
+  .calc .result .v{font-size:18px;font-weight:900;margin-top:2px}
+  .calc .result .l{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#94a3b8}
+
+  .nav{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .navbtn{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cbd5e1;font-size:12px;padding:8px 12px;border-radius:999px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+  .navbtn:hover{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35);color:#fff}
+  .navbtn.on{background:var(--accent);color:#0a0f1a;border-color:var(--accent);font-weight:700}
+  .navbtn .n{display:inline-flex;width:18px;height:18px;border-radius:999px;background:rgba(0,0,0,.18);align-items:center;justify-content:center;font-size:10px;font-weight:800}
+
+  footer{margin-top:40px;text-align:center;color:#64748b;font-size:12px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="pill"><span class="dot"></span> Antes de comprar</span>
+    <span style="color:#64748b;font-size:12px">EV Explainers · PURA CORRIENTE · Colombia</span>
+  </div>
+  <h1>Eléctrico o gasolina: <em>la mejor decisión es la tuya</em></h1>
+  <p class="lead">Una guía honesta para quien está pensando comprar su primer vehículo eléctrico. Sin venderte nada: analiza tus hábitos, costos y necesidades reales para que tomes una decisión informada.</p>
+
+  <div class="layout">
+    <div class="stage">
+      <div class="badges">
+        <span class="badge ev">⚡ Eléctrico</span>
+        <span class="badge ice">⛽ Gasolina</span>
+      </div>
+      <img class="hero" src="./img/antes-de-comprar.jpg" alt="Motor eléctrico vs motor de gasolina" />
+      <div class="hint">Recorre las 16 secciones para entender qué te conviene</div>
+    </div>
+
+    <aside class="panel" id="panel">
+      <div class="icon" id="p-icon">🤔</div>
+      <span class="tag" id="p-tag">● Empieza aquí</span>
+      <h3 id="p-title">Antes de comprar</h3>
+      <p id="p-body">Selecciona una sección abajo para comparar eléctrico vs gasolina sin sesgos.</p>
+      <div id="p-extra"></div>
+    </aside>
+  </div>
+
+  <div class="nav" id="nav" style="margin-top:22px"></div>
+
+  <footer>EV Explainers by PURA CORRIENTE · Hecho para entender, no para vender.</footer>
+</div>
+
+<script>
+  const SECTIONS = [
+    {key:"uso",icon:"🤔",tag:"1 · La pregunta clave",title:"¿Qué uso le darás a tu vehículo?",
+      body:"Antes de pensar en marcas o modelos, analiza cómo vas a usar el carro día a día. La mejor opción depende de tus necesidades reales, no de la moda.",
+      sub:"Preguntas que debes responder",
+      list:["¿Cuántos kilómetros recorres al día?","¿Tienes estacionamiento propio?","¿Puedes instalar un cargador en casa?","¿Haces viajes largos con frecuencia?","¿Hay cargadores públicos cerca de ti?"],
+      quote:"💡 Para la mayoría, cómo usas el vehículo importa más que la marca que compras."},
+
+    {key:"km",icon:"📏",tag:"2 · Kilómetros al día",title:"¿Cuánto manejas cada día?",
+      body:"La mayoría de conductores en ciudad recorren menos de 50 km diarios, una cifra que cualquier EV moderno cubre sin esfuerzo.",
+      vs:[
+        {side:"ev",k:"Menos de 50 km/día",v:"Un EV cubre esta necesidad sin problema, incluso con la carga de varios días."},
+        {side:"ev",k:"50 a 150 km/día",v:"La mayoría de eléctricos modernos siguen siendo adecuados."},
+      ],
+      sub:"Más de 300 km diarios",
+      list:["Analiza con cuidado la autonomía real del modelo","Verifica la infraestructura de carga rápida en tu ruta","Considera tiempos de parada para recargar"]},
+
+    {key:"casa",icon:"🏠",tag:"3 · Cargar en casa",title:"El factor más importante",
+      body:"La experiencia de tener un EV cambia por completo si puedes cargarlo en casa. Es probablemente el factor que más impacta tu satisfacción.",
+      vs:[
+        {side:"ev",k:"Con cargador en casa",v:"Mayor comodidad · Menor costo · Vehículo listo cada mañana"},
+        {side:"ice",k:"Solo cargadores públicos",v:"Mayor planificación · Posibles esperas · Menor comodidad"}
+      ],
+      quote:"🔑 Poder cargar en casa suele ser el factor decisivo al elegir un eléctrico."},
+
+    {key:"precio",icon:"💰",tag:"4 · Precio de compra",title:"Costo inicial",
+      body:"El precio de compra es solo una parte de la historia: el costo total de propiedad cambia mucho a 5 o 10 años.",
+      vs:[
+        {side:"ice",k:"Gasolina",v:"Generalmente menor precio de compra inicial."},
+        {side:"ev",k:"Eléctrico",v:"Precio inicial usualmente mayor, aunque la brecha se reduce cada año."}
+      ],
+      quote:"⚖️ Compara siempre el costo total: precio + combustible + mantenimiento + impuestos."},
+
+    {key:"energia",icon:"⛽",tag:"5 · Costo de energía",title:"Gasolina vs electricidad",
+      body:"El costo por kilómetro suele ser mucho menor en un vehículo eléctrico. Esta es una de las ventajas más claras y constantes.",
+      vs:[
+        {side:"ice",k:"100 km en gasolina",v:"≈ 150.000 a 250.000 COP"},
+        {side:"ev",k:"100 km en eléctrico",v:"≈ 20.000 a 60.000 COP"}
+      ],
+      calc:true,
+      quote:"📊 Los valores varían según ciudad, tarifa eléctrica y precio del combustible."},
+
+    {key:"mant",icon:"🛠️",tag:"6 · Mantenimiento",title:"¿Qué requiere más mantenimiento?",
+      body:"Un motor eléctrico tiene muchas menos piezas móviles que un motor de combustión. Eso se traduce en menos visitas al taller.",
+      vs:[
+        {side:"ice",k:"Gasolina necesita",v:"",items:["Cambios de aceite","Filtros","Bujías","Correas","Sistema de escape"]},
+        {side:"ev",k:"Eléctrico necesita",v:"",items:["Revisión de frenos","Llantas","Suspensión","Filtros de cabina"]}
+      ],
+      quote:"💸 El mantenimiento suele ser claramente más barato en un EV."},
+
+    {key:"auto",icon:"🛣️",tag:"7 · Autonomía",title:"¿Cuántos km puede recorrer?",
+      body:"La autonomía depende mucho del modelo, el clima y tu estilo de conducción.",
+      vs:[
+        {side:"ice",k:"Gasolina",v:"≈ 500 a 800 km por tanque"},
+        {side:"ev",k:"Eléctrico",v:"≈ 300 a 600 km por carga (según modelo)"}
+      ],
+      quote:"🌡️ La autonomía real cambia con clima, velocidad y uso del aire acondicionado."},
+
+    {key:"tiempo",icon:"⏱️",tag:"8 · Tiempo de carga",title:"Recarga vs repostaje",
+      body:"La pregunta correcta no es cuánto tarda en cargar, sino cuándo cargas. Muchos EV se cargan mientras duermes.",
+      vs:[
+        {side:"ice",k:"Repostar gasolina",v:"3 a 5 minutos"},
+        {side:"ev",k:"Cargar eléctrico",v:"4 a 10 horas en casa · 20 a 60 min en carga rápida"}
+      ],
+      quote:"🌙 Si cargas en casa de noche, prácticamente nunca esperas a que cargue."},
+
+    {key:"infra",icon:"📍",tag:"9 · Infraestructura",title:"¿Dónde puedes abastecerte?",
+      body:"La red de cargadores crece cada año, pero todavía no llega a todos lados como las estaciones de gasolina.",
+      vs:[
+        {side:"ice",k:"Gasolina",v:"Estaciones prácticamente en cualquier lugar."},
+        {side:"ev",k:"Eléctrico",v:"Red en crecimiento. Verifica antes de comprar."}
+      ],
+      sub:"Antes de comprar, revisa",
+      list:["Cargadores cerca de casa","Cargadores cerca del trabajo","Cargadores en tus rutas frecuentes"]},
+
+    {key:"bateria",icon:"🔋",tag:"10 · Vida útil de la batería",title:"La preocupación más común",
+      body:"Las baterías modernas están diseñadas para durar muchísimos años, y mantienen una buena parte de su capacidad incluso después de cientos de miles de kilómetros.",
+      sub:"Garantías típicas",
+      list:["8 años de garantía","160.000 km","Algunos fabricantes ofrecen coberturas mayores"],
+      quote:"🔬 Muchas baterías Blade conservan más del 80% de capacidad tras 500.000 km."},
+
+    {key:"clima",icon:"🌡️",tag:"11 · Clima",title:"¿Cómo influye el clima?",
+      body:"Las temperaturas extremas pueden afectar la autonomía del EV. Buena noticia: en Colombia el impacto es mucho menor que en países con inviernos severos.",
+      vs:[
+        {side:"ice",k:"Frío extremo",v:"Menor autonomía temporal · Más consumo"},
+        {side:"ev",k:"Calor extremo",v:"Mayor uso de refrigeración"}
+      ],
+      quote:"🇨🇴 En la mayoría de ciudades colombianas el impacto del clima en la autonomía es mínimo."},
+
+    {key:"reventa",icon:"📈",tag:"12 · Valor de reventa",title:"Pensando a largo plazo",
+      body:"El valor de reventa depende de la marca, el estado, el kilometraje y la demanda del mercado de segunda mano.",
+      sub:"Recomendación",
+      list:["Investiga cómo se cotiza ese modelo usado","Revisa cuántos años lleva el fabricante en el país","Verifica disponibilidad de repuestos y servicio técnico"]},
+
+    {key:"perfilEV",icon:"✅",tag:"13 · Perfil ideal EV",title:"¿Quién debería considerar un EV?",
+      body:"Si te identificas con la mayoría de estos puntos, un vehículo eléctrico probablemente te va a encantar.",
+      list:["Tienes estacionamiento propio","Puedes cargar en casa","Recorres menos de 200 km diarios","Buscas reducir costos de operación","Planeas conservar el vehículo varios años"]},
+
+    {key:"perfilICE",icon:"⚠️",tag:"14 · Analiza con cuidado",title:"¿Quién debería pensarlo más?",
+      body:"Si te identificas con varios de estos puntos, conviene investigar bien antes de pasarte a un EV.",
+      list:["Haces viajes largos constantemente","No tienes acceso fácil a carga","Vives en zonas con poca infraestructura","Necesitas autonomía inmediata para grandes distancias"]},
+
+    {key:"final",icon:"⚖️",tag:"15 · Comparación final",title:"Ventajas y desventajas",
+      body:"Resumen honesto de cada tecnología: ninguna es perfecta, cada una brilla en escenarios distintos.",
+      vs:[
+        {side:"ev",k:"Eléctrico · Ventajas",v:"",items:["Menor costo por km","Menos mantenimiento","Menos ruido","Aceleración inmediata","Menos piezas móviles"]},
+        {side:"ev",k:"Eléctrico · Desventajas",v:"",items:["Precio inicial más alto","Depende de infraestructura","Más planificación en viajes largos"]},
+        {side:"ice",k:"Gasolina · Ventajas",v:"",items:["Amplia infraestructura","Reabastecimiento muy rápido","Mayor familiaridad"]},
+        {side:"ice",k:"Gasolina · Desventajas",v:"",items:["Más gasto en combustible","Más mantenimiento","Más piezas que se desgastan"]}
+      ]},
+
+    {key:"conclusion",icon:"🎯",tag:"16 · Conclusión",title:"No hay respuesta universal",
+      body:"No existe una respuesta única sobre cuál tecnología es mejor. La mejor elección depende de ti.",
+      sub:"Tu decisión depende de",
+      list:["Tu presupuesto","Tus recorridos diarios","Tu acceso a infraestructura de carga","Tus hábitos de conducción","Cuánto tiempo planeas conservar el vehículo"],
+      quote:"🤝 La mejor compra no es la más moderna ni la más barata: es la que se ajusta a tu vida."}
+  ];
+
+  const el = id => document.getElementById(id);
+
+  function renderVs(vs){
+    const cols = vs.map(c=>{
+      const items = c.items ? '<ul>' + c.items.map(i=>`<li>${i}</li>`).join('') + '</ul>' : '';
+      const p = c.v ? `<p>${c.v}</p>` : '';
+      return `<div class="col ${c.side}"><div class="k">${c.k}</div>${p}${items}</div>`;
+    }).join('');
+    return `<div class="vs" style="grid-template-columns:${vs.length>2?'1fr 1fr':'1fr 1fr'}">${cols}</div>`;
+  }
+
+  function renderCalc(){
+    return `
+      <div class="calc">
+        <h4>💡 Calculadora simple</h4>
+        <div class="row"><label>Km recorridos al mes</label><input id="c-km" type="number" value="1500" min="0"></div>
+        <div class="row"><label>Precio gasolina (COP/galón)</label><input id="c-pg" type="number" value="16000" min="0"></div>
+        <div class="row"><label>Rendimiento gasolina (km/galón)</label><input id="c-rg" type="number" value="40" min="1"></div>
+        <div class="row"><label>Precio energía (COP/kWh)</label><input id="c-pe" type="number" value="800" min="0"></div>
+        <div class="row"><label>Consumo EV (kWh/100km)</label><input id="c-ce" type="number" value="15" min="1"></div>
+        <div class="result">
+          <div class="box ice"><div class="l">Gasolina/mes</div><div class="v" id="c-out-ice">—</div></div>
+          <div class="box ev"><div class="l">Eléctrico/mes</div><div class="v" id="c-out-ev">—</div></div>
+        </div>
+        <div class="result" style="grid-template-columns:1fr;margin-top:8px">
+          <div class="box ev"><div class="l">Ahorro estimado al mes</div><div class="v" id="c-out-save">—</div></div>
+        </div>
+      </div>`;
+  }
+
+  function bindCalc(){
+    const fmt = n => new Intl.NumberFormat('es-CO',{maximumFractionDigits:0}).format(Math.max(0,Math.round(n))) + ' COP';
+    const recalc = () => {
+      const km = +el('c-km').value||0, pg = +el('c-pg').value||0, rg = +el('c-rg').value||1;
+      const pe = +el('c-pe').value||0, ce = +el('c-ce').value||1;
+      const ice = (km/rg)*pg;
+      const ev = (km*ce/100)*pe;
+      el('c-out-ice').textContent = fmt(ice);
+      el('c-out-ev').textContent = fmt(ev);
+      el('c-out-save').textContent = fmt(ice-ev);
+    };
+    ['c-km','c-pg','c-rg','c-pe','c-ce'].forEach(id=>el(id).addEventListener('input',recalc));
+    recalc();
+  }
+
+  function render(key){
+    const s = SECTIONS.find(x=>x.key===key); if(!s) return;
+    el('p-icon').textContent = s.icon;
+    el('p-tag').innerHTML = '● ' + s.tag;
+    el('p-title').textContent = s.title;
+    el('p-body').textContent = s.body;
+
+    let extra = '';
+    if(s.vs){ extra += renderVs(s.vs); }
+    if(s.sub){ extra += `<div class="sub">${s.sub}</div>`; }
+    if(s.list){ extra += '<ul>' + s.list.map(li=>`<li>${li}</li>`).join('') + '</ul>'; }
+    if(s.calc){ extra += renderCalc(); }
+    if(s.quote){ extra += `<div class="quote">${s.quote}</div>`; }
+    el('p-extra').innerHTML = extra;
+
+    const p = document.getElementById('panel');
+    p.style.animation='none'; void p.offsetWidth; p.style.animation='';
+
+    document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.key===key));
+    if(s.calc) bindCalc();
+  }
+
+  el('nav').innerHTML = SECTIONS.map((s,i)=>`<button class="navbtn" data-key="${s.key}"><span class="n">${i+1}</span> ${s.title.split('(')[0].trim()}</button>`).join('');
+  document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.key)));
+
+  render('uso');
+
+  window.addEventListener('keydown',(e)=>{
+    if(['INPUT','TEXTAREA'].includes(document.activeElement?.tagName)) return;
+    const active = document.querySelector('.navbtn.on');
+    const keys = SECTIONS.map(s=>s.key);
+    let idx = keys.indexOf(active?.dataset.key || 'uso');
+    if(e.key==='ArrowRight'){idx=(idx+1)%keys.length;render(keys[idx]);}
+    if(e.key==='ArrowLeft'){idx=(idx-1+keys.length)%keys.length;render(keys[idx]);}
+  });
+</script>
+</body>
+</html>
