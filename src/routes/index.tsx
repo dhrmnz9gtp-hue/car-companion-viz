@@ -235,13 +235,16 @@ function Landing() {
                     <p className="mt-3 text-sm text-slate-300 leading-relaxed line-clamp-3">{g.shortDescription}</p>
 
                     {/* Trabajos interactivos */}
-                    {g.slug === "byd-yuan-up" ? (
+                    {g.slug === "byd-yuan-up" || g.slug === "tesla-model-y" ? (
                       <button
                         type="button"
                         onClick={(e) => {
                           e.preventDefault();
                           e.stopPropagation();
-                          openModal("/interactivos/byd-yuan-up.html", "Modelo interactivo — BYD Yuan UP");
+                          const cfg = g.slug === "byd-yuan-up"
+                            ? { src: "/interactivos/byd-yuan-up.html", title: "Modelo interactivo — BYD Yuan UP" }
+                            : { src: "/interactivos/tesla-model-y.html", title: "Modelo interactivo — Tesla Model Y" };
+                          openModal(cfg.src, cfg.title);
                         }}
                         className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 text-slate-950 font-semibold px-3 py-2.5 text-xs uppercase tracking-wider hover:bg-emerald-300 transition"
                       >
@@ -252,6 +255,7 @@ function Landing() {
                         Trabajos interactivos · próximamente
                       </div>
                     )}
+
 
                     <div className="mt-4 inline-flex items-center gap-1 text-sm text-emerald-300 group-hover:gap-2 transition-all">
                       Abrir guía <ArrowRight className="h-4 w-4" />
