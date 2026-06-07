@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Volvo EX30 — Interactivo</title>
+<style>
+  :root{--bg:#070b14;--fg:#fff;--muted:#94a3b8;--accent:#34d399;--accent2:#a3e635;--line:rgba(255,255,255,.08)}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:radial-gradient(80% 60% at 50% 0%, #0e2030 0%, var(--bg) 60%) fixed;color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;min-height:100vh}
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 18px 80px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.35);padding:6px 12px;border-radius:999px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .pill .dot{width:6px;height:6px;background:var(--accent);border-radius:999px;box-shadow:0 0 12px var(--accent)}
+  h1{font-size:clamp(30px,5vw,54px);font-weight:900;letter-spacing:-.02em;margin:6px 0 6px;line-height:1.02}
+  h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lead{color:var(--muted);max-width:720px;margin:0;font-size:15px}
+  .layout{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:24px;align-items:start}
+  @media (max-width: 960px){ .layout{grid-template-columns:1fr} }
+  .stage{position:relative;border-radius:24px;overflow:hidden;background:#08111e;box-shadow:0 30px 80px -30px rgba(52,211,153,.25), inset 0 0 0 1px var(--line)}
+  .stage img.car{display:block;width:100%;height:auto}
+  .hint{position:absolute;left:14px;bottom:14px;font-size:11px;color:#cbd5e1;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
+  .brand{position:absolute;top:14px;left:14px;font-size:10px;letter-spacing:.3em;color:#fff;background:rgba(0,0,0,.55);padding:6px 10px;border-radius:999px;border:1px solid var(--line);text-transform:uppercase}
+  .panel{background:linear-gradient(180deg, rgba(52,211,153,.08), rgba(255,255,255,.02));border:1px solid var(--line);border-radius:24px;padding:22px;min-height:380px;position:sticky;top:18px;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .panel .icon{font-size:30px;margin-bottom:4px}
+  .panel .tag{font-size:11px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+  .panel h3{margin:8px 0 4px;font-size:24px;font-weight:900;letter-spacing:-.01em}
+  .panel p{color:#cbd5e1;font-size:14.5px;line-height:1.65;margin:10px 0 0}
+  .panel .sub{margin-top:14px;font-size:11px;color:var(--accent2);letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .panel ul{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+  .panel li{color:#e2e8f0;font-size:13px;padding-left:20px;position:relative;line-height:1.5}
+  .panel li::before{content:"";position:absolute;left:6px;top:8px;width:6px;height:6px;border-radius:999px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .panel .quote{margin-top:14px;background:rgba(163,230,53,.06);border:1px solid rgba(163,230,53,.25);border-radius:14px;padding:12px 14px;color:#ecfccb;font-size:13px;line-height:1.55}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+  .stat{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+  .stat .k{font-size:10px;letter-spacing:.14em;color:#94a3b8;text-transform:uppercase}
+  .stat .v{font-size:15px;font-weight:800;margin-top:2px;color:var(--accent2)}
+  .nav{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .navbtn{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cbd5e1;font-size:12px;padding:8px 12px;border-radius:999px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+  .navbtn:hover{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35);color:#fff}
+  .navbtn.on{background:var(--accent);color:#0a0f1a;border-color:var(--accent);font-weight:700}
+  .navbtn .n{display:inline-flex;width:18px;height:18px;border-radius:999px;background:rgba(0,0,0,.18);align-items:center;justify-content:center;font-size:10px;font-weight:800}
+  .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:28px}
+  .card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:14px;transition:transform .25s, border-color .25s}
+  .card:hover{transform:translateY(-3px);border-color:rgba(52,211,153,.35)}
+  .card .t{font-size:11px;color:var(--accent);letter-spacing:.16em;text-transform:uppercase}
+  .card .v{font-size:24px;font-weight:900;margin-top:4px}
+  .card .d{font-size:12px;color:#94a3b8;margin-top:4px}
+  footer{margin-top:40px;text-align:center;color:#64748b;font-size:12px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="pill"><span class="dot"></span> Modelo interactivo</span>
+    <span style="color:#64748b;font-size:12px">EV Explainers · PURA CORRIENTE</span>
+  </div>
+  <h1>Volvo <em>EX30</em></h1>
+  <p class="lead">SUV eléctrico compacto premium con diseño escandinavo, hasta 476 km WLTP y seguridad Volvo de serie. Explora cada sistema en simple.</p>
+
+  <div class="layout">
+    <div class="stage">
+      <span class="brand">Volvo · EX30</span>
+      <img class="car" src="./img/volvo-ex30.jpg" alt="Volvo EX30" />
+      <div class="hint">Usa los botones para explorar cada sistema</div>
+    </div>
+
+    <aside class="panel" id="panel">
+      <div class="icon" id="p-icon">⚡</div>
+      <span class="tag" id="p-tag">● Selecciona un sistema</span>
+      <h3 id="p-title">Volvo EX30</h3>
+      <p id="p-body">Toca un botón para entender batería, motor, carga, cabina, regeneración y seguridad.</p>
+      <div id="p-extra"></div>
+    </aside>
+  </div>
+
+  <div class="specs">
+    <div class="card"><div class="t">Autonomía</div><div class="v">476 km</div><div class="d">WLTP · Extended Range</div></div>
+    <div class="card"><div class="t">Carga rápida</div><div class="v">153 kW</div><div class="d">DC · 10→80% en 25-30 min</div></div>
+    <div class="card"><div class="t">0–100 km/h</div><div class="v">3.6 s</div><div class="d">Twin Motor Performance</div></div>
+    <div class="card"><div class="t">Garantía batería</div><div class="v">8 años</div><div class="d">Cobertura del fabricante</div></div>
+  </div>
+
+  <footer>EV Explainers by PURA CORRIENTE · Hecho para entender, no para vender.</footer>
+</div>
+
+<script>
+  const SECTIONS = [
+    {key:"bateria",icon:"🔋",tag:"1 · Batería",title:"Compacta y eficiente",
+      body:"Integrada en la plataforma del vehículo. Tres configuraciones según la versión: 51 kWh LFP (Single Motor) o 69 kWh NMC (Extended Range y Twin Performance). Hasta 476 km WLTP en la versión Extended Range.",
+      stats:[["Single Motor","51 kWh LFP"],["Extended Range","69 kWh NMC"],["Twin Performance","69 kWh NMC"],["Garantía","8 años"]],
+      sub:"Lo que notarás como usuario",
+      list:["Excelente autonomía para uso diario","Menor necesidad de cargar constantemente","Conducción estable gracias al bajo centro de gravedad","Gestión térmica avanzada"]},
+
+    {key:"motor",icon:"⚙️",tag:"2 · Motor",title:"Rendimiento escandinavo",
+      body:"Uno o dos motores eléctricos según versión. La Twin Motor Performance es el Volvo de producción más rápido de la historia: 0 a 100 km/h en 3.6 segundos.",
+      stats:[["Single Motor","272 hp · RWD"],["Twin Performance","428 hp · AWD"],["0-100 km/h","3.6 s"],["Torque","Instantáneo"]],
+      sub:"Lo que notarás como usuario",
+      list:["Aceleración inmediata","Conducción silenciosa","Excelente respuesta en ciudad y carretera","Gran estabilidad con tracción AWD"]},
+
+    {key:"carga",icon:"⚡",tag:"3 · Carga",title:"Rápida y conveniente",
+      body:"Conector CCS2, compatible con la infraestructura de Latinoamérica. AC hasta 11 kW en casa y DC hasta 153 kW en estaciones rápidas.",
+      stats:[["AC máx.","11 kW"],["DC máx.","153 kW"],["Conector","CCS2"],["10→80%","25–30 min"]],
+      sub:"Opciones de carga",
+      list:["Carga AC doméstica","Wallbox residencial","Cargadores públicos AC","Carga rápida DC"],
+      quote:"💡 En cargador rápido recuperas del 10 al 80% en aproximadamente 25–30 minutos."},
+
+    {key:"cabina",icon:"🖥️",tag:"4 · Cabina",title:"Minimalismo escandinavo",
+      body:"Interior inspirado en el diseño nórdico: pocos elementos, materiales sostenibles y reciclados. Casi todo se controla desde la pantalla vertical central.",
+      stats:[["Pantalla","12.3\" vertical"],["Sistema","Google integrado"],["Audio","Harman Kardon"],["Updates","OTA"]],
+      sub:"Equipamiento destacado",
+      list:["Google Maps y Google Assistant integrados","Apple CarPlay","Pocos botones físicos","Materiales reciclados","Diseño limpio y moderno"]},
+
+    {key:"regen",icon:"♻️",tag:"5 · Frenado regenerativo",title:"One Pedal Drive",
+      body:"Frenado regenerativo ajustable. Al soltar el acelerador, el vehículo recupera energía y la envía nuevamente a la batería.",
+      stats:[["Modo","One-pedal"],["Beneficio","+ autonomía"],["Desgaste frenos","Menor"],["Uso ideal","Ciudad"]],
+      sub:"Lo que notarás como usuario",
+      list:["Menor uso del pedal de freno","Conducción más relajada en ciudad","Recuperación constante de energía"],
+      quote:"🚗 Permite conducir gran parte del tiempo utilizando un solo pedal."},
+
+    {key:"seguridad",icon:"🛡️",tag:"6 · Seguridad",title:"Seguridad Volvo",
+      body:"Décadas de experiencia Volvo en seguridad. Hasta 7 airbags, asistencias activas y la función Door Opening Alert que avisa si vas a abrir la puerta cuando se aproxima una bici, moto o vehículo.",
+      stats:[["Airbags","Hasta 7"],["AEB","Sí"],["Pilot Assist","Sí"],["Door Alert","Sí"]],
+      sub:"Sistemas destacados",
+      list:["Frenado automático de emergencia","Detección de peatones, ciclistas y motociclistas","Asistente de mantenimiento de carril","Monitoreo de punto ciego","Control crucero adaptativo","Door Opening Alert"],
+      quote:"🚲 Door Opening Alert: el EX30 te avisa antes de abrir la puerta si detecta una bici o moto acercándose."}
+  ];
+
+  const el = id => document.getElementById(id);
+  function render(key){
+    const s = SECTIONS.find(x=>x.key===key); if(!s) return;
+    el('p-icon').textContent = s.icon;
+    el('p-tag').innerHTML = '● ' + s.tag;
+    el('p-title').textContent = s.title;
+    el('p-body').textContent = s.body;
+    let extra = '';
+    if(s.stats){ extra += '<div class="stats">' + s.stats.map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('') + '</div>'; }
+    if(s.sub){ extra += `<div class="sub">${s.sub}</div>`; }
+    if(s.list){ extra += '<ul>' + s.list.map(li=>`<li>${li}</li>`).join('') + '</ul>'; }
+    if(s.quote){ extra += `<div class="quote">${s.quote}</div>`; }
+    el('p-extra').innerHTML = extra;
+    const p = document.getElementById('panel');
+    p.style.animation='none'; void p.offsetWidth; p.style.animation='';
+    document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.key===key));
+  }
+  document.getElementById('panel').insertAdjacentHTML('afterend',
+    '<div class="nav" id="nav" style="margin-top:18px"></div>');
+  document.getElementById('nav').innerHTML = SECTIONS.map((s,i)=>
+    `<button class="navbtn" data-key="${s.key}"><span class="n">${i+1}</span> ${s.title}</button>`).join('');
+  document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.key)));
+  render('bateria');
+  window.addEventListener('keydown',(e)=>{
+    const active = document.querySelector('.navbtn.on');
+    const keys = SECTIONS.map(s=>s.key);
+    let idx = keys.indexOf(active?.dataset.key || 'bateria');
+    if(e.key==='ArrowRight'){idx=(idx+1)%keys.length;render(keys[idx]);}
+    if(e.key==='ArrowLeft'){idx=(idx-1+keys.length)%keys.length;render(keys[idx]);}
+  });
+</script>
+</body>
+</html>

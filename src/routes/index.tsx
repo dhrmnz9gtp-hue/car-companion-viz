@@ -235,26 +235,32 @@ function Landing() {
                     <p className="mt-3 text-sm text-slate-300 leading-relaxed line-clamp-3">{g.shortDescription}</p>
 
                     {/* Trabajos interactivos */}
-                    {g.slug === "byd-yuan-up" || g.slug === "tesla-model-y" ? (
-                      <button
-                        type="button"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          const cfg = g.slug === "byd-yuan-up"
-                            ? { src: "/interactivos/byd-yuan-up.html", title: "Modelo interactivo — BYD Yuan UP" }
-                            : { src: "/interactivos/tesla-model-y.html", title: "Modelo interactivo — Tesla Model Y" };
-                          openModal(cfg.src, cfg.title);
-                        }}
-                        className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 text-slate-950 font-semibold px-3 py-2.5 text-xs uppercase tracking-wider hover:bg-emerald-300 transition"
-                      >
-                        ▶ Abrir modelo interactivo
-                      </button>
-                    ) : (
-                      <div className="mt-4 rounded-xl border border-dashed border-emerald-400/30 bg-white/[0.02] px-3 py-3 text-[11px] uppercase tracking-wider text-emerald-300/70">
-                        Trabajos interactivos · próximamente
-                      </div>
-                    )}
+                    {(() => {
+                      const interactives: Record<string, { src: string; title: string }> = {
+                        "byd-yuan-up": { src: "/interactivos/byd-yuan-up.html", title: "Modelo interactivo — BYD Yuan UP" },
+                        "tesla-model-y": { src: "/interactivos/tesla-model-y.html", title: "Modelo interactivo — Tesla Model Y" },
+                        "volvo-ex30": { src: "/interactivos/volvo-ex30.html", title: "Modelo interactivo — Volvo EX30" },
+                        "byd-dolphin-mini": { src: "/interactivos/byd-dolphin-mini.html", title: "Modelo interactivo — BYD Dolphin Mini" },
+                      };
+                      const cfg = interactives[g.slug];
+                      return cfg ? (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            openModal(cfg.src, cfg.title);
+                          }}
+                          className="mt-4 w-full inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 text-slate-950 font-semibold px-3 py-2.5 text-xs uppercase tracking-wider hover:bg-emerald-300 transition"
+                        >
+                          ▶ Abrir modelo interactivo
+                        </button>
+                      ) : (
+                        <div className="mt-4 rounded-xl border border-dashed border-emerald-400/30 bg-white/[0.02] px-3 py-3 text-[11px] uppercase tracking-wider text-emerald-300/70">
+                          Trabajos interactivos · próximamente
+                        </div>
+                      );
+                    })()}
 
 
                     <div className="mt-4 inline-flex items-center gap-1 text-sm text-emerald-300 group-hover:gap-2 transition-all">
