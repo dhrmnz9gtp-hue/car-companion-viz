@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>BYD Dolphin Mini — Interactivo</title>
+<style>
+  :root{--bg:#070b14;--fg:#fff;--muted:#94a3b8;--accent:#34d399;--accent2:#a3e635;--line:rgba(255,255,255,.08)}
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:radial-gradient(80% 60% at 50% 0%, #0e2030 0%, var(--bg) 60%) fixed;color:var(--fg);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Inter,sans-serif;min-height:100vh}
+  .wrap{max-width:1240px;margin:0 auto;padding:28px 18px 80px}
+  .top{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+  .pill{display:inline-flex;align-items:center;gap:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.35);padding:6px 12px;border-radius:999px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+  .pill .dot{width:6px;height:6px;background:var(--accent);border-radius:999px;box-shadow:0 0 12px var(--accent)}
+  h1{font-size:clamp(30px,5vw,54px);font-weight:900;letter-spacing:-.02em;margin:6px 0 6px;line-height:1.02}
+  h1 em{font-style:normal;background:linear-gradient(90deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+  p.lead{color:var(--muted);max-width:720px;margin:0;font-size:15px}
+  .layout{display:grid;grid-template-columns:1.25fr 1fr;gap:22px;margin-top:24px;align-items:start}
+  @media (max-width: 960px){ .layout{grid-template-columns:1fr} }
+  .stage{position:relative;border-radius:24px;overflow:hidden;background:#08111e;box-shadow:0 30px 80px -30px rgba(52,211,153,.25), inset 0 0 0 1px var(--line)}
+  .stage img.car{display:block;width:100%;height:auto}
+  .hint{position:absolute;left:14px;bottom:14px;font-size:11px;color:#cbd5e1;background:rgba(0,0,0,.5);backdrop-filter:blur(6px);padding:6px 10px;border-radius:999px;border:1px solid var(--line)}
+  .brand{position:absolute;top:14px;left:14px;font-size:10px;letter-spacing:.3em;color:#fff;background:rgba(0,0,0,.55);padding:6px 10px;border-radius:999px;border:1px solid var(--line);text-transform:uppercase}
+  .panel{background:linear-gradient(180deg, rgba(52,211,153,.08), rgba(255,255,255,.02));border:1px solid var(--line);border-radius:24px;padding:22px;min-height:380px;position:sticky;top:18px;animation:fade .35s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  .panel .icon{font-size:30px;margin-bottom:4px}
+  .panel .tag{font-size:11px;letter-spacing:.16em;color:var(--accent);text-transform:uppercase;display:inline-flex;align-items:center;gap:8px}
+  .panel h3{margin:8px 0 4px;font-size:24px;font-weight:900;letter-spacing:-.01em}
+  .panel p{color:#cbd5e1;font-size:14.5px;line-height:1.65;margin:10px 0 0}
+  .panel .sub{margin-top:14px;font-size:11px;color:var(--accent2);letter-spacing:.14em;text-transform:uppercase;font-weight:700}
+  .panel ul{margin:8px 0 0;padding:0;list-style:none;display:grid;gap:6px}
+  .panel li{color:#e2e8f0;font-size:13px;padding-left:20px;position:relative;line-height:1.5}
+  .panel li::before{content:"";position:absolute;left:6px;top:8px;width:6px;height:6px;border-radius:999px;background:var(--accent);box-shadow:0 0 8px var(--accent)}
+  .panel .quote{margin-top:14px;background:rgba(163,230,53,.06);border:1px solid rgba(163,230,53,.25);border-radius:14px;padding:12px 14px;color:#ecfccb;font-size:13px;line-height:1.55}
+  .stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}
+  .stat{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:12px;padding:8px 10px}
+  .stat .k{font-size:10px;letter-spacing:.14em;color:#94a3b8;text-transform:uppercase}
+  .stat .v{font-size:15px;font-weight:800;margin-top:2px;color:var(--accent2)}
+  .nav{display:flex;gap:8px;margin-top:18px;flex-wrap:wrap}
+  .navbtn{background:rgba(255,255,255,.05);border:1px solid var(--line);color:#cbd5e1;font-size:12px;padding:8px 12px;border-radius:999px;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:6px}
+  .navbtn:hover{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.35);color:#fff}
+  .navbtn.on{background:var(--accent);color:#0a0f1a;border-color:var(--accent);font-weight:700}
+  .navbtn .n{display:inline-flex;width:18px;height:18px;border-radius:999px;background:rgba(0,0,0,.18);align-items:center;justify-content:center;font-size:10px;font-weight:800}
+  .specs{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-top:28px}
+  .card{background:rgba(255,255,255,.04);border:1px solid var(--line);border-radius:16px;padding:14px;transition:transform .25s, border-color .25s}
+  .card:hover{transform:translateY(-3px);border-color:rgba(52,211,153,.35)}
+  .card .t{font-size:11px;color:var(--accent);letter-spacing:.16em;text-transform:uppercase}
+  .card .v{font-size:24px;font-weight:900;margin-top:4px}
+  .card .d{font-size:12px;color:#94a3b8;margin-top:4px}
+  footer{margin-top:40px;text-align:center;color:#64748b;font-size:12px;border-top:1px solid var(--line);padding-top:18px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <span class="pill"><span class="dot"></span> Modelo interactivo</span>
+    <span style="color:#64748b;font-size:12px">EV Explainers · PURA CORRIENTE</span>
+  </div>
+  <h1>BYD <em>Dolphin Mini</em></h1>
+  <p class="lead">Hatchback eléctrico urbano con batería Blade LFP, ideal para el día a día en ciudad. Explora cada sistema en simple.</p>
+
+  <div class="layout">
+    <div class="stage">
+      <span class="brand">BYD · Dolphin Mini</span>
+      <img class="car" src="./img/byd-dolphin-mini.png" alt="BYD Dolphin Mini" />
+      <div class="hint">Usa los botones para explorar cada sistema</div>
+    </div>
+
+    <aside class="panel" id="panel">
+      <div class="icon" id="p-icon">⚡</div>
+      <span class="tag" id="p-tag">● Selecciona un sistema</span>
+      <h3 id="p-title">BYD Dolphin Mini</h3>
+      <p id="p-body">Toca un botón para entender batería, motor, carga, cabina, regeneración y seguridad.</p>
+      <div id="p-extra"></div>
+    </aside>
+  </div>
+
+  <div class="specs">
+    <div class="card"><div class="t">Autonomía</div><div class="v">~380 km</div><div class="d">NEDC · 250-320 km reales</div></div>
+    <div class="card"><div class="t">Carga DC</div><div class="v">40 kW</div><div class="d">30→80% en ~30 min</div></div>
+    <div class="card"><div class="t">Potencia</div><div class="v">75 hp</div><div class="d">FWD · 135 Nm</div></div>
+    <div class="card"><div class="t">Garantía batería</div><div class="v">8 años</div><div class="d">Tecnología Blade LFP</div></div>
+  </div>
+
+  <footer>EV Explainers by PURA CORRIENTE · Hecho para entender, no para vender.</footer>
+</div>
+
+<script>
+  const SECTIONS = [
+    {key:"bateria",icon:"🔋",tag:"1 · Batería",title:"Batería Blade BYD",
+      body:"La famosa Blade Battery con química LFP (Litio-Ferrofosfato): muy segura, gran resistencia al calor y diseñada para miles de ciclos. Forma parte de la estructura del vehículo, mejorando la rigidez.",
+      stats:[["Capacidad","38.9 kWh"],["Química","LFP Blade"],["Autonomía NEDC","~380 km"],["Garantía","8 años"]],
+      sub:"Lo que notarás como usuario",
+      list:["Costos de uso muy bajos","Excelente rendimiento en ciudad","Menor preocupación por degradación","Mayor resistencia al calentamiento"]},
+
+    {key:"motor",icon:"⚙️",tag:"2 · Motor",title:"Eficiente y urbano",
+      body:"Motor eléctrico delantero diseñado para maximizar la eficiencia en ciudad. Respuesta inmediata, silencio total y muy fácil de conducir.",
+      stats:[["Potencia","75 hp (55 kW)"],["Torque","135 Nm"],["Tracción","FWD"],["0-50 km/h","< 5 s"]],
+      sub:"Lo que notarás como usuario",
+      list:["Excelente respuesta en ciudad","Arranques ágiles en semáforos","Manejo silencioso","Muy fácil de conducir"]},
+
+    {key:"carga",icon:"⚡",tag:"3 · Carga",title:"Carga para el día a día",
+      body:"Conector CCS2, el estándar más utilizado en Latinoamérica. AC hasta 7 kW en casa y DC hasta 40 kW en estaciones rápidas.",
+      stats:[["AC máx.","7 kW"],["DC máx.","40 kW"],["Conector","CCS2"],["30→80%","~30 min"]],
+      sub:"Opciones de carga",
+      list:["Enchufe doméstico","Wallbox residencial","Estaciones públicas AC","Estaciones rápidas DC"],
+      quote:"💡 Ideal cargar en casa por la noche: cubre prácticamente todo el uso urbano."},
+
+    {key:"cabina",icon:"🖥️",tag:"4 · Cabina",title:"Tecnología a buen precio",
+      body:"Equipamiento poco común para su tamaño y precio. Pantalla rotativa, conectividad completa y espacio sorprendente para 5 pasajeros.",
+      stats:[["Pantalla","10.1\" rotativa"],["Pasajeros","5"],["CarPlay","Sí"],["Android Auto","Sí"]],
+      sub:"Equipamiento destacado",
+      list:["Sistema multimedia BYD","Cámara de reversa","Aire acondicionado automático","Acceso sin llave","Puertos USB delanteros y traseros"]},
+
+    {key:"regen",icon:"♻️",tag:"5 · Frenado regenerativo",title:"Recuperación de energía",
+      body:"El Dolphin Mini recupera energía al desacelerar y al frenar, devolviéndola a la batería para mejorar la eficiencia.",
+      stats:[["Beneficio","+ autonomía"],["Frenos","Menor desgaste"],["Eficiencia","Mayor"],["Ideal","Tráfico urbano"]],
+      sub:"Lo que notarás como usuario",
+      list:["Mayor rendimiento en ciudad","Menor consumo energético","Conducción más eficiente en trancones"]},
+
+    {key:"seguridad",icon:"🛡️",tag:"6 · Seguridad",title:"Para todos los días",
+      body:"BYD equipa al Dolphin Mini con 6 airbags de serie y sistemas electrónicos pensados para proteger en ciudad y carretera.",
+      stats:[["Airbags","6"],["ABS","Sí"],["ESC","Sí"],["TPMS","Sí"]],
+      sub:"Sistemas destacados",
+      list:["Frontales, laterales y de cortina","Control electrónico de estabilidad","Control de tracción","Asistente de arranque en pendientes","Cámara de reversa y sensores de parqueo","Monitoreo de presión de neumáticos"],
+      quote:"🛞 Ayudas electrónicas para evitar pérdidas de control y mayor confianza al manejar."}
+  ];
+
+  const el = id => document.getElementById(id);
+  function render(key){
+    const s = SECTIONS.find(x=>x.key===key); if(!s) return;
+    el('p-icon').textContent = s.icon;
+    el('p-tag').innerHTML = '● ' + s.tag;
+    el('p-title').textContent = s.title;
+    el('p-body').textContent = s.body;
+    let extra = '';
+    if(s.stats){ extra += '<div class="stats">' + s.stats.map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('') + '</div>'; }
+    if(s.sub){ extra += `<div class="sub">${s.sub}</div>`; }
+    if(s.list){ extra += '<ul>' + s.list.map(li=>`<li>${li}</li>`).join('') + '</ul>'; }
+    if(s.quote){ extra += `<div class="quote">${s.quote}</div>`; }
+    el('p-extra').innerHTML = extra;
+    const p = document.getElementById('panel');
+    p.style.animation='none'; void p.offsetWidth; p.style.animation='';
+    document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.key===key));
+  }
+  document.getElementById('panel').insertAdjacentHTML('afterend',
+    '<div class="nav" id="nav" style="margin-top:18px"></div>');
+  document.getElementById('nav').innerHTML = SECTIONS.map((s,i)=>
+    `<button class="navbtn" data-key="${s.key}"><span class="n">${i+1}</span> ${s.title}</button>`).join('');
+  document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.key)));
+  render('bateria');
+  window.addEventListener('keydown',(e)=>{
+    const active = document.querySelector('.navbtn.on');
+    const keys = SECTIONS.map(s=>s.key);
+    let idx = keys.indexOf(active?.dataset.key || 'bateria');
+    if(e.key==='ArrowRight'){idx=(idx+1)%keys.length;render(keys[idx]);}
+    if(e.key==='ArrowLeft'){idx=(idx-1+keys.length)%keys.length;render(keys[idx]);}
+  });
+</script>
+</body>
+</html>
