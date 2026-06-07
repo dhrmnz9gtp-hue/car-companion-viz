@@ -241,6 +241,8 @@ function Landing() {
                         "tesla-model-y": { src: "/interactivos/tesla-model-y.html", title: "Modelo interactivo — Tesla Model Y" },
                         "volvo-ex30": { src: "/interactivos/volvo-ex30.html", title: "Modelo interactivo — Volvo EX30" },
                         "byd-dolphin-mini": { src: "/interactivos/byd-dolphin-mini.html", title: "Modelo interactivo — BYD Dolphin Mini" },
+                        "zeekr-x": { src: "/interactivos/zeekr-x.html", title: "Modelo interactivo — Zeekr X" },
+                        "tesla-model-3": { src: "/interactivos/tesla-model-3.html", title: "Modelo interactivo — Tesla Model 3" },
                       };
                       const cfg = interactives[g.slug];
                       return cfg ? (
