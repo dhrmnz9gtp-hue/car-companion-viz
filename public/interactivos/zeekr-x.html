@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Tesla Model 3 — Interactivo</title>
+<title>Zeekr X — Interactivo</title>
 <style>
   :root{--bg:#070b14;--fg:#fff;--muted:#94a3b8;--accent:#34d399;--accent2:#a3e635;--line:rgba(255,255,255,.08)}
   *{box-sizing:border-box}
@@ -56,30 +56,30 @@
     <span class="pill"><span class="dot"></span> Modelo interactivo</span>
     <span style="color:#64748b;font-size:12px">EV Explainers · PURA CORRIENTE</span>
   </div>
-  <h1>Tesla <em>Model 3</em></h1>
-  <p class="lead">El sedán eléctrico más conocido del mundo. Explora batería, motor, carga, cabina, regeneración y seguridad en simple.</p>
+  <h1>Zeekr <em>X</em></h1>
+  <p class="lead">SUV compacto premium sobre la plataforma SEA de Geely. Explora batería, motor, carga, cabina, regeneración y seguridad en simple.</p>
 
   <div class="layout">
     <div class="stage">
-      <span class="brand">TESLA · MODEL 3</span>
-      <img class="car" src="./img/tesla-model-3.png" alt="Tesla Model 3" />
+      <span class="brand">ZEEKR · X</span>
+      <img class="car" src="./img/zeekr-x.png" alt="Zeekr X" />
       <div class="hint">Usa los botones para explorar cada sistema</div>
     </div>
 
     <aside class="panel" id="panel">
       <div class="icon" id="p-icon">⚡</div>
       <span class="tag" id="p-tag">● Selecciona un sistema</span>
-      <h3 id="p-title">Tesla Model 3</h3>
+      <h3 id="p-title">Zeekr X</h3>
       <p id="p-body">Toca un botón para conocer cada sistema del vehículo.</p>
       <div id="p-extra"></div>
     </aside>
   </div>
 
   <div class="specs">
-    <div class="card"><div class="t">Autonomía</div><div class="v">+600 km</div><div class="d">WLTP · versión Long Range</div></div>
-    <div class="card"><div class="t">Carga DC</div><div class="v">250 kW</div><div class="d">Supercharger · &lt;30 min</div></div>
-    <div class="card"><div class="t">Performance</div><div class="v">~510 hp</div><div class="d">0–100 km/h en ~3 s</div></div>
-    <div class="card"><div class="t">Pantalla</div><div class="v">15.4"</div><div class="d">+ pantalla trasera 8"</div></div>
+    <div class="card"><div class="t">Autonomía</div><div class="v">~446 km</div><div class="d">WLTP · versiones tope</div></div>
+    <div class="card"><div class="t">Carga DC</div><div class="v">150 kW</div><div class="d">10→80% en ~30 min</div></div>
+    <div class="card"><div class="t">Potencia AWD</div><div class="v">428 hp</div><div class="d">0–100 km/h en 3.7 s</div></div>
+    <div class="card"><div class="t">Garantía batería</div><div class="v">8 años</div><div class="d">Plataforma SEA</div></div>
   </div>
 
   <footer>EV Explainers by PURA CORRIENTE · Hecho para entender, no para vender.</footer>
@@ -87,45 +87,42 @@
 
 <script>
   const SECTIONS = [
-    {key:"bateria",icon:"🔋",tag:"1 · Batería",title:"Batería de largo alcance",
-      body:"Baterías de litio de alta eficiencia integradas en el piso. Hasta ~580 km EPA y más de 600 km WLTP en algunas versiones, con gestión térmica avanzada.",
-      stats:[["Autonomía","+600 km WLTP"],["Garantía","8 años"],["Gestión","Térmica avanzada"],["CG","Muy bajo"]],
+    {key:"bateria",icon:"🔋",tag:"1 · Batería",title:"Batería de alto rendimiento",
+      body:"Hasta 69 kWh sobre la plataforma SEA de Geely, dedicada a vehículos eléctricos. Autonomía WLTP de hasta 446 km y excelente eficiencia.",
+      stats:[["Capacidad","hasta 69 kWh"],["Autonomía","446 km WLTP"],["Plataforma","SEA Geely"],["Garantía","8 años"]],
       sub:"Lo que notarás como usuario",
-      list:["Excelente autonomía para viajes largos","Menos visitas a cargadores","Gran estabilidad en curvas","Mejor aprovechamiento del espacio interior"]},
+      list:["Buena autonomía diaria y en viajes","Estabilidad con batería bajo el piso","Menos recargas frecuentes"]},
 
-    {key:"motor",icon:"⚙️",tag:"2 · Motor",title:"Rendimiento deportivo eléctrico",
-      body:"Disponible en RWD, Long Range AWD y Performance. La versión Performance acelera de 0 a 100 km/h en aproximadamente 3 segundos.",
-      stats:[["RWD","Eficiente"],["Long Range","Doble motor AWD"],["Performance","~510 hp"],["0–100","~3 s"]],
+    {key:"motor",icon:"⚙️",tag:"2 · Motor",title:"Uno de los SUV compactos más rápidos",
+      body:"Disponible en RWD o AWD. La versión Privilege AWD entrega 428 hp y 543 Nm, con 0–100 km/h en 3.7 s.",
+      stats:[["RWD","272 hp · 5.6 s"],["AWD","428 hp · 3.7 s"],["Torque AWD","543 Nm"],["Tracción","RWD / AWD"]],
       sub:"Lo que notarás como usuario",
-      list:["Aceleración instantánea","Conducción silenciosa","Respuesta inmediata al acelerador","Excelente estabilidad"]},
+      list:["Aceleración impresionante","Respuesta inmediata al acelerar","Excelente agarre en curvas","Conducción silenciosa"]},
 
-    {key:"carga",icon:"⚡",tag:"3 · Carga",title:"Carga rápida y conveniente",
-      body:"Puerto CCS2 en Europa y Latinoamérica (NACS en Norteamérica). Hasta 250 kW en Superchargers Tesla, ideal para viajes largos.",
-      stats:[["Conector","CCS2 / NACS"],["DC máx.","250 kW"],["10→80%","<30 min"],["Red","Supercharger"]],
-      sub:"Opciones de carga",
-      list:["Enchufe doméstico","Wall Connector Tesla","Estaciones públicas AC","Estaciones rápidas DC","Tesla Supercharger"],
-      quote:"📱 Puedes monitorear la carga desde la app Tesla."},
+    {key:"carga",icon:"⚡",tag:"3 · Carga",title:"Carga rápida para el día a día",
+      body:"Puerto CCS2 compatible con la mayoría de la infraestructura pública. AC hasta 22 kW y DC hasta 150 kW.",
+      stats:[["Conector","CCS2"],["AC máx.","11–22 kW"],["DC máx.","150 kW"],["10→80%","~30 min"]],
+      sub:"Lo que notarás como usuario",
+      list:["Compatible con cargadores públicos","Carga doméstica nocturna","Viajes largos más sencillos"]},
 
-    {key:"cabina",icon:"🖥️",tag:"4 · Cabina",title:"Minimalismo tecnológico",
-      body:"Tesla eliminó casi todos los botones físicos y concentra las funciones en una pantalla central de 15.4\". Techo panorámico, asientos calefactados/ventilados y OTA.",
-      stats:[["Pantalla","15.4\""]
-        ,["Pantalla trasera","8\""],["Pasajeros","5"],["Carga","Hasta 24 ft³"]],
+    {key:"cabina",icon:"🖥️",tag:"4 · Cabina",title:"Lujo tecnológico",
+      body:"Interior minimalista con materiales premium, iluminación ambiental y tecnología avanzada. Procesador Qualcomm Snapdragon 8155 y actualizaciones OTA.",
+      stats:[["Pantalla","Gran formato"],["HUD","Realidad aumentada"],["Audio","Yamaha · 13 bocinas"],["Techo","Panorámico"]],
       sub:"Equipamiento destacado",
-      list:["Techo panorámico de cristal","Cargadores inalámbricos","Asientos calefactados y ventilados","Actualizaciones OTA","Frunk + maletero amplio"]},
+      list:["Pantalla central grande","HUD con realidad aumentada","Snapdragon 8155 + OTA","Iluminación ambiental","Sonido Yamaha hasta 13 bocinas","Techo panorámico de cristal"]},
 
     {key:"regen",icon:"♻️",tag:"5 · Frenado regenerativo",title:"Recuperación inteligente de energía",
-      body:"Al levantar el pie del acelerador, el Model 3 recupera energía y la devuelve a la batería para mayor autonomía y eficiencia.",
-      stats:[["Beneficio","+ autonomía"],["Frenos","Menor desgaste"],["Eficiencia","Mayor"],["Modo","Un pedal"]],
+      body:"El Zeekr X recupera energía al desacelerar y frenar, devolviéndola a la batería para mayor eficiencia y autonomía.",
+      stats:[["Beneficio","+ autonomía"],["Frenos","Menor desgaste"],["Eficiencia","Mayor"],["Ideal","Ciudad"]],
       sub:"Lo que notarás como usuario",
-      list:["El coche desacelera al soltar el acelerador","Menor uso del pedal de freno","Conducción más eficiente en ciudad"],
-      quote:"💡 Muchos propietarios usan la conducción de un solo pedal la mayor parte del tiempo."},
+      list:["Menor uso del pedal de freno","Conducción más eficiente en ciudad","Mayor aprovechamiento de la energía"]},
 
-    {key:"seguridad",icon:"🛡️",tag:"6 · Seguridad",title:"Diseñado para ser uno de los más seguros",
-      body:"Zonas de absorción de impacto, estructura rígida y múltiples sistemas de asistencia. 8 airbags incluyendo de rodilla para conductor y pasajero.",
-      stats:[["Airbags","8"],["Cámaras","360°"],["AEB","Sí"],["BSM","Sí"]],
-      sub:"Sistemas de seguridad",
-      list:["Frenado automático de emergencia","Advertencia de colisión frontal","Monitoreo de punto ciego","Mantenimiento de carril","Crucero adaptativo","Visualización del entorno en tiempo real"],
-      quote:"🛡️ Alertas constantes ante posibles riesgos y mayor confianza en viajes largos."}
+    {key:"seguridad",icon:"🛡️",tag:"6 · Seguridad",title:"La seguridad es el lujo definitivo",
+      body:"Estructura reforzada para impactos laterales, 7 airbags y un conjunto completo de asistencias activas con cámaras y radares.",
+      stats:[["Airbags","7"],["Cámaras HD","5"],["Radares","5 mm"],["Ultrasónicos","12"]],
+      sub:"Asistencias destacadas",
+      list:["Frenado automático de emergencia","Monitoreo de punto ciego","Crucero adaptativo","Mantenimiento de carril","Detección de tráfico alrededor","Airbag central delantero"],
+      quote:"🛡️ Muchas alertas preventivas y gran sensación de seguridad durante toda la conducción."}
   ];
 
   const el = id => document.getElementById(id);
