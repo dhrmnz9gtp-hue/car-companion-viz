@@ -80,6 +80,17 @@ export interface ModelDefinition {
     | { kind: "gltf"; url: string; nodeMap: Record<string, string>; units: "m" };
   components: ComponentDefinition[];
   assemblies: { id: string; parentId?: string; pivot: Vec3; axis?: Vec3 }[];
+  disassembly?: {
+    description: string;
+    cameraExpansion: number;
+    groups: {
+      id: string;
+      partIds: string[];
+      /** Ordered translation stages, using the resource's existing separation vectors. */
+      steps: { directionFrom: string; scale: number; range: [number, number] }[];
+    }[];
+  };
+  transparency?: { componentId: string; shellPartIds: string[]; description: string };
   camera: { position: Vec3; target: Vec3; minDistance: number; maxDistance: number };
   capabilities: {
     orbit: boolean;
@@ -180,5 +191,49 @@ export function validateModel(model: ModelDefinition): string[] {
     errors.push("Límites de cámara inválidos");
   if (model.animations.length > 0 && !model.capabilities.animation)
     errors.push("Animaciones sin capacidad habilitada");
+  const allParts = new Set(model.components.flatMap((c) => c.parts.map((p) => p.id)));
+  const componentIds = new Set(model.components.map((c) => c.id));
+  if (model.capabilities.explode && !model.disassembly) errors.push("Falta plan de separación");
+  if (model.disassembly) {
+    const assigned = new Set<string>();
+    const groups = new Set<string>();
+    if (
+      !Number.isFinite(model.disassembly.cameraExpansion) ||
+      model.disassembly.cameraExpansion < 0
+    )
+      errors.push("Expansión de cámara inválida");
+    for (const group of model.disassembly.groups) {
+      if (groups.has(group.id)) errors.push(`Grupo duplicado: ${group.id}`);
+      groups.add(group.id);
+      for (const id of group.partIds) {
+        if (!allParts.has(id) || assigned.has(id))
+          errors.push(`Pieza de separación inválida: ${id}`);
+        assigned.add(id);
+      }
+      for (const step of group.steps) {
+        if (
+          !componentIds.has(step.directionFrom) ||
+          !Number.isFinite(step.scale) ||
+          !step.range.every(Number.isFinite) ||
+          step.range[0] < 0 ||
+          step.range[1] > 1 ||
+          step.range[0] >= step.range[1]
+        )
+          errors.push(`Etapa de separación inválida: ${group.id}`);
+      }
+    }
+    if (assigned.size !== allParts.size) errors.push("Plan de separación incompleto");
+  }
+  if (model.capabilities.transparency && !model.transparency)
+    errors.push("Falta envolvente transparente");
+  if (model.transparency) {
+    const shell = model.components.find((c) => c.id === model.transparency!.componentId);
+    if (
+      !shell ||
+      !model.transparency.shellPartIds.length ||
+      model.transparency.shellPartIds.some((id) => !shell.parts.some((p) => p.id === id))
+    )
+      errors.push("Envolvente transparente inválida");
+  }
   return errors;
 }

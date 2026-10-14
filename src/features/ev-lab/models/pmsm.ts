@@ -174,7 +174,7 @@ export const pmsmModel: ModelDefinition = {
   technology: "motor.pmsm",
   description:
     "Explora cómo la electricidad se transforma en movimiento. Siete componentes, un mismo sistema.",
-  resourceVersion: "1.0.0",
+  resourceVersion: "1.1.0",
   lesson: {
     section: "01 · PROPULSIÓN",
     shortName: "Motor PMSM",
@@ -205,14 +205,62 @@ export const pmsmModel: ModelDefinition = {
     { id: fixed, pivot: [0, 0, 0] },
     { id: rotating, parentId: fixed, pivot: [0, 0, 0], axis: [0, 0, 1] },
   ],
+  disassembly: {
+    description:
+      "Las tapas y los rodamientos se retiran primero. Eje, rotor e imanes viajan juntos; estator y bobinas conservan su unión. Es una secuencia didáctica, no un procedimiento de mantenimiento.",
+    cameraExpansion: 1.6,
+    groups: [
+      ...[-1, 1].map((side) => ({
+        id: `pmsm.support.${side}`,
+        partIds: [
+          `housing.end.${side}`,
+          ...bearings
+            .filter(
+              (p) =>
+                p.id === `bearings.inner.${side}` ||
+                p.id === `bearings.outer.${side}` ||
+                p.id.startsWith(`bearings.ball.${side}.`),
+            )
+            .map((p) => p.id),
+        ],
+        steps: [
+          { directionFrom: "bearings", scale: -side * 1.6, range: [0, 0.25] as [number, number] },
+        ],
+      })),
+      {
+        id: "pmsm.rotating-unit",
+        partIds: ["rotor.core", "shaft.main", ...magnets.map((p) => p.id)],
+        steps: [{ directionFrom: "rotor", scale: 1, range: [0.25, 0.7] }],
+      },
+      {
+        id: "pmsm.wound-stator",
+        partIds: [...stator, ...coils].map((p) => p.id),
+        steps: [
+          { directionFrom: "windings", scale: -1.5, range: [0.25, 0.7] },
+          { directionFrom: "stator", scale: -1.7, range: [0.7, 1] },
+        ],
+      },
+      {
+        id: "pmsm.outer-shell",
+        partIds: housing.filter((p) => !p.id.startsWith("housing.end.")).map((p) => p.id),
+        steps: [{ directionFrom: "housing", scale: 1, range: [0.7, 1] }],
+      },
+    ],
+  },
+  transparency: {
+    componentId: "housing",
+    shellPartIds: ["housing.shell"],
+    description:
+      "Al transparentar la carcasa se ocultan tapas, apoyos y nervaduras para evitar capas superpuestas. Puedes seleccionar el interior a través de ella.",
+  },
   camera: { position: [5.6, 3.7, 6.8], target: [0, -0.1, 0], minDistance: 4.8, maxDistance: 14 },
   capabilities: {
     orbit: true,
     zoom: true,
     selection: true,
-    explode: false,
-    transparency: false,
-    isolation: false,
+    explode: true,
+    transparency: true,
+    isolation: true,
     animation: false,
     simulation: false,
   },

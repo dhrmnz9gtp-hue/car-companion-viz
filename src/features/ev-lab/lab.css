@@ -267,11 +267,9 @@
   color: #93aabc;
 }
 .lab-camera-tools {
-  position: absolute;
-  top: 65px;
-  right: 18px;
   display: flex;
-  flex-direction: column;
+  flex-shrink: 0;
+  flex-direction: row;
   padding: 4px;
   background: #0b1728df;
   border: 1px solid #2d4158;
@@ -292,7 +290,7 @@
   color: #a7f3d0;
 }
 .lab-camera-tools > span {
-  border-top: 1px solid #2d4158;
+  border-left: 1px solid #2d4158;
   margin: 3px;
 }
 .lab-stage-bottom {
@@ -808,10 +806,6 @@
   .lab-stage:before {
     left: 15px;
   }
-  .lab-camera-tools {
-    right: 10px;
-    top: 60px;
-  }
   .lab-camera-tools button {
     width: 44px;
     height: 44px;
@@ -861,5 +855,132 @@
   .lab-fallback-message {
     font-size: 11px;
     padding-inline: 22px;
+  }
+}
+
+/* Assembly tools remain in the viewer card; native ranges work with touch and keyboard. */
+.lab-assembly-controls {
+  padding: 22px;
+  border-top: 1px solid #2b4053;
+  background: #0d1b2a;
+}
+.lab-assembly-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+.lab-assembly-heading h3 {
+  margin: 5px 0 0;
+  font-size: 18px;
+  letter-spacing: -0.4px;
+}
+.lab-assembly-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.lab-assembly-actions button {
+  border: 1px solid #3e665e;
+  background: #18362f;
+  color: #b1f1d8;
+  border-radius: 8px;
+  min-height: 44px;
+  padding: 10px 14px;
+  font-size: 12px;
+  cursor: pointer;
+}
+.lab-assembly-actions button:hover:not(:disabled) {
+  background: #245344;
+  border-color: #6ee7b7;
+}
+.lab-assembly-actions button:disabled {
+  opacity: 0.38;
+  cursor: default;
+}
+.lab-range-label {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  font-size: 12px;
+}
+.lab-range-label output {
+  color: #83ecc1;
+  font-variant-numeric: tabular-nums;
+  font-size: 15px;
+}
+.lab-assembly-controls input[type="range"] {
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  accent-color: #6ee7b7;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.lab-range-ends {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-size: 10px;
+  color: #9baec0;
+}
+.lab-assembly-description {
+  font-size: 11px;
+  line-height: 1.65;
+  color: #9fb2c5;
+  margin: 14px 0 0;
+}
+.lab-visibility-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  border-top: 1px solid #2b4053;
+  margin-top: 22px;
+  padding-top: 20px;
+}
+.lab-isolation > p {
+  font-size: 13px;
+  margin: 6px 0 12px;
+}
+.lab-isolation > .lab-assembly-description {
+  font-size: 11px;
+  margin-top: 12px;
+}
+.lab-2d-note {
+  padding: 14px 22px;
+  border-top: 1px solid #2b4053;
+  margin: 0;
+  color: #9fb2c5;
+  font-size: 11px;
+  line-height: 1.6;
+}
+.lab-education {
+  align-self: start;
+}
+@media (max-width: 1100px) {
+  .lab-assembly-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}
+@media (max-width: 520px) {
+  .lab-assembly-controls {
+    padding: 18px 16px;
+  }
+  .lab-visibility-controls {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  .lab-range-ends {
+    font-size: 9px;
+  }
+  .lab-assembly-actions {
+    gap: 6px;
+  }
+  .lab-assembly-actions button {
+    padding: 10px;
   }
 }

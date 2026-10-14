@@ -30,13 +30,7 @@ describe("Educational resource contract", () => {
   });
   test("prepared capabilities do not advertise unimplemented simulations or animation", () => {
     expect(pmsmModel.animations).toHaveLength(0);
-    for (const capability of [
-      "explode",
-      "transparency",
-      "isolation",
-      "animation",
-      "simulation",
-    ] as const)
+    for (const capability of ["animation", "simulation"] as const)
       expect(pmsmModel.capabilities[capability]).toBe(false);
   });
 });

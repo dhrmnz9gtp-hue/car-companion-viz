@@ -16,6 +16,8 @@ import {
   Zap,
 } from "lucide-react";
 import type { CameraCommand, ModelDefinition, Selection } from "./model";
+import { useSeparation } from "./useSeparation";
+import { AssemblyControls } from "./AssemblyControls";
 import { Viewport } from "./viewer/Viewport";
 import "./lab.css";
 
@@ -32,6 +34,9 @@ export function Lab({
   model: ModelDefinition;
   Diagram: ComponentType<DiagramProps>;
 }) {
+  const separation = useSeparation();
+  const [transparency, setTransparency] = useState(0);
+  const [isolatedId, setIsolatedId] = useState<string | null>(null);
   const [selection, setSelection] = useState<Selection>(null);
   const [mode, setMode] = useState<"3d" | "2d">("3d");
   const [sceneReady, setSceneReady] = useState(false);
@@ -40,12 +45,26 @@ export function Lab({
   useEffect(() => {
     setEnabled(window.matchMedia("(pointer: fine)").matches);
   }, []);
-  const onSelect = useCallback((value: Selection) => setSelection(value), []);
+  const onSelect = useCallback(
+    (value: Selection) => {
+      setSelection(value);
+      setIsolatedId((previous) => (previous ? (value?.componentId ?? null) : null));
+      if (isolatedId && value?.componentId === model.transparency?.componentId) setTransparency(0);
+    },
+    [isolatedId, model.transparency?.componentId],
+  );
+  const { stop } = separation;
+  useEffect(() => {
+    if (mode !== "3d" || !sceneReady) stop();
+  }, [mode, sceneReady, stop]);
   const selected = model.components.find((component) => component.id === selection?.componentId);
   const selectedPart = selected?.parts.find((part) => part.id === selection?.partId);
   const issue = (action: CameraCommand["action"]) =>
     setCommand((previous) => ({ sequence: previous.sequence + 1, action }));
   const reset = () => {
+    separation.reset();
+    setTransparency(0);
+    setIsolatedId(null);
     setSelection(null);
     issue("reset");
   };
@@ -148,6 +167,9 @@ export function Lab({
                   selection={selection}
                   onSelect={onSelect}
                   enabled={enabled}
+                  separation={separation.value}
+                  transparency={transparency}
+                  isolatedId={isolatedId}
                   command={command}
                   fallback={fallback}
                   onAvailabilityChange={setSceneReady}
@@ -155,23 +177,7 @@ export function Lab({
               ) : (
                 fallback
               )}
-              {mode === "3d" && sceneReady && (
-                <div className="lab-camera-tools" role="group" aria-label="Controles de cámara">
-                  <button onClick={() => issue("zoom-in")} aria-label="Acercar">
-                    <Plus size={18} />
-                  </button>
-                  <button onClick={() => issue("zoom-out")} aria-label="Alejar">
-                    <Minus size={18} />
-                  </button>
-                  <span />
-                  <button onClick={() => issue("left")} aria-label="Girar a la izquierda">
-                    <ArrowLeft size={17} />
-                  </button>
-                  <button onClick={() => issue("right")} aria-label="Girar a la derecha">
-                    <ArrowRight size={17} />
-                  </button>
-                </div>
-              )}
+
               <div className="lab-stage-bottom">
                 <span className="lab-axis" aria-hidden="true">
                   <i /> X <i /> Y <i /> Z
@@ -196,11 +202,44 @@ export function Lab({
                     : "Activa la exploración para girar con el dedo o el mouse. También puedes usar los botones."
                   : "Explora los componentes sin necesidad de gráficos 3D."}
               </p>
+              {mode === "3d" && sceneReady && (
+                <div className="lab-camera-tools" role="group" aria-label="Controles de cámara">
+                  <button onClick={() => issue("zoom-in")} aria-label="Acercar">
+                    <Plus size={18} />
+                  </button>
+                  <button onClick={() => issue("zoom-out")} aria-label="Alejar">
+                    <Minus size={18} />
+                  </button>
+                  <span />
+                  <button onClick={() => issue("left")} aria-label="Girar a la izquierda">
+                    <ArrowLeft size={17} />
+                  </button>
+                  <button onClick={() => issue("right")} aria-label="Girar a la derecha">
+                    <ArrowRight size={17} />
+                  </button>
+                </div>
+              )}
               <button className="lab-reset" onClick={reset}>
                 <RotateCcw size={15} />
                 Restablecer vista
               </button>
             </div>
+            {mode === "3d" && sceneReady ? (
+              <AssemblyControls
+                model={model}
+                separation={separation}
+                transparency={transparency}
+                setTransparency={setTransparency}
+                selectedId={selection?.componentId ?? null}
+                isolatedId={isolatedId}
+                setIsolatedId={setIsolatedId}
+              />
+            ) : (
+              <p className="lab-2d-note">
+                El esquema 2D muestra el modelo ensamblado. Los ajustes de exploración se conservan
+                para volver al visor 3D.
+              </p>
+            )}
           </section>
 
           <section

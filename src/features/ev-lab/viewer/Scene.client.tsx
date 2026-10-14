@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { Spherical, Vector3 } from "three";
+import { Mesh, Spherical, Vector3 } from "three";
 import type {
   CameraCommand,
   ComponentDefinition,
@@ -9,6 +9,7 @@ import type {
   PartDefinition,
   Selection,
 } from "../model";
+import { partAppearance, selectionOffset, separationOffsets } from "../exploration";
 import { createGeometry } from "./geometry";
 
 export interface SceneProps {
@@ -16,15 +17,28 @@ export interface SceneProps {
   selection: Selection;
   onSelect: (selection: Selection) => void;
   enabled: boolean;
+  separation: number;
+  transparency: number;
+  isolatedId: string | null;
   command: CameraCommand;
   onFailure: () => void;
   onReady: () => void;
 }
 
-function Controls({ model, enabled, command, selection, onFailure, onReady }: SceneProps) {
+function Controls({
+  model,
+  enabled,
+  command,
+  selection,
+  separation,
+  onFailure,
+  onReady,
+}: SceneProps) {
   const { camera, gl, invalidate, scene } = useThree();
   const controls = useRef<OrbitControls | null>(null);
-  const lastCommand = useRef(-1);
+  const lastCommand = useRef(command.sequence);
+  const previousScale = useRef(1);
+  const focused = useRef<Selection>(null);
   useEffect(() => {
     const orbit = new OrbitControls(camera, gl.domElement);
     orbit.target.set(...model.camera.target);
@@ -57,7 +71,30 @@ function Controls({ model, enabled, command, selection, onFailure, onReady }: Sc
                 (mesh.geometry.index?.count ?? mesh.geometry.attributes.position.count) / 3;
             }
           });
+          const parts: Record<string, unknown> = {};
+          scene.updateMatrixWorld(true);
+          scene.traverse((object) => {
+            const mesh = object as Mesh;
+            if (!mesh.isMesh) return;
+            const material = mesh.material as import("three").MeshStandardMaterial;
+            const world = mesh.getWorldPosition(new Vector3());
+            mesh.geometry.computeBoundingBox();
+            const pickPoint = mesh.geometry
+              .boundingBox!.getCenter(new Vector3())
+              .applyMatrix4(mesh.matrixWorld)
+              .project(camera);
+            parts[mesh.name] = {
+              pickPoint: pickPoint.toArray(),
+              position: world.toArray(),
+              screen: world.clone().project(camera).toArray(),
+              visible: mesh.visible,
+              opacity: material.opacity,
+              depthWrite: material.depthWrite,
+              transparent: material.transparent,
+            };
+          });
           return {
+            parts,
             triangles,
             meshes,
             frame: gl.info.render.frame,
@@ -87,6 +124,37 @@ function Controls({ model, enabled, command, selection, onFailure, onReady }: Sc
   }, [enabled, gl]);
 
   useEffect(() => {
+    if (focused.current?.componentId !== selection?.componentId) focused.current = null;
+  }, [selection]);
+
+  useEffect(() => {
+    const orbit = controls.current;
+    if (!orbit) return;
+    const factor = 1 + (model.disassembly?.cameraExpansion ?? 0) * separation;
+    camera.position
+      .sub(orbit.target)
+      .multiplyScalar(factor / previousScale.current)
+      .add(orbit.target);
+    previousScale.current = factor;
+    orbit.maxDistance = model.camera.maxDistance * factor;
+    if (focused.current) {
+      const component = model.components.find((c) => c.id === focused.current?.componentId);
+      if (component) {
+        const offset = selectionOffset(
+          model,
+          focused.current,
+          separationOffsets(model, separation),
+        );
+        const target = new Vector3(...component.focus.target).add(new Vector3(...offset));
+        camera.position.add(target.clone().sub(orbit.target));
+        orbit.target.copy(target);
+      }
+    }
+    orbit.update();
+    invalidate();
+  }, [camera, invalidate, model, separation]);
+
+  useEffect(() => {
     const orbit = controls.current;
     if (!orbit || command.sequence === lastCommand.current) return;
     lastCommand.current = command.sequence;
@@ -94,13 +162,18 @@ function Controls({ model, enabled, command, selection, onFailure, onReady }: Sc
     const spherical = new Spherical().setFromVector3(offset);
     const action = command.action;
     if (action === "reset") {
+      focused.current = null;
       camera.position.set(...model.camera.position);
       orbit.target.set(...model.camera.target);
     } else if (action === "focus") {
       const component = model.components.find((item) => item.id === selection?.componentId);
       if (component) {
-        camera.position.set(...component.focus.position);
-        orbit.target.set(...component.focus.target);
+        focused.current = selection;
+        const offset = new Vector3(
+          ...selectionOffset(model, selection, separationOffsets(model, separation)),
+        );
+        camera.position.set(...component.focus.position).add(offset);
+        orbit.target.set(...component.focus.target).add(offset);
       }
     } else {
       if (action === "zoom-in") spherical.radius *= 0.82;
@@ -110,7 +183,7 @@ function Controls({ model, enabled, command, selection, onFailure, onReady }: Sc
       if (action === "up") spherical.phi -= Math.PI / 12;
       if (action === "down") spherical.phi += Math.PI / 12;
       spherical.radius = Math.min(
-        model.camera.maxDistance,
+        orbit.maxDistance,
         Math.max(model.camera.minDistance, spherical.radius),
       );
       spherical.makeSafe();
@@ -118,20 +191,26 @@ function Controls({ model, enabled, command, selection, onFailure, onReady }: Sc
     }
     orbit.update();
     invalidate();
-  }, [camera, command, invalidate, model, selection]);
+  }, [camera, command, invalidate, model, selection, separation]);
   return null;
 }
+
+const ignoreRaycast = () => {};
 
 function Part({
   part,
   component,
   selection,
   onSelect,
+  offset,
+  appearance,
 }: {
   part: PartDefinition;
   component: ComponentDefinition;
   selection: Selection;
   onSelect: SceneProps["onSelect"];
+  offset: import("../model").Vec3;
+  appearance: ReturnType<typeof partAppearance>;
 }) {
   const geometry = useMemo(() => createGeometry(part.geometry), [part.geometry]);
   useEffect(() => () => geometry.dispose(), [geometry]);
@@ -140,7 +219,14 @@ function Part({
   return (
     <mesh
       geometry={geometry}
-      position={part.position}
+      position={[
+        part.position[0] + offset[0],
+        part.position[1] + offset[1],
+        part.position[2] + offset[2],
+      ]}
+      visible={appearance.visible}
+      raycast={appearance.pickable ? Mesh.prototype.raycast : ignoreRaycast}
+      renderOrder={appearance.opacity < 1 ? 10 : 0}
       rotation={part.rotation}
       name={part.id}
       userData={{ componentId: component.id, partId: part.id, assemblyId: part.assemblyId }}
@@ -152,6 +238,9 @@ function Part({
     >
       <meshStandardMaterial
         color={part.color ?? component.color}
+        transparent={appearance.opacity < 1}
+        opacity={appearance.opacity}
+        depthWrite={appearance.opacity === 1}
         metalness={0.48}
         roughness={0.38}
         emissive={selected ? "#38e6ad" : "#000000"}
@@ -162,6 +251,11 @@ function Part({
 }
 
 export default function Scene(props: SceneProps) {
+  const offsets = useMemo(
+    () => separationOffsets(props.model, props.separation),
+    [props.model, props.separation],
+  );
+
   if (props.model.resource.kind !== "procedural")
     throw new Error("No hay adaptador disponible para este recurso.");
   const limited =
@@ -186,6 +280,14 @@ export default function Scene(props: SceneProps) {
             <Part
               key={part.id}
               part={part}
+              offset={offsets[part.id] ?? [0, 0, 0]}
+              appearance={partAppearance(
+                props.model,
+                component.id,
+                part.id,
+                props.transparency,
+                props.isolatedId,
+              )}
               component={component}
               selection={props.selection}
               onSelect={props.onSelect}
