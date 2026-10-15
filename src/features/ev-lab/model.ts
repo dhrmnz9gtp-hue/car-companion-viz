@@ -57,6 +57,25 @@ export interface ComponentDefinition {
   diagram: { labelPosition: [number, number]; anchor: [number, number] };
 }
 
+/** Parameters of an illustrative synchronous lesson, never a field solver. */
+export interface SynchronousLesson {
+  kind: "synchronous-illustration";
+  rotatingAssemblyId: string;
+  polePairs: number;
+  electricalLead: number;
+  displayCyclesPerSecond: number;
+  referenceFrequencyHz: number;
+  phaseOffsets: [number, number, number];
+  fieldMarker: {
+    radius: number;
+    rotorRadius: number;
+    axialPosition: number;
+    referenceAngle: number;
+  };
+  lessons: { title: string; text: string }[];
+  limitations: string[];
+}
+
 export interface ModelDefinition {
   id: string;
   name: string;
@@ -80,6 +99,7 @@ export interface ModelDefinition {
     | { kind: "gltf"; url: string; nodeMap: Record<string, string>; units: "m" };
   components: ComponentDefinition[];
   assemblies: { id: string; parentId?: string; pivot: Vec3; axis?: Vec3 }[];
+  operation?: SynchronousLesson;
   disassembly?: {
     description: string;
     cameraExpansion: number;
@@ -234,6 +254,40 @@ export function validateModel(model: ModelDefinition): string[] {
       model.transparency.shellPartIds.some((id) => !shell.parts.some((p) => p.id === id))
     )
       errors.push("Envolvente transparente inválida");
+  }
+  if (model.operation) {
+    const op = model.operation;
+    const assembly = model.assemblies.find((a) => a.id === op.rotatingAssemblyId);
+    if (!assembly?.axis || !vector(assembly.axis) || Math.hypot(...assembly.axis) === 0)
+      errors.push("Eje de funcionamiento inválido");
+    if (
+      !Number.isInteger(op.polePairs) ||
+      op.polePairs < 1 ||
+      !Number.isFinite(op.electricalLead) ||
+      Math.abs(op.electricalLead) >= Math.PI / 2 ||
+      !Number.isFinite(op.displayCyclesPerSecond) ||
+      op.displayCyclesPerSecond <= 0 ||
+      !Number.isFinite(op.referenceFrequencyHz) ||
+      op.referenceFrequencyHz <= 0
+    )
+      errors.push("Parámetros de funcionamiento inválidos");
+    const phases = op.phaseOffsets;
+    const angularDistance = (a: number, b: number) => Math.acos(Math.cos(a - b));
+    if (
+      phases.length !== 3 ||
+      !phases.every(Number.isFinite) ||
+      phases.some(
+        (p, i) => Math.abs(angularDistance(p, phases[(i + 1) % 3]) - (2 * Math.PI) / 3) > 1e-8,
+      )
+    )
+      errors.push("Desfase trifásico inválido");
+    if (
+      !model.capabilities.animation ||
+      !model.animations.some(
+        (a) => a.assemblyId === op.rotatingAssemblyId && a.kind === "illustrative",
+      )
+    )
+      errors.push("Falta animación ilustrativa declarada");
   }
   return errors;
 }

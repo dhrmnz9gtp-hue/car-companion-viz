@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { Mesh, Spherical, Vector3 } from "three";
+import { Euler, Mesh, Quaternion, Spherical, Vector3 } from "three";
 import type {
   CameraCommand,
   ComponentDefinition,
@@ -10,6 +10,8 @@ import type {
   Selection,
 } from "../model";
 import { partAppearance, selectionOffset, separationOffsets } from "../exploration";
+import { movingAssembly, rotateAround, synchronousState } from "../operation/electromagnetics";
+import { OperationOverlay } from "./OperationOverlay.client";
 import { createGeometry } from "./geometry";
 
 export interface SceneProps {
@@ -20,6 +22,8 @@ export interface SceneProps {
   separation: number;
   transparency: number;
   isolatedId: string | null;
+  operationPhase: number;
+  fieldVisible: boolean;
   command: CameraCommand;
   onFailure: () => void;
   onReady: () => void;
@@ -85,6 +89,8 @@ function Controls({
               .project(camera);
             parts[mesh.name] = {
               pickPoint: pickPoint.toArray(),
+              quaternion: mesh.getWorldQuaternion(new Quaternion()).toArray(),
+              matrix: mesh.matrixWorld.toArray(),
               position: world.toArray(),
               screen: world.clone().project(camera).toArray(),
               visible: mesh.visible,
@@ -204,7 +210,11 @@ function Part({
   onSelect,
   offset,
   appearance,
+  assembly,
+  angle,
 }: {
+  assembly: ModelDefinition["assemblies"][number] | undefined;
+  angle: number;
   part: PartDefinition;
   component: ComponentDefinition;
   selection: Selection;
@@ -214,20 +224,31 @@ function Part({
 }) {
   const geometry = useMemo(() => createGeometry(part.geometry), [part.geometry]);
   useEffect(() => () => geometry.dispose(), [geometry]);
+  const localPivot = assembly?.pivot.map((value, i) => value - component.position[i]) as
+    | import("../model").Vec3
+    | undefined;
+  const position =
+    localPivot && assembly?.axis
+      ? rotateAround(part.position, localPivot, assembly.axis, angle)
+      : part.position;
+  const quaternion = useMemo(() => {
+    const base = new Quaternion().setFromEuler(new Euler(...(part.rotation ?? [0, 0, 0])));
+    return assembly?.axis
+      ? new Quaternion()
+          .setFromAxisAngle(new Vector3(...assembly.axis).normalize(), angle)
+          .multiply(base)
+      : base;
+  }, [part.rotation, assembly, angle]);
   const selected = selection?.componentId === component.id;
   const exact = selected && selection?.partId === part.id;
   return (
     <mesh
       geometry={geometry}
-      position={[
-        part.position[0] + offset[0],
-        part.position[1] + offset[1],
-        part.position[2] + offset[2],
-      ]}
+      position={[position[0] + offset[0], position[1] + offset[1], position[2] + offset[2]]}
       visible={appearance.visible}
       raycast={appearance.pickable ? Mesh.prototype.raycast : ignoreRaycast}
       renderOrder={appearance.opacity < 1 ? 10 : 0}
-      rotation={part.rotation}
+      quaternion={quaternion}
       name={part.id}
       userData={{ componentId: component.id, partId: part.id, assemblyId: part.assemblyId }}
       onClick={(event) => {
@@ -258,6 +279,9 @@ export default function Scene(props: SceneProps) {
 
   if (props.model.resource.kind !== "procedural")
     throw new Error("No hay adaptador disponible para este recurso.");
+  const angle = props.model.operation
+    ? synchronousState(props.operationPhase, props.model.operation).mechanical
+    : 0;
   const limited =
     typeof navigator !== "undefined" &&
     (navigator.hardwareConcurrency <= 4 || window.matchMedia("(max-width: 767px)").matches);
@@ -280,6 +304,8 @@ export default function Scene(props: SceneProps) {
             <Part
               key={part.id}
               part={part}
+              assembly={movingAssembly(props.model, part.assemblyId)}
+              angle={angle}
               offset={offsets[part.id] ?? [0, 0, 0]}
               appearance={partAppearance(
                 props.model,
@@ -295,6 +321,9 @@ export default function Scene(props: SceneProps) {
           ))}
         </group>
       ))}
+      {props.fieldVisible && props.model.operation && (
+        <OperationOverlay model={props.model} phase={props.operationPhase} />
+      )}
       <Controls {...props} />
     </Canvas>
   );

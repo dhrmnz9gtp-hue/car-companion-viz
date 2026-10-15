@@ -28,10 +28,11 @@ describe("Educational resource contract", () => {
     expect(validateModel(model).some((e) => e.includes("Ensamblaje inexistente"))).toBe(true);
     expect(validateModel(model).some((e) => e.includes("Geometría inválida"))).toBe(true);
   });
-  test("prepared capabilities do not advertise unimplemented simulations or animation", () => {
-    expect(pmsmModel.animations).toHaveLength(0);
-    for (const capability of ["animation", "simulation"] as const)
-      expect(pmsmModel.capabilities[capability]).toBe(false);
+  test("declares illustrative rotation but no engineering simulation", () => {
+    expect(pmsmModel.animations).toHaveLength(1);
+    expect(pmsmModel.animations[0].kind).toBe("illustrative");
+    expect(pmsmModel.capabilities.animation).toBe(true);
+    expect(pmsmModel.capabilities.simulation).toBe(false);
   });
 });
 

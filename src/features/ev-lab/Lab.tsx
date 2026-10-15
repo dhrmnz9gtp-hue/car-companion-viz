@@ -18,6 +18,8 @@ import {
 import type { CameraCommand, ModelDefinition, Selection } from "./model";
 import { useSeparation } from "./useSeparation";
 import { AssemblyControls } from "./AssemblyControls";
+import { usePlayback } from "./operation/usePlayback";
+import { OperationPanel } from "./operation/OperationPanel";
 import { Viewport } from "./viewer/Viewport";
 import "./lab.css";
 
@@ -35,6 +37,21 @@ export function Lab({
   Diagram: ComponentType<DiagramProps>;
 }) {
   const separation = useSeparation();
+  const playback = usePlayback(
+    model.operation?.displayCyclesPerSecond ?? 0.5,
+    model.operation?.polePairs ?? 1,
+  );
+  const [operationEnabled, setOperationEnabled] = useState(false);
+  const [showField, setShowField] = useState(true);
+  const { pause } = playback;
+  const blockedByAssembly = separation.value > 0 || separation.moving;
+  const assemblySeparation = {
+    ...separation,
+    moveTo: (value: number, duration?: number) => {
+      pause();
+      separation.moveTo(value, duration);
+    },
+  };
   const [transparency, setTransparency] = useState(0);
   const [isolatedId, setIsolatedId] = useState<string | null>(null);
   const [selection, setSelection] = useState<Selection>(null);
@@ -57,11 +74,24 @@ export function Lab({
   useEffect(() => {
     if (mode !== "3d" || !sceneReady) stop();
   }, [mode, sceneReady, stop]);
+  useEffect(() => {
+    pause();
+  }, [mode, operationEnabled, pause]);
+  useEffect(() => {
+    if ((mode === "3d" && !sceneReady) || blockedByAssembly) pause();
+  }, [mode, sceneReady, blockedByAssembly, pause]);
+  const blocked = blockedByAssembly
+    ? "Ensambla el motor al 0% para iniciar el funcionamiento."
+    : mode === "3d" && !sceneReady
+      ? "Elige Esquema 2D para explorar las señales sin WebGL."
+      : null;
+  const fieldHidden = blockedByAssembly || !!isolatedId;
   const selected = model.components.find((component) => component.id === selection?.componentId);
   const selectedPart = selected?.parts.find((part) => part.id === selection?.partId);
   const issue = (action: CameraCommand["action"]) =>
     setCommand((previous) => ({ sequence: previous.sequence + 1, action }));
   const reset = () => {
+    playback.reset();
     separation.reset();
     setTransparency(0);
     setIsolatedId(null);
@@ -116,6 +146,15 @@ export function Lab({
               <div>
                 <span className="lab-small-label">{model.lesson.shortName.toUpperCase()}</span>
                 <h2>{model.name}</h2>
+                {model.operation && (
+                  <button
+                    className="lab-operation-toggle"
+                    aria-pressed={operationEnabled}
+                    onClick={() => setOperationEnabled((value) => !value)}
+                  >
+                    {operationEnabled ? "Volver a explorar" : "Cómo funciona"}
+                  </button>
+                )}
               </div>
               <div className="lab-mode" role="group" aria-label="Tipo de vista">
                 <button aria-pressed={mode === "3d"} onClick={() => setMode("3d")}>
@@ -170,6 +209,8 @@ export function Lab({
                   separation={separation.value}
                   transparency={transparency}
                   isolatedId={isolatedId}
+                  operationPhase={playback.phase}
+                  fieldVisible={operationEnabled && showField && !fieldHidden}
                   command={command}
                   fallback={fallback}
                   onAvailabilityChange={setSceneReady}
@@ -227,7 +268,7 @@ export function Lab({
             {mode === "3d" && sceneReady ? (
               <AssemblyControls
                 model={model}
-                separation={separation}
+                separation={assemblySeparation}
                 transparency={transparency}
                 setTransparency={setTransparency}
                 selectedId={selection?.componentId ?? null}
@@ -269,51 +310,67 @@ export function Lab({
           </section>
 
           <aside className="lab-education" aria-label="Explicación del componente">
-            <div className="lab-education-top">
-              <span className="lab-small-label">ENTIENDE CADA PIEZA</span>
-              <span className="lab-number">
-                {selected
-                  ? String(model.components.indexOf(selected) + 1).padStart(2, "0")
-                  : `01–${String(model.components.length).padStart(2, "0")}`}
-              </span>
-            </div>
-            <div aria-live="polite" aria-atomic="true">
-              <div className="lab-component-symbol" style={{ color: selected?.color ?? "#6ee7b7" }}>
-                {selected ? (
-                  <Box size={31} strokeWidth={1.25} />
-                ) : (
-                  <Zap size={31} strokeWidth={1.25} />
-                )}
-              </div>
-              <p className="lab-small-label">
-                {selected ? "COMPONENTE SELECCIONADO" : "EL PRINCIPIO"}
-              </p>
-              <h2>{selected?.name ?? model.lesson.overviewTitle}</h2>
-              <p className="lab-function">
-                {selected?.education.function ?? model.lesson.overviewFunction}
-              </p>
-              {selectedPart && <p className="lab-part-name">Pieza: {selectedPart.label}</p>}
-              <div className="lab-explanation">
-                <h3>{selected ? "Cómo funciona" : "Explora a tu ritmo"}</h3>
-                <p>
-                  {selected?.education.explanation ??
-                    "Selecciona una pieza del modelo o de la lista de componentes. Verás para qué sirve y cómo se relaciona con el resto del sistema."}
-                </p>
-              </div>
-              <div className="lab-connection">
-                <span className="lab-connection-line" />
-                <h3>{selected ? "Su papel en el sistema" : model.lesson.overviewQuestion}</h3>
-                <p>{selected?.education.relationship ?? model.lesson.overviewAnswer}</p>
-              </div>
-            </div>
-            {selected && mode === "3d" && sceneReady && (
-              <button className="lab-focus" onClick={() => issue("focus")}>
-                <Crosshair size={16} />
-                Enfocar componente
-                <Maximize2 size={14} />
-              </button>
+            {operationEnabled && model.operation && (
+              <OperationPanel
+                lesson={model.operation}
+                playback={playback}
+                blocked={blocked}
+                showField={showField}
+                setShowField={setShowField}
+                fieldHidden={fieldHidden}
+                is2d={mode === "2d" || !sceneReady}
+              />
             )}
-            <p className="lab-education-hint">También puedes seleccionar con el teclado.</p>
+            <div hidden={operationEnabled && !selected}>
+              <div className="lab-education-top">
+                <span className="lab-small-label">ENTIENDE CADA PIEZA</span>
+                <span className="lab-number">
+                  {selected
+                    ? String(model.components.indexOf(selected) + 1).padStart(2, "0")
+                    : `01–${String(model.components.length).padStart(2, "0")}`}
+                </span>
+              </div>
+              <div aria-live="polite" aria-atomic="true">
+                <div
+                  className="lab-component-symbol"
+                  style={{ color: selected?.color ?? "#6ee7b7" }}
+                >
+                  {selected ? (
+                    <Box size={31} strokeWidth={1.25} />
+                  ) : (
+                    <Zap size={31} strokeWidth={1.25} />
+                  )}
+                </div>
+                <p className="lab-small-label">
+                  {selected ? "COMPONENTE SELECCIONADO" : "EL PRINCIPIO"}
+                </p>
+                <h2>{selected?.name ?? model.lesson.overviewTitle}</h2>
+                <p className="lab-function">
+                  {selected?.education.function ?? model.lesson.overviewFunction}
+                </p>
+                {selectedPart && <p className="lab-part-name">Pieza: {selectedPart.label}</p>}
+                <div className="lab-explanation">
+                  <h3>{selected ? "Cómo funciona" : "Explora a tu ritmo"}</h3>
+                  <p>
+                    {selected?.education.explanation ??
+                      "Selecciona una pieza del modelo o de la lista de componentes. Verás para qué sirve y cómo se relaciona con el resto del sistema."}
+                  </p>
+                </div>
+                <div className="lab-connection">
+                  <span className="lab-connection-line" />
+                  <h3>{selected ? "Su papel en el sistema" : model.lesson.overviewQuestion}</h3>
+                  <p>{selected?.education.relationship ?? model.lesson.overviewAnswer}</p>
+                </div>
+              </div>
+              {selected && mode === "3d" && sceneReady && (
+                <button className="lab-focus" onClick={() => issue("focus")}>
+                  <Crosshair size={16} />
+                  Enfocar componente
+                  <Maximize2 size={14} />
+                </button>
+              )}
+              <p className="lab-education-hint">También puedes seleccionar con el teclado.</p>
+            </div>
           </aside>
         </div>
 

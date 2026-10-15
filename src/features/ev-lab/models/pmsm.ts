@@ -174,7 +174,7 @@ export const pmsmModel: ModelDefinition = {
   technology: "motor.pmsm",
   description:
     "Explora cómo la electricidad se transforma en movimiento. Siete componentes, un mismo sistema.",
-  resourceVersion: "1.1.0",
+  resourceVersion: "1.2.0",
   lesson: {
     section: "01 · PROPULSIÓN",
     shortName: "Motor PMSM",
@@ -261,11 +261,69 @@ export const pmsmModel: ModelDefinition = {
     explode: true,
     transparency: true,
     isolation: true,
-    animation: false,
+    animation: true,
     simulation: false,
   },
-  animations: [],
+  animations: [
+    {
+      id: "synchronous-rotation",
+      assemblyId: rotating,
+      kind: "illustrative",
+      description:
+        "Giro síncrono ideal con corrientes normalizadas; no resuelve campos ni dinámica de torque.",
+      referenceIds: ["mathworks-clarke", "microchip-pmsm"],
+    },
+  ],
+  operation: {
+    kind: "synchronous-illustration",
+    rotatingAssemblyId: rotating,
+    polePairs: 4,
+    electricalLead: PI / 6,
+    displayCyclesPerSecond: 0.5,
+    referenceFrequencyHz: 50,
+    phaseOffsets: [0, (-2 * PI) / 3, (2 * PI) / 3],
+    fieldMarker: { radius: 2.25, rotorRadius: 1.04, axialPosition: 1.7, referenceAngle: PI / 8 },
+    lessons: [
+      {
+        title: "Un campo que gira",
+        text: "Las corrientes de las bobinas varían coordinadamente. En una máquina ideal con devanados distribuidos apropiadamente, su efecto combinado forma un patrón magnético que avanza alrededor del entrehierro. El estator no gira.",
+      },
+      {
+        title: "Tres fases, un mismo ritmo",
+        text: "A, B y C tienen la misma frecuencia y se desplazan 120° eléctricos entre sí: un tercio de ciclo. Sus valores positivos y negativos indican sentidos opuestos de corriente. Aquí se normalizan entre −1 y +1; no son amperios medidos.",
+      },
+      {
+        title: "Los imanes del rotor",
+        text: "Los ocho polos permanentes aportan el campo del rotor. No necesitan corriente en una bobina del rotor, pero tampoco aportan energía ilimitada: la energía útil procede de la alimentación eléctrica del estator.",
+      },
+      {
+        title: "Por qué aparece el giro",
+        text: "La interacción entre el campo del estator y el de los imanes puede producir torque. Aquí imponemos un adelanto constante de 30° eléctricos del campo respecto al rotor para ilustrar el giro motor. No calculamos ese ángulo a partir de una carga ni simulamos el arranque.",
+      },
+      {
+        title: "Qué significa síncrono",
+        text: "En régimen síncrono, el rotor y el patrón magnético del estator giran a la misma velocidad mecánica, con un desfase constante. Eso no obliga a que sus ejes magnéticos estén alineados. Cambiar la reproducción solo acelera o ralentiza la explicación.",
+      },
+      {
+        title: "Frecuencia y velocidad",
+        text: "La velocidad síncrona es nₛ = 60 fₑ / p, con fₑ en Hz y p en pares de polos. Este recurso tiene ocho polos: cuatro pares. Por eso cuatro ciclos eléctricos equivalen a una vuelta mecánica. La fórmula describe sincronismo ideal; no predice torque ni eficiencia.",
+      },
+    ],
+    limitations: [
+      "Esquema angular, no cálculo electromagnético: no mostramos líneas de flujo ni valores de densidad magnética.",
+      "La dirección equivalente procede de corrientes trifásicas ideales equilibradas. Se omiten saturación, armónicos, PWM, pérdidas, transitorios y carga mecánica.",
+      "Las señales no reconstruyen las conexiones reales de cada bobina de la geometría simplificada. Los colores del cobre no representan corrientes instantáneas.",
+      "Se animan rotor, eje, imanes y pistas interiores. La rodadura de las bolas de los rodamientos no se representa.",
+    ],
+  },
   references: [
+    {
+      id: "mathworks-clarke",
+      title: "MathWorks · Clarke Transform",
+      url: "https://www.mathworks.com/help/mcb/ref/clarketransform.html",
+      scope:
+        "Conversión de corrientes trifásicas equilibradas a un vector equivalente en coordenadas αβ. No determina la distribución espacial del campo de este modelo.",
+    },
     {
       id: "microchip-pmsm",
       title: "Microchip · Permanent Magnet Synchronous Motor",
