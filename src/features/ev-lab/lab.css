@@ -496,7 +496,7 @@
 }
 .lab-component-list {
   display: grid;
-  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
   gap: 8px;
 }
 .lab-component-list button {
@@ -1179,4 +1179,134 @@
 }
 .lab-operation li {
   margin-bottom: 9px;
+}
+
+/* Independent reading sections below exploration; electrical tools stay alongside. */
+.lab-workbench {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "viewer" "components" "education" "lessons";
+  align-items: start;
+}
+.lab-workbench.is-operating {
+  grid-template-columns: minmax(0, 1fr) 330px;
+  grid-template-areas:
+    "viewer electrical"
+    "components electrical"
+    "education electrical"
+    "lessons electrical";
+  grid-template-rows: repeat(4, max-content);
+}
+.lab-viewer-card {
+  grid-area: viewer;
+}
+.lab-components {
+  grid-area: components;
+  margin-top: 0;
+}
+.lab-education {
+  grid-area: education;
+}
+.lab-electrical {
+  grid-area: electrical;
+  min-width: 0;
+  padding: 24px;
+  background: linear-gradient(145deg, #102333, #0d1a2b);
+  border: 1px solid #2b4053;
+  border-radius: 18px;
+}
+.lab-electrical .lab-operation {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+.lab-component-copy {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+}
+.lab-component-copy > * {
+  grid-column: 1 / -1;
+}
+.lab-component-copy .lab-component-symbol {
+  float: none;
+  margin: 18px 0;
+}
+.lab-component-copy .lab-explanation {
+  grid-column: 1;
+}
+.lab-component-copy .lab-connection {
+  grid-column: 2;
+  border-top: 1px solid #294052;
+  padding-top: 20px;
+  margin-top: 22px;
+}
+.lab-component-copy .lab-connection-line {
+  top: 20px;
+}
+.lab-component-copy p {
+  max-width: 65ch;
+}
+.lab-education .lab-focus {
+  width: fit-content;
+  min-height: 44px;
+}
+.lab-lessons {
+  grid-area: lessons;
+  min-width: 0;
+  padding: 24px;
+  border: 1px solid #2b4053;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #102333, #0d1a2b);
+}
+.lab-operation-lessons {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  column-gap: 28px;
+  align-items: start;
+  margin-top: 18px;
+}
+.lab-lessons details {
+  border-top: 1px solid #2c4353;
+  font-size: 12px;
+}
+.lab-lessons summary {
+  padding: 14px 0;
+  min-height: 44px;
+  cursor: pointer;
+  color: #d5e4ed;
+}
+.lab-lessons p,
+.lab-lessons li {
+  max-width: 65ch;
+  color: #b0c3d2;
+  font-size: 11px;
+  line-height: 1.65;
+}
+.lab-lessons ul {
+  padding-left: 17px;
+}
+.lab-lessons li {
+  margin-bottom: 9px;
+}
+@media (max-width: 1100px) {
+  .lab-workbench.is-operating {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas: "viewer" "electrical" "components" "education" "lessons";
+    grid-template-rows: auto;
+  }
+}
+@media (max-width: 600px) {
+  .lab-component-copy,
+  .lab-operation-lessons {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .lab-component-copy .lab-explanation,
+  .lab-component-copy .lab-connection {
+    grid-column: 1;
+  }
+  .lab-electrical,
+  .lab-education,
+  .lab-lessons {
+    padding: 20px;
+  }
 }

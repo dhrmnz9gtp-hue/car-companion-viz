@@ -92,9 +92,14 @@ try {
   assert.notDeepEqual((await diagnostic(page)).target, baseline.target);
   await page.getByRole("button", { name: "Restablecer vista" }).click();
   assert.equal(await page.locator('.lab-component-list [aria-pressed="true"]').count(), 0);
-  await page.mouse.move(box.x + box.width * 0.46, box.y + box.height * 0.52);
+  // Focusing a component can scroll to its explanation below the viewer.
+  await canvas.scrollIntoViewIfNeeded();
+  const orbitBox = await canvas.boundingBox();
+  await page.mouse.move(orbitBox.x + orbitBox.width * 0.46, orbitBox.y + orbitBox.height * 0.52);
   await page.mouse.down();
-  await page.mouse.move(box.x + box.width * 0.68, box.y + box.height * 0.55, { steps: 12 });
+  await page.mouse.move(orbitBox.x + orbitBox.width * 0.68, orbitBox.y + orbitBox.height * 0.55, {
+    steps: 12,
+  });
   await page.mouse.up();
   assert.notDeepEqual((await diagnostic(page)).camera, baseline.camera);
   assert.equal(

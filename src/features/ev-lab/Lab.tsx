@@ -20,6 +20,7 @@ import { useSeparation } from "./useSeparation";
 import { AssemblyControls } from "./AssemblyControls";
 import { usePlayback } from "./operation/usePlayback";
 import { OperationPanel } from "./operation/OperationPanel";
+import { OperationLessons } from "./operation/OperationLessons";
 import { Viewport } from "./viewer/Viewport";
 import "./lab.css";
 
@@ -140,7 +141,9 @@ export function Lab({
           </div>
         </header>
 
-        <div className="lab-workbench">
+        <div
+          className={`lab-workbench${operationEnabled && model.operation ? " is-operating" : ""}`}
+        >
           <section className="lab-viewer-card" aria-label="Exploración del modelo">
             <div className="lab-viewer-head">
               <div>
@@ -283,6 +286,20 @@ export function Lab({
             )}
           </section>
 
+          {operationEnabled && model.operation && (
+            <aside className="lab-electrical" aria-label="Herramientas de funcionamiento eléctrico">
+              <OperationPanel
+                lesson={model.operation}
+                playback={playback}
+                blocked={blocked}
+                showField={showField}
+                setShowField={setShowField}
+                fieldHidden={fieldHidden}
+                is2d={mode === "2d" || !sceneReady}
+              />
+            </aside>
+          )}
+
           <section
             className="lab-components"
             id="lab-components"
@@ -309,19 +326,8 @@ export function Lab({
             </div>
           </section>
 
-          <aside className="lab-education" aria-label="Explicación del componente">
-            {operationEnabled && model.operation && (
-              <OperationPanel
-                lesson={model.operation}
-                playback={playback}
-                blocked={blocked}
-                showField={showField}
-                setShowField={setShowField}
-                fieldHidden={fieldHidden}
-                is2d={mode === "2d" || !sceneReady}
-              />
-            )}
-            <div hidden={operationEnabled && !selected}>
+          <section className="lab-education" aria-label="Explicación del componente">
+            <div>
               <div className="lab-education-top">
                 <span className="lab-small-label">ENTIENDE CADA PIEZA</span>
                 <span className="lab-number">
@@ -330,7 +336,7 @@ export function Lab({
                     : `01–${String(model.components.length).padStart(2, "0")}`}
                 </span>
               </div>
-              <div aria-live="polite" aria-atomic="true">
+              <div className="lab-component-copy" aria-live="polite" aria-atomic="true">
                 <div
                   className="lab-component-symbol"
                   style={{ color: selected?.color ?? "#6ee7b7" }}
@@ -371,7 +377,8 @@ export function Lab({
               )}
               <p className="lab-education-hint">También puedes seleccionar con el teclado.</p>
             </div>
-          </aside>
+          </section>
+          {operationEnabled && model.operation && <OperationLessons lesson={model.operation} />}
         </div>
 
         <section className="lab-note" aria-label="Alcance del recurso educativo">
