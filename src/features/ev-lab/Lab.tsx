@@ -21,6 +21,10 @@ import { AssemblyControls } from "./AssemblyControls";
 import { usePlayback } from "./operation/usePlayback";
 import { OperationPanel } from "./operation/OperationPanel";
 import { OperationLessons } from "./operation/OperationLessons";
+import { SimulationPanel } from "./simulation/SimulationPanel";
+import { SimulationLessons } from "./simulation/SimulationLessons";
+import { useSimulation } from "./simulation/useSimulation";
+import { visualCyclesPerSecond } from "./simulation/physics";
 import { Viewport } from "./viewer/Viewport";
 import "./lab.css";
 
@@ -38,13 +42,27 @@ export function Lab({
   Diagram: ComponentType<DiagramProps>;
 }) {
   const separation = useSeparation();
+  const [lessonMode, setLessonMode] = useState<"explore" | "operation" | "simulation">("explore");
+  const operationEnabled = lessonMode === "operation";
+  const simulationEnabled = lessonMode === "simulation";
+  const simulation = useSimulation(model.simulation);
   const playback = usePlayback(
-    model.operation?.displayCyclesPerSecond ?? 0.5,
+    simulationEnabled
+      ? visualCyclesPerSecond(
+          simulation.point.angularSpeed,
+          simulation.timeScale,
+          model.operation?.polePairs ?? 1,
+        )
+      : (model.operation?.displayCyclesPerSecond ?? 0.5),
     model.operation?.polePairs ?? 1,
+    simulationEnabled ? 1 : undefined,
   );
-  const [operationEnabled, setOperationEnabled] = useState(false);
   const [showField, setShowField] = useState(true);
   const { pause } = playback;
+  const changeLesson = (next: typeof lessonMode) => {
+    pause();
+    setLessonMode(next);
+  };
   const blockedByAssembly = separation.value > 0 || separation.moving;
   const assemblySeparation = {
     ...separation,
@@ -77,14 +95,19 @@ export function Lab({
   }, [mode, sceneReady, stop]);
   useEffect(() => {
     pause();
-  }, [mode, operationEnabled, pause]);
+  }, [mode, lessonMode, pause]);
   useEffect(() => {
     if ((mode === "3d" && !sceneReady) || blockedByAssembly) pause();
   }, [mode, sceneReady, blockedByAssembly, pause]);
+  useEffect(() => {
+    if (simulationEnabled && simulation.point.angularSpeed === 0) pause();
+  }, [simulationEnabled, simulation.point.angularSpeed, pause]);
   const blocked = blockedByAssembly
     ? "Ensambla el motor al 0% para iniciar el funcionamiento."
     : mode === "3d" && !sceneReady
-      ? "Elige Esquema 2D para explorar las señales sin WebGL."
+      ? simulationEnabled
+        ? "El visor 3D no está disponible. Puedes seguir calculando y usar el esquema 2D."
+        : "Elige Esquema 2D para explorar las señales sin WebGL."
       : null;
   const fieldHidden = blockedByAssembly || !!isolatedId;
   const selected = model.components.find((component) => component.id === selection?.componentId);
@@ -142,7 +165,7 @@ export function Lab({
         </header>
 
         <div
-          className={`lab-workbench${operationEnabled && model.operation ? " is-operating" : ""}`}
+          className={`lab-workbench${(operationEnabled && model.operation) || (simulationEnabled && model.simulation) ? " is-operating" : ""}`}
         >
           <section className="lab-viewer-card" aria-label="Exploración del modelo">
             <div className="lab-viewer-head">
@@ -150,21 +173,51 @@ export function Lab({
                 <span className="lab-small-label">{model.lesson.shortName.toUpperCase()}</span>
                 <h2>{model.name}</h2>
                 {model.operation && (
-                  <button
-                    className="lab-operation-toggle"
-                    aria-pressed={operationEnabled}
-                    onClick={() => setOperationEnabled((value) => !value)}
-                  >
-                    {operationEnabled ? "Volver a explorar" : "Cómo funciona"}
-                  </button>
+                  <div className="lab-lesson-modes" role="group" aria-label="Modo educativo">
+                    <button
+                      className="lab-operation-toggle"
+                      aria-pressed={lessonMode === "explore"}
+                      onClick={() => changeLesson("explore")}
+                    >
+                      Explorar
+                    </button>
+                    <button
+                      className="lab-operation-toggle"
+                      aria-pressed={operationEnabled}
+                      onClick={() => changeLesson("operation")}
+                    >
+                      Cómo funciona
+                    </button>
+                    {model.simulation && (
+                      <button
+                        className="lab-operation-toggle"
+                        aria-pressed={simulationEnabled}
+                        onClick={() => changeLesson("simulation")}
+                      >
+                        Simular
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
               <div className="lab-mode" role="group" aria-label="Tipo de vista">
-                <button aria-pressed={mode === "3d"} onClick={() => setMode("3d")}>
+                <button
+                  aria-pressed={mode === "3d"}
+                  onClick={() => {
+                    pause();
+                    setMode("3d");
+                  }}
+                >
                   <Box size={14} />
                   3D
                 </button>
-                <button aria-pressed={mode === "2d"} onClick={() => setMode("2d")}>
+                <button
+                  aria-pressed={mode === "2d"}
+                  onClick={() => {
+                    pause();
+                    setMode("2d");
+                  }}
+                >
                   Esquema 2D
                 </button>
               </div>
@@ -300,6 +353,18 @@ export function Lab({
             </aside>
           )}
 
+          {simulationEnabled && model.simulation && (
+            <aside className="lab-electrical" aria-label="Herramientas de simulación">
+              <SimulationPanel
+                definition={model.simulation}
+                simulation={simulation}
+                playback={playback}
+                blocked={blocked}
+                is2d={mode === "2d" || !sceneReady}
+              />
+            </aside>
+          )}
+
           <section
             className="lab-components"
             id="lab-components"
@@ -379,6 +444,7 @@ export function Lab({
             </div>
           </section>
           {operationEnabled && model.operation && <OperationLessons lesson={model.operation} />}
+          {simulationEnabled && model.simulation && <SimulationLessons />}
         </div>
 
         <section className="lab-note" aria-label="Alcance del recurso educativo">

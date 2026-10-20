@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { advancePlayback, TAU } from "./electromagnetics";
 
-export function usePlayback(cyclesPerSecond: number, cycleCount: number) {
+export function usePlayback(cyclesPerSecond: number, cycleCount: number, speedOverride?: number) {
   const [phase, setPhase] = useState(0);
   const [running, setRunning] = useState(false);
   const [speed, setSpeed] = useState(1);
+  const effectiveSpeed = speedOverride ?? speed;
   const current = useRef(0);
   const [reducedMotion, setReducedMotion] = useState(false);
   const pause = useCallback(() => setRunning(false), []);
@@ -47,7 +48,7 @@ export function usePlayback(cyclesPerSecond: number, cycleCount: number) {
         current.current,
         (now - previous) / 1000,
         cyclesPerSecond,
-        speed,
+        effectiveSpeed,
         cycleCount,
       );
       previous = now;
@@ -56,7 +57,7 @@ export function usePlayback(cyclesPerSecond: number, cycleCount: number) {
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [running, speed, cyclesPerSecond, cycleCount]);
+  }, [running, effectiveSpeed, cyclesPerSecond, cycleCount]);
   return {
     phase,
     running,

@@ -18,7 +18,7 @@ describe("Three-phase and synchronous relationships", () => {
     expect(model.components.find((c) => c.id === "magnets")!.parts.length).toBe(
       2 * lesson.polePairs,
     );
-    expect(model.capabilities.simulation).toBe(false);
+    expect(model.capabilities.simulation).toBe(true);
     const invalid = structuredClone(model);
     invalid.operation!.polePairs = 0;
     invalid.operation!.phaseOffsets = [0, 0, 0];

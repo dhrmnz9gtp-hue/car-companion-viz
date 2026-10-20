@@ -1,3 +1,6 @@
+import type { SimulationDefinition } from "./simulation/definition";
+import { withinLesson } from "./simulation/definition";
+import { calculatePoint } from "./simulation/physics";
 /** Serializable educational content. No React, Three.js or browser dependencies. */
 export type Vec3 = [number, number, number];
 export type Technology =
@@ -100,6 +103,7 @@ export interface ModelDefinition {
   components: ComponentDefinition[];
   assemblies: { id: string; parentId?: string; pivot: Vec3; axis?: Vec3 }[];
   operation?: SynchronousLesson;
+  simulation?: SimulationDefinition;
   disassembly?: {
     description: string;
     cameraExpansion: number;
@@ -288,6 +292,33 @@ export function validateModel(model: ModelDefinition): string[] {
       )
     )
       errors.push("Falta animación ilustrativa declarada");
+  }
+  if (model.capabilities.simulation !== !!model.simulation)
+    errors.push("Capacidad de simulación sin definición coherente");
+  if (model.simulation) {
+    const sim = model.simulation;
+    if (
+      !model.operation ||
+      sim.kind !== "steady-motor" ||
+      !Object.values(sim.bounds).every(
+        ([min, max]) => Number.isFinite(min) && Number.isFinite(max) && min >= 0 && min < max,
+      ) ||
+      sim.bounds.efficiency[0] <= 0 ||
+      sim.bounds.efficiency[1] > 1 ||
+      !sim.timeScales.length ||
+      !sim.timeScales.every((v) => Number.isFinite(v) && v > 0 && v <= 1) ||
+      !sim.timeScales.includes(sim.defaultTimeScale)
+    )
+      errors.push("Parámetros de simulación inválidos");
+    if (sim.defaults.length !== 2) errors.push("Se requieren dos escenarios iniciales");
+    for (const point of sim.defaults) {
+      try {
+        calculatePoint(point);
+        if (!withinLesson(point, sim)) errors.push("Escenario fuera del rango ilustrativo");
+      } catch {
+        errors.push("Escenario de simulación inválido");
+      }
+    }
   }
   return errors;
 }

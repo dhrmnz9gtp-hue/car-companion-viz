@@ -1,3 +1,4 @@
+import { motorPowerLesson } from "../simulation/definition";
 import type { ComponentDefinition, ModelDefinition, PartDefinition, Vec3 } from "../model";
 
 const PI = Math.PI;
@@ -174,7 +175,7 @@ export const pmsmModel: ModelDefinition = {
   technology: "motor.pmsm",
   description:
     "Explora cómo la electricidad se transforma en movimiento. Siete componentes, un mismo sistema.",
-  resourceVersion: "1.2.0",
+  resourceVersion: "1.3.0",
   lesson: {
     section: "01 · PROPULSIÓN",
     shortName: "Motor PMSM",
@@ -262,7 +263,7 @@ export const pmsmModel: ModelDefinition = {
     transparency: true,
     isolation: true,
     animation: true,
-    simulation: false,
+    simulation: true,
   },
   animations: [
     {
@@ -274,6 +275,7 @@ export const pmsmModel: ModelDefinition = {
       referenceIds: ["mathworks-clarke", "microchip-pmsm"],
     },
   ],
+  simulation: motorPowerLesson,
   operation: {
     kind: "synchronous-illustration",
     rotatingAssemblyId: rotating,
