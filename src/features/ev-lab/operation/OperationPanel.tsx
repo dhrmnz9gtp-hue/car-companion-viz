@@ -36,7 +36,12 @@ export function OperationPanel({
         <button onClick={playback.reset}>Restablecer funcionamiento</button>
       </div>
       <p className="lab-playback-status" role="status">
-        {blocked ?? (playback.running ? "Reproduciendo" : "En pausa")}
+        {blocked ??
+          (playback.running
+            ? playback.suspended
+              ? "En pausa por visibilidad; vuelve al visor para continuar."
+              : "Reproduciendo"
+            : "En pausa")}
       </p>
       <label className="lab-speed-label">
         Velocidad de reproducción

@@ -86,6 +86,8 @@ try {
   pass("Current readouts follow the same electrical phase as the mechanical rotation");
   await page.getByRole("button", { name: "Restablecer funcionamiento", exact: true }).click();
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(250);
   assert(Number(await page.locator("#lab-cycle").inputValue()) > 0);
   await page.getByRole("button", { name: "Seleccionar Imanes permanentes", exact: true }).click();
@@ -98,12 +100,16 @@ try {
   await page.getByLabel("Velocidad de reproducción").selectOption("0.25");
   await page.getByRole("button", { name: "Restablecer funcionamiento", exact: true }).click();
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   const slow = Number(await page.locator("#lab-cycle").inputValue());
   await page.getByLabel("Velocidad de reproducción").selectOption("2");
   await page.getByRole("button", { name: "Restablecer funcionamiento", exact: true }).click();
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   const fast = Number(await page.locator("#lab-cycle").inputValue());
@@ -137,6 +143,8 @@ try {
   assert.equal((await diag(page)).parts["housing.shell"].opacity, 0.4);
   pass("Rotated geometry remains pickable; isolation and transparency preserve the lesson");
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page.getByRole("button", { name: "Desmontar", exact: true }).click();
   await stable(page);
   const frozen = await page.locator("#lab-cycle").inputValue();
@@ -164,6 +172,8 @@ try {
   await page.getByRole("button", { name: "Esquema 2D", exact: true }).click();
   assert.equal(await page.locator("canvas").count(), 0);
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(200);
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   assert(Number(await page.locator("#lab-cycle").inputValue()) > 0);
@@ -175,6 +185,8 @@ try {
   await page.getByRole("button", { name: "3D", exact: true }).click();
   await ready(page);
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page
     .locator("canvas")
     .evaluate((c) => c.getContext("webgl2").getExtension("WEBGL_lose_context").loseContext());
@@ -202,6 +214,8 @@ try {
   await phone.getByRole("button", { name: "Cómo funciona", exact: true }).tap();
   assert.equal(await phone.getByRole("button", { name: "Pausar", exact: true }).isDisabled(), true);
   await phone.getByRole("button", { name: "Iniciar", exact: true }).tap();
+  // Playback suspends when the 3D stage is offscreen.
+  await phone.locator(".lab-stage").scrollIntoViewIfNeeded();
   await phone.waitForTimeout(200);
   await phone.getByRole("button", { name: "Pausar", exact: true }).tap();
   assert(Number(await phone.locator("#lab-cycle").inputValue()) > 0);

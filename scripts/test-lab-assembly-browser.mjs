@@ -103,7 +103,10 @@ try {
   assert.equal(exploded.geometries, original.geometries);
   await page.locator(".lab-stage").screenshot({ path: output + "/desmontado.png" });
   await page.screenshot({ path: output + "/desmontado-pagina.png", fullPage: true });
-  const frameA = exploded.frame;
+  // Captures may change viewport visibility and request a final demand frame.
+  // Measure steady idle only after those interactions have settled.
+  await page.waitForTimeout(150);
+  const frameA = (await diag(page)).frame;
   await page.waitForTimeout(300);
   assert.equal((await diag(page)).frame, frameA);
   pass(

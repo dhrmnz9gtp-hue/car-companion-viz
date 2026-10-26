@@ -5,7 +5,8 @@ import { angularSpeedToRpm, calculatePoint, rpmToAngularSpeed, wattsToHp } from 
 import { ParameterControl } from "./ParameterControl";
 import { Comparison, PowerBalance, PowerCurve } from "./Charts";
 
-const format = (value: number) => value.toLocaleString("es-MX", { maximumFractionDigits: 2 });
+const formatter = new Intl.NumberFormat("es-MX", { maximumFractionDigits: 2 });
+const format = (value: number) => formatter.format(value);
 
 export function SimulationPanel({
   definition,
@@ -121,7 +122,12 @@ export function SimulationPanel({
           {format(rpm)} rpm del cálculo → {format(rpm * timeScale)} rpm visuales.
         </p>
         <p className="lab-playback-status" role="status">
-          {stopped ?? (playback.running ? "Reproduciendo" : "En pausa")}
+          {stopped ??
+            (playback.running
+              ? playback.suspended
+                ? "En pausa por visibilidad; vuelve al visor para continuar."
+                : "Reproduciendo"
+              : "En pausa")}
         </p>
         <p>
           El torque no acelera el rotor. Cambiar de modo o desmontar pausa el giro; ensambla al 0%

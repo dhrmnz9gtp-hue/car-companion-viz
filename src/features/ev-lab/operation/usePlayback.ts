@@ -1,7 +1,12 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { advancePlayback, TAU } from "./electromagnetics";
 
-export function usePlayback(cyclesPerSecond: number, cycleCount: number, speedOverride?: number) {
+export function usePlayback(
+  cyclesPerSecond: number,
+  cycleCount: number,
+  speedOverride?: number,
+  suspended = false,
+) {
   const [phase, setPhase] = useState(0);
   const [running, setRunning] = useState(false);
   const [speed, setSpeed] = useState(1);
@@ -40,7 +45,9 @@ export function usePlayback(cyclesPerSecond: number, cycleCount: number, speedOv
     };
   }, []);
   useEffect(() => {
-    if (!running) return;
+    // Keep user intent and phase while offscreen. A fresh timestamp on resume
+    // excludes the invisible interval instead of catching up with a large jump.
+    if (!running || suspended) return;
     let frame = 0;
     let previous = performance.now();
     const tick = (now: number) => {
@@ -57,10 +64,11 @@ export function usePlayback(cyclesPerSecond: number, cycleCount: number, speedOv
     };
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
-  }, [running, effectiveSpeed, cyclesPerSecond, cycleCount]);
+  }, [running, suspended, effectiveSpeed, cyclesPerSecond, cycleCount]);
   return {
     phase,
     running,
+    suspended,
     speed,
     setSpeed,
     pause,

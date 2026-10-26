@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { memo, useId } from "react";
 import type { SimulationDefinition } from "./definition";
 import {
   angularSpeedToRpm,
@@ -8,9 +8,10 @@ import {
   type OperatingPoint,
 } from "./physics";
 
-const number = (value: number) => value.toLocaleString("es-MX", { maximumFractionDigits: 2 });
+const formatter = new Intl.NumberFormat("es-MX", { maximumFractionDigits: 2 });
+const number = (value: number) => formatter.format(value);
 
-export function PowerCurve({
+export const PowerCurve = memo(function PowerCurve({
   point,
   definition,
   axis,
@@ -85,9 +86,9 @@ export function PowerCurve({
       </p>
     </section>
   );
-}
+});
 
-export function PowerBalance({ point }: { point: OperatingPoint }) {
+export const PowerBalance = memo(function PowerBalance({ point }: { point: OperatingPoint }) {
   const id = useId();
   const result = calculatePoint(point);
   const fraction = result.electrical > 0 ? result.mechanical / result.electrical : 0;
@@ -126,9 +127,13 @@ export function PowerBalance({ point }: { point: OperatingPoint }) {
       </p>
     </section>
   );
-}
+});
 
-export function Comparison({ points }: { points: [OperatingPoint, OperatingPoint] }) {
+export const Comparison = memo(function Comparison({
+  points,
+}: {
+  points: [OperatingPoint, OperatingPoint];
+}) {
   const compared = comparePoints(...points);
   const values = [compared.first, compared.second];
   const maximum = Math.max(...values.map((r) => r.mechanical), 1);
@@ -193,4 +198,4 @@ export function Comparison({ points }: { points: [OperatingPoint, OperatingPoint
       </p>
     </details>
   );
-}
+});

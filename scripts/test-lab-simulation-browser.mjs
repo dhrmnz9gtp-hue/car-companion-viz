@@ -109,6 +109,8 @@ try {
   await button(page, "Restablecer escenarios").click();
   const before = await diag(page);
   await button(page, "Iniciar").click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
   await button(page, "Pausar").click();
   const after = await diag(page);
@@ -140,6 +142,8 @@ try {
   );
 
   await button(page, "Iniciar").click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await button(page, "Desmontar").click();
   await page.waitForTimeout(100);
   assert(await button(page, "Pausar").isDisabled());
@@ -162,6 +166,8 @@ try {
   );
 
   await button(page, "Iniciar").click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await button(page, "Cómo funciona").click();
   assert(await button(page, "Pausar").isDisabled());
   await page.getByLabel("Velocidad de reproducción").selectOption("0.25");
@@ -217,6 +223,8 @@ try {
   await button(mobile, "Escenario B").tap();
   assert.equal(await input(mobile, "Torque · Nm").inputValue(), "100");
   await button(mobile, "Iniciar").tap();
+  // Playback suspends when the 3D stage is offscreen.
+  await mobile.locator(".lab-stage").scrollIntoViewIfNeeded();
   await button(mobile, "Pausar").tap();
   assert(await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
   const mstage = await mobile.locator(".lab-stage").boundingBox();

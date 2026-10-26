@@ -13,6 +13,9 @@ import { partAppearance, selectionOffset, separationOffsets } from "../explorati
 import { movingAssembly, rotateAround, synchronousState } from "../operation/electromagnetics";
 import { OperationOverlay } from "./OperationOverlay.client";
 import { createGeometry } from "./geometry";
+import { disposeControls } from "./disposeControls";
+import { limitedGraphics } from "./graphicsPolicy";
+import { manageRendererLifetime } from "./rendererLifecycle";
 
 export interface SceneProps {
   model: ModelDefinition;
@@ -44,6 +47,7 @@ function Controls({
   const previousScale = useRef(1);
   const focused = useRef<Selection>(null);
   useEffect(() => {
+    const eventRoot = gl.domElement.getRootNode();
     const orbit = new OrbitControls(camera, gl.domElement);
     orbit.target.set(...model.camera.target);
     orbit.minDistance = model.camera.minDistance;
@@ -118,7 +122,7 @@ function Controls({
     return () => {
       orbit.removeEventListener("change", changed);
       gl.domElement.removeEventListener("webglcontextlost", lost);
-      orbit.dispose();
+      disposeControls(orbit, eventRoot);
       controls.current = null;
       delete (gl.domElement as HTMLCanvasElement & { labDiagnostics?: unknown }).labDiagnostics;
     };
@@ -282,12 +286,19 @@ export default function Scene(props: SceneProps) {
   const angle = props.model.operation
     ? synchronousState(props.operationPhase, props.model.operation).mechanical
     : 0;
-  const limited =
-    typeof navigator !== "undefined" &&
-    (navigator.hardwareConcurrency <= 4 || window.matchMedia("(max-width: 767px)").matches);
+  const limited = useMemo(
+    () =>
+      limitedGraphics({
+        coarsePointer: window.matchMedia("(pointer: coarse)").matches,
+        cores: navigator.hardwareConcurrency,
+        memoryGiB: (navigator as Navigator & { deviceMemory?: number }).deviceMemory,
+      }),
+    [],
+  );
   return (
     <Canvas
       frameloop="demand"
+      onCreated={({ gl }) => manageRendererLifetime(gl)}
       dpr={limited ? 1 : [1, 1.5]}
       camera={{ position: props.model.camera.position, fov: 38, near: 0.1, far: 60 }}
       gl={{ alpha: true, antialias: !limited, powerPreference: "low-power" }}

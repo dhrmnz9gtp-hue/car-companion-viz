@@ -105,6 +105,8 @@ try {
     "Seven independent disclosures expand and collapse with keyboard; content is not duplicated",
   );
   await page.getByRole("button", { name: "Iniciar", exact: true }).click();
+  // Playback suspends when the 3D stage is offscreen.
+  await page.locator(".lab-stage").scrollIntoViewIfNeeded();
   await page.waitForTimeout(300);
   await page.getByRole("button", { name: "Pausar", exact: true }).click();
   assert.equal(await page.locator('[role="status"]').innerText(), "En pausa");

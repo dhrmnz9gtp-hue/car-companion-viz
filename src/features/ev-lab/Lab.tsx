@@ -16,6 +16,7 @@ import {
   Zap,
 } from "lucide-react";
 import type { CameraCommand, ModelDefinition, Selection } from "./model";
+import { useViewportVisibility } from "./useViewportVisibility";
 import { useSeparation } from "./useSeparation";
 import { AssemblyControls } from "./AssemblyControls";
 import { usePlayback } from "./operation/usePlayback";
@@ -42,6 +43,8 @@ export function Lab({
   Diagram: ComponentType<DiagramProps>;
 }) {
   const separation = useSeparation();
+  const [mode, setMode] = useState<"3d" | "2d">("3d");
+  const viewport = useViewportVisibility();
   const [lessonMode, setLessonMode] = useState<"explore" | "operation" | "simulation">("explore");
   const operationEnabled = lessonMode === "operation";
   const simulationEnabled = lessonMode === "simulation";
@@ -56,6 +59,7 @@ export function Lab({
       : (model.operation?.displayCyclesPerSecond ?? 0.5),
     model.operation?.polePairs ?? 1,
     simulationEnabled ? 1 : undefined,
+    mode === "3d" && !viewport.visible,
   );
   const [showField, setShowField] = useState(true);
   const { pause } = playback;
@@ -74,7 +78,6 @@ export function Lab({
   const [transparency, setTransparency] = useState(0);
   const [isolatedId, setIsolatedId] = useState<string | null>(null);
   const [selection, setSelection] = useState<Selection>(null);
-  const [mode, setMode] = useState<"3d" | "2d">("3d");
   const [sceneReady, setSceneReady] = useState(false);
   const [enabled, setEnabled] = useState(false);
   const [command, setCommand] = useState<CameraCommand>({ sequence: 0, action: "reset" });
@@ -223,6 +226,7 @@ export function Lab({
               </div>
             </div>
             <div
+              ref={viewport.ref}
               className="lab-stage"
               tabIndex={mode === "3d" && sceneReady ? 0 : -1}
               role="group"
