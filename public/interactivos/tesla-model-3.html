@@ -48,6 +48,12 @@
   .card .v{font-size:24px;font-weight:900;margin-top:4px}
   .card .d{font-size:12px;color:#94a3b8;margin-top:4px}
   footer{margin-top:40px;text-align:center;color:#64748b;font-size:12px;border-top:1px solid var(--line);padding-top:18px}
+  .education-note{color:#cbd5e1;font-size:13px;line-height:1.6;margin:14px 0}
+  .motor-lab-link{display:inline-flex;align-items:center;background:var(--accent);color:#071014;font-weight:700;padding:12px 16px;border-radius:999px;text-decoration:none;margin-top:18px;min-height:44px}
+  .motor-lab-link:focus-visible,.navbtn:focus-visible{outline:2px solid var(--accent2);outline-offset:4px}
+  .example-details{margin-top:16px;border-top:1px solid var(--line);padding-top:12px}
+  .example-details summary{cursor:pointer;color:var(--accent2);font-size:13px;line-height:1.5}
+  @media(max-width:960px){body.educational .panel{position:static}}
 </style>
 </head>
 <body>
@@ -128,29 +134,90 @@
       quote:"🛡️ Alertas constantes ante posibles riesgos y mayor confianza en viajes largos."}
   ];
 
+  const education = new URLSearchParams(location.search).get('context') === 'education';
+  const common = {
+    bateria: ['Batería de tracción', 'La batería almacena la energía que alimenta al sistema de propulsión. La química, capacidad, autonomía y gestión térmica cambian según el vehículo.'],
+    motor: ['Motor eléctrico', 'El motor eléctrico transforma energía eléctrica en movimiento. Existen diferentes tecnologías de motores utilizadas en vehículos eléctricos. El laboratorio interactivo permite explorar un motor síncrono de imanes permanentes (PMSM) como ejemplo educativo.'],
+    carga: ['Carga del vehículo', 'La carga transfiere energía a la batería. La conexión, potencia admitida y tiempo de carga dependen del vehículo, del cargador y de las condiciones de uso.'],
+    cabina: ['Cabina y controles', 'La cabina reúne los mandos y la información para conducir. Cada fabricante distribuye sus pantallas, botones y funciones de manera diferente.'],
+    regen: ['Frenado regenerativo', 'Durante la regeneración, la máquina eléctrica puede recuperar parte de la energía del movimiento y enviarla a la batería. Su intensidad y disponibilidad varían según el vehículo y el estado de la batería.'],
+    seguridad: ['Seguridad y asistencia', 'Los vehículos combinan protección estructural y sistemas de seguridad y asistencia. El equipamiento y sus límites dependen del modelo; las ayudas no sustituyen la atención de quien conduce.']
+  };
+  const channel = 'pura-ev-guide-v1';
+  let currentSection = 'bateria';
+  function tell(type) {
+    if (window.parent !== window) window.parent.postMessage({channel, type, section:currentSection, frameY:window.scrollY}, location.origin);
+  }
+  if (education) {
+    document.body.classList.add('educational');
+    document.title = 'Guía de Vehículo EV — Sistemas de un automóvil eléctrico';
+    document.querySelector('h1').innerHTML = 'Cómo funciona un <em>vehículo eléctrico</em>';
+    document.querySelector('.lead').textContent = 'Explora sus sistemas generales. El Tesla Model 3 se utiliza como referencia visual; sus datos y características particulares no representan a todos los EV.';
+    document.querySelector('.brand').textContent = 'Referencia visual · Tesla Model 3';
+    document.querySelector('.specs').insertAdjacentHTML('beforebegin', '<p class="education-note">Ejemplo del vehículo ilustrado: las cifras siguientes son datos particulares del Tesla, no propiedades comunes a todos los EV.</p>');
+  }
   const el = id => document.getElementById(id);
-  function render(key){
+  function render(key, notify = true){
     const s = SECTIONS.find(x=>x.key===key); if(!s) return;
     el('p-icon').textContent = s.icon;
     el('p-tag').innerHTML = '● ' + s.tag;
-    el('p-title').textContent = s.title;
-    el('p-body').textContent = s.body;
+    currentSection = key;
+    el('p-title').textContent = education ? common[key][0] : s.title;
+    el('p-body').textContent = education ? common[key][1] : s.body;
     let extra = '';
     if(s.stats){ extra += '<div class="stats">' + s.stats.map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('') + '</div>'; }
     if(s.sub){ extra += `<div class="sub">${s.sub}</div>`; }
     if(s.list){ extra += '<ul>' + s.list.map(li=>`<li>${li}</li>`).join('') + '</ul>'; }
     if(s.quote){ extra += `<div class="quote">${s.quote}</div>`; }
+    if (education) {
+      extra = '<details class="example-details"><summary>Ejemplo particular: Tesla Model 3 · no universal</summary><p>' + s.body + '</p>' + extra + '</details>';
+      if (key === 'motor') extra = '<a class="motor-lab-link" id="motor-lab-link" href="/laboratorio/motor-electrico?from=ev-guide" target="_top">Explorar motor eléctrico en 3D →</a><p class="education-note">Modelo didáctico genérico. No reproduce exactamente el motor del Tesla Model 3 ni representa la arquitectura de todos los automóviles eléctricos.</p>' + extra;
+    }
     el('p-extra').innerHTML = extra;
+    const link = el('motor-lab-link');
+    if (link) link.addEventListener('click', event => {
+      if (window.parent !== window) { event.preventDefault(); tell('open-lab'); }
+    });
     const p = document.getElementById('panel');
     p.style.animation='none'; void p.offsetWidth; p.style.animation='';
-    document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('on', b.dataset.key===key));
+    document.querySelectorAll('.navbtn').forEach(b=>{b.classList.toggle('on', b.dataset.key===key);b.setAttribute('aria-pressed', String(b.dataset.key===key));});
+    if (education && notify) tell('section');
   }
   document.getElementById('panel').insertAdjacentHTML('afterend',
     '<div class="nav" id="nav" style="margin-top:18px"></div>');
   document.getElementById('nav').innerHTML = SECTIONS.map((s,i)=>
-    `<button class="navbtn" data-key="${s.key}"><span class="n">${i+1}</span> ${s.title}</button>`).join('');
+    `<button class="navbtn" data-key="${s.key}"><span class="n">${i+1}</span> ${education ? common[s.key][0] : s.title}</button>`).join('');
   document.querySelectorAll('[data-key]').forEach(b=>b.addEventListener('click',()=>render(b.dataset.key)));
-  render('bateria');
+  render('bateria', false);
+  window.addEventListener('message', event => {
+    if (event.origin !== location.origin || event.source !== window.parent || window.parent === window) return;
+    const data = event.data;
+    if (!data || typeof data !== 'object' || data.channel !== channel) return;
+    if (data.type === 'focus' && (data.edge === 'first' || data.edge === 'last')) {
+      const items = focusable(); items[data.edge === 'first' ? 0 : items.length - 1]?.focus({preventScroll:true});
+    }
+    if (!education || data.type !== 'restore' || !SECTIONS.some(s=>s.key === data.section)) return;
+    render(data.section, false);
+    const y = typeof data.frameY === 'number' && Number.isFinite(data.frameY) ? Math.max(0, Math.min(100000, data.frameY)) : 0;
+    const restore = () => requestAnimationFrame(() => requestAnimationFrame(() => {
+      const target = data.focus === 'motor-link' ? el('motor-lab-link') : document.querySelector('.navbtn.on');
+      target?.focus({preventScroll:true});
+      window.scrollTo(0, y);
+    }));
+    if (document.querySelector('.car').complete) restore();
+    else document.querySelector('.car').addEventListener('load', restore, {once:true});
+  });
+  function focusable() { return [...document.querySelectorAll('a[href],button,summary')].filter(item=>item.getClientRects().length); }
+  window.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { event.preventDefault(); tell('close'); }
+    if (event.key === 'Tab') {
+      const items = focusable();
+      if ((!event.shiftKey && document.activeElement === items[items.length-1]) || (event.shiftKey && document.activeElement === items[0])) {
+        if (window.parent !== window) { event.preventDefault(); tell('focus-close'); }
+      }
+    }
+  });
+  if (education) tell('ready');
   window.addEventListener('keydown',(e)=>{
     const active = document.querySelector('.navbtn.on');
     const keys = SECTIONS.map(s=>s.key);
