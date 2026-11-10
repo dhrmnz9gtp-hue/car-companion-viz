@@ -245,9 +245,31 @@ try {
   await fallback.addInitScript(() => {
     HTMLCanvasElement.prototype.getContext = () => null;
   });
-  await fallback.goto(base + "/laboratorio/motor-electrico");
-  await button(fallback, "Simular").click();
+  const simulate = button(fallback, "Simular");
+  // Hold client scripts so SSR and hydration are checked separately, regardless of network speed.
+  let releaseScripts;
+  const scriptsAllowed = new Promise((resolve) => {
+    releaseScripts = resolve;
+  });
+  await fallback.route("**/*", async (route) => {
+    if (route.request().resourceType() === "script") await scriptsAllowed;
+    await route.continue();
+  });
+  try {
+    const response = await fallback.goto(base + "/laboratorio/motor-electrico", {
+      waitUntil: "commit",
+    });
+    assert.equal(response?.status(), 200);
+    await simulate.waitFor();
+    assert(await simulate.isDisabled(), "The server-rendered mode is disabled before hydration");
+  } finally {
+    releaseScripts();
+  }
+  // Playwright waits for the native button to become enabled, even without a 3D viewer.
+  await simulate.click();
   await input(fallback, "Torque · Nm").fill("200");
+  assert.equal(await simulate.getAttribute("aria-pressed"), "true");
+  await fallback.locator(".lab-fallback-message").waitFor();
   assert.equal(await read(fallback, "sim-mechanical"), "62.83 kW");
   assert(await button(fallback, "Iniciar").isDisabled());
   pass("No-WebGL fallback retains the educational calculator without starting animation");

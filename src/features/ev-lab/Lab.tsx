@@ -80,9 +80,11 @@ export function Lab({
   const [selection, setSelection] = useState<Selection>(null);
   const [sceneReady, setSceneReady] = useState(false);
   const [enabled, setEnabled] = useState(false);
+  const [lessonControlsReady, setLessonControlsReady] = useState(false);
   const [command, setCommand] = useState<CameraCommand>({ sequence: 0, action: "reset" });
   useEffect(() => {
     setEnabled(window.matchMedia("(pointer: fine)").matches);
+    setLessonControlsReady(true);
   }, []);
   const onSelect = useCallback(
     (value: Selection) => {
@@ -180,6 +182,7 @@ export function Lab({
                     <button
                       className="lab-operation-toggle"
                       aria-pressed={lessonMode === "explore"}
+                      disabled={!lessonControlsReady}
                       onClick={() => changeLesson("explore")}
                     >
                       Explorar
@@ -187,6 +190,7 @@ export function Lab({
                     <button
                       className="lab-operation-toggle"
                       aria-pressed={operationEnabled}
+                      disabled={!lessonControlsReady}
                       onClick={() => changeLesson("operation")}
                     >
                       Cómo funciona
@@ -195,10 +199,16 @@ export function Lab({
                       <button
                         className="lab-operation-toggle"
                         aria-pressed={simulationEnabled}
+                        disabled={!lessonControlsReady}
                         onClick={() => changeLesson("simulation")}
                       >
                         Simular
                       </button>
+                    )}
+                    {!lessonControlsReady && (
+                      <span className="sr-only" role="status">
+                        Preparando los modos educativos…
+                      </span>
                     )}
                   </div>
                 )}

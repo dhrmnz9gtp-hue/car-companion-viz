@@ -999,6 +999,10 @@
 .lab-operation-toggle[aria-pressed="true"] {
   background: #2a5546;
 }
+.lab-operation-toggle:disabled {
+  cursor: wait;
+  opacity: 0.6;
+}
 .lab-operation {
   border-bottom: 1px solid #365064;
   padding-bottom: 24px;
