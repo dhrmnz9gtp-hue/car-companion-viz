@@ -12,7 +12,7 @@ export const Route = createFileRoute("/")({
   validateSearch: educationSearch,
   head: () => ({
     meta: [
-      { title: "EV Explainers by PURA CORRIENTE" },
+      { title: "Pura Academy by Pura Corriente" },
       {
         name: "description",
         content:
@@ -79,7 +79,7 @@ function Landing() {
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-1.5 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-300"
         >
-          <Sparkles className="h-3 w-3" /> EV Explainers
+          <Sparkles className="h-3 w-3" /> Pura Academy
         </motion.span>
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
@@ -331,7 +331,7 @@ function Landing() {
       </section>
 
       <footer className="relative z-10 border-t border-white/5 py-8 text-center text-xs text-slate-500">
-        EV Explainers by PURA CORRIENTE · Hecho para entender, no para vender.
+        Pura Academy by Pura Corriente · Hecho para entender, no para vender.
       </footer>
     </div>
   );

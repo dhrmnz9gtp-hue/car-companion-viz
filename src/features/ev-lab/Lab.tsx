@@ -136,7 +136,7 @@ export function Lab({
         <Link to="/" className="lab-brand">
           <span className="lab-monogram">PC</span>
           <span>
-            PURA CORRIENTE<span className="lab-brand-sub">EV EXPLAINERS</span>
+            Pura Academy<span className="lab-brand-sub">by Pura Corriente</span>
           </span>
         </Link>
         <Link to="/guias" className="lab-back">

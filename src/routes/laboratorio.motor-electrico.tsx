@@ -9,7 +9,7 @@ export const Route = createFileRoute("/laboratorio/motor-electrico")({
   validateSearch: labOriginSearch,
   head: () => ({
     meta: [
-      { title: "Motor eléctrico PMSM · EV Interactive Lab | PURA CORRIENTE" },
+      { title: "Motor eléctrico PMSM · EV Interactive Lab | Pura Academy by Pura Corriente" },
       {
         name: "description",
         content:
