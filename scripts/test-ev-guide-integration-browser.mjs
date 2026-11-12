@@ -175,16 +175,51 @@ try {
   await frame(page).locator(".navbtn").first().waitFor();
   await button(page, "Cerrar").focus();
   await button(page, "Cerrar").press("Tab");
-  assert.equal(
-    await frame(page)
-      .locator("body")
-      .evaluate(() => document.activeElement.matches("button, a, summary")),
-    true,
-  );
+  await frame(page).locator("button:focus, a[href]:focus, summary:focus").waitFor();
   await button(page, "Cerrar").click();
   pass(
     "Close/focus: Escape inside iframe closes modal, body scroll unlocks, keyboard can reenter the guide",
   );
+
+  const failedImage = await browser.newPage({ viewport: { width: 390, height: 480 } });
+  failedImage.on("pageerror", (e) => errors.push(e.message));
+  await failedImage.addInitScript(() => {
+    if (window === window.top) {
+      sessionStorage.setItem(
+        "pura.ev-guide.return.v1",
+        JSON.stringify({ section: "motor", frameY: 120, focus: "motor-link" }),
+      );
+    }
+  });
+  const carImageUrl = "**/interactivos/img/tesla-model-3.png";
+  let releaseImage;
+  const imageMayFail = new Promise((resolve) => {
+    releaseImage = resolve;
+  });
+  await failedImage.route(carImageUrl, async (route) => {
+    await imageMayFail;
+    await route.abort("failed");
+  });
+  try {
+    const [response] = await Promise.all([
+      failedImage.goto(base + "/?guide=education&section=motor", {
+        waitUntil: "domcontentloaded",
+      }),
+      failedImage.waitForRequest(carImageUrl),
+    ]);
+    assert.equal(response.status(), 200);
+    await restored(failedImage);
+    const carImage = frame(failedImage).locator("img.car");
+    assert.equal(await carImage.evaluate((image) => image.complete), false);
+    releaseImage();
+    await frame(failedImage).locator("#motor-lab-link:focus").waitFor();
+    assert(await carImage.evaluate((image) => image.complete && image.naturalWidth === 0));
+    assert.equal(await carImage.evaluate((image) => image.ownerDocument.defaultView.scrollY), 120);
+  } finally {
+    releaseImage();
+    await failedImage.close();
+  }
+  pass("A failed guide image preserves restoration of the Motor section, CTA focus and scroll");
 
   // The individual Tesla entry must retain its original text and all sections.
   const teslaCard = page.locator('a[href="/guias/tesla-model-3"]');

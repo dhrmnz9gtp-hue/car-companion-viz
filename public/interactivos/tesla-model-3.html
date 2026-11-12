@@ -204,8 +204,17 @@
       target?.focus({preventScroll:true});
       window.scrollTo(0, y);
     }));
-    if (document.querySelector('.car').complete) restore();
-    else document.querySelector('.car').addEventListener('load', restore, {once:true});
+    const car = document.querySelector('.car');
+    if (car.complete) restore();
+    else {
+      const restoreAfterImage = () => {
+        car.removeEventListener('load', restoreAfterImage);
+        car.removeEventListener('error', restoreAfterImage);
+        restore();
+      };
+      car.addEventListener('load', restoreAfterImage);
+      car.addEventListener('error', restoreAfterImage);
+    }
   });
   function focusable() { return [...document.querySelectorAll('a[href],button,summary')].filter(item=>item.getClientRects().length); }
   window.addEventListener('keydown', event => {
