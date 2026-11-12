@@ -11,8 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuiasIndexRouteImport } from './routes/guias.index'
-import { Route as LaboratorioMotorElectricoRouteImport } from './routes/laboratorio.motor-electrico'
 import { Route as GuiasSlugRouteImport } from './routes/guias.$slug'
+import { Route as LaboratorioMotorElectricoRouteImport } from './routes/laboratorio.motor-electrico'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -24,17 +24,17 @@ const GuiasIndexRoute = GuiasIndexRouteImport.update({
   path: '/guias/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const GuiasSlugRoute = GuiasSlugRouteImport.update({
+  id: '/guias/$slug',
+  path: '/guias/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const LaboratorioMotorElectricoRoute =
   LaboratorioMotorElectricoRouteImport.update({
     id: '/laboratorio/motor-electrico',
     path: '/laboratorio/motor-electrico',
     getParentRoute: () => rootRouteImport,
   } as any)
-const GuiasSlugRoute = GuiasSlugRouteImport.update({
-  id: '/guias/$slug',
-  path: '/guias/$slug',
-  getParentRoute: () => rootRouteImport,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -91,18 +91,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuiasIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/laboratorio/motor-electrico': {
-      id: '/laboratorio/motor-electrico'
-      path: '/laboratorio/motor-electrico'
-      fullPath: '/laboratorio/motor-electrico'
-      preLoaderRoute: typeof LaboratorioMotorElectricoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/guias/$slug': {
       id: '/guias/$slug'
       path: '/guias/$slug'
       fullPath: '/guias/$slug'
       preLoaderRoute: typeof GuiasSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/laboratorio/motor-electrico': {
+      id: '/laboratorio/motor-electrico'
+      path: '/laboratorio/motor-electrico'
+      fullPath: '/laboratorio/motor-electrico'
+      preLoaderRoute: typeof LaboratorioMotorElectricoRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
