@@ -47,7 +47,7 @@ export const Route = createFileRoute("/guias/$slug")({
     <div className="min-h-screen flex items-center justify-center bg-slate-950 text-white p-6">
       <div className="text-center">
         <h1 className="text-3xl font-bold">Guía no encontrada</h1>
-        <p className="mt-2 text-slate-400">Esa guía aún no existe en EV Explainers.</p>
+        <p className="mt-2 text-slate-400">Esa guía aún no existe en Pura Academy.</p>
         <Link to="/guias" className="inline-flex mt-6 px-5 py-2.5 rounded-full bg-emerald-500 text-slate-900 font-semibold">
           Ver guías disponibles
         </Link>
@@ -129,7 +129,7 @@ function GuidePage() {
           <span className="inline-flex h-7 w-7 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-green-500 text-slate-950 font-black text-xs">PC</span>
           <span className="font-semibold tracking-tight">PURA CORRIENTE</span>
           <span className="text-slate-500">/</span>
-          <span className="text-slate-400">EV Explainers</span>
+          <span className="text-slate-400">Pura Academy</span>
         </Link>
         <Link
           to="/guias"
@@ -442,7 +442,7 @@ function GuidePage() {
       </main>
 
       <footer className="relative z-10 border-t border-white/5 py-8 text-center text-xs text-slate-500">
-        EV Explainers by PURA CORRIENTE · Guía educativa, no comercial.
+        Pura Academy by Pura Corriente · Guía educativa, no comercial.
       </footer>
     </div>
   );

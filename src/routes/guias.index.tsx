@@ -7,7 +7,7 @@ export const Route = createFileRoute("/guias/")({
   component: GuidesIndex,
   head: () => ({
     meta: [
-      { title: "Guías EV — EV Explainers by PURA CORRIENTE" },
+      { title: "Guías EV — Pura Academy by Pura Corriente" },
       {
         name: "description",
         content:
@@ -31,7 +31,7 @@ function GuidesIndex() {
 
       <header className="relative z-10 mx-auto max-w-6xl px-4 pt-12 pb-10 text-center">
         <span className="inline-flex items-center gap-1.5 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-300">
-          <Sparkles className="h-3 w-3" /> EV Explainers
+          <Sparkles className="h-3 w-3" /> Pura Academy
         </span>
         <h1 className="mt-4 text-4xl md:text-6xl font-black tracking-tight">
           Guías de vehículos eléctricos

@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as GuiasIndexRouteImport } from './routes/guias.index'
 import { Route as GuiasSlugRouteImport } from './routes/guias.$slug'
+import { Route as LaboratorioMotorElectricoRouteImport } from './routes/laboratorio.motor-electrico'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -28,34 +29,49 @@ const GuiasSlugRoute = GuiasSlugRouteImport.update({
   path: '/guias/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LaboratorioMotorElectricoRoute =
+  LaboratorioMotorElectricoRouteImport.update({
+    id: '/laboratorio/motor-electrico',
+    path: '/laboratorio/motor-electrico',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/guias/$slug': typeof GuiasSlugRoute
+  '/laboratorio/motor-electrico': typeof LaboratorioMotorElectricoRoute
   '/guias/': typeof GuiasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/guias/$slug': typeof GuiasSlugRoute
+  '/laboratorio/motor-electrico': typeof LaboratorioMotorElectricoRoute
   '/guias': typeof GuiasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/guias/$slug': typeof GuiasSlugRoute
+  '/laboratorio/motor-electrico': typeof LaboratorioMotorElectricoRoute
   '/guias/': typeof GuiasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/guias/$slug' | '/guias/'
+  fullPaths: '/' | '/guias/$slug' | '/laboratorio/motor-electrico' | '/guias/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/guias/$slug' | '/guias'
-  id: '__root__' | '/' | '/guias/$slug' | '/guias/'
+  to: '/' | '/guias/$slug' | '/laboratorio/motor-electrico' | '/guias'
+  id:
+    | '__root__'
+    | '/'
+    | '/guias/$slug'
+    | '/laboratorio/motor-electrico'
+    | '/guias/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   GuiasSlugRoute: typeof GuiasSlugRoute
+  LaboratorioMotorElectricoRoute: typeof LaboratorioMotorElectricoRoute
   GuiasIndexRoute: typeof GuiasIndexRoute
 }
 
@@ -82,14 +98,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof GuiasSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/laboratorio/motor-electrico': {
+      id: '/laboratorio/motor-electrico'
+      path: '/laboratorio/motor-electrico'
+      fullPath: '/laboratorio/motor-electrico'
+      preLoaderRoute: typeof LaboratorioMotorElectricoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   GuiasSlugRoute: GuiasSlugRoute,
+  LaboratorioMotorElectricoRoute: LaboratorioMotorElectricoRoute,
   GuiasIndexRoute: GuiasIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

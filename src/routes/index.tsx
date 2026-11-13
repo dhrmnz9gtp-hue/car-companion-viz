@@ -1,17 +1,18 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { motion } from "framer-motion";
-import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug, X } from "lucide-react";
-import { useState, useEffect } from "react";
-import { createPortal } from "react-dom";
-
+import { ArrowRight, Sparkles, Zap, Battery, ShieldCheck, Car, Plug } from "lucide-react";
+import { useState } from "react";
+import { EvGuideModal } from "@/components/EvGuideModal";
+import { educationSearch, saveGuideSnapshot } from "@/lib/ev-guide-context";
 
 import { vehicleGuides } from "@/data/vehicleGuides";
 
 export const Route = createFileRoute("/")({
   component: Landing,
+  validateSearch: educationSearch,
   head: () => ({
     meta: [
-      { title: "EV Explainers by PURA CORRIENTE" },
+      { title: "Pura Academy by Pura Corriente" },
       {
         name: "description",
         content:
@@ -25,23 +26,23 @@ function Landing() {
   const [modalSrc, setModalSrc] = useState<string | null>(null);
   const [modalTitle, setModalTitle] = useState<string>("");
 
-  useEffect(() => {
-    if (!modalSrc) return;
-    const scrollY = window.scrollY;
-    const { overflow, position, top, width } = document.body.style;
-    document.body.style.position = "fixed";
-    document.body.style.top = `-${scrollY}px`;
-    document.body.style.width = "100%";
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = overflow;
-      document.body.style.position = position;
-      document.body.style.top = top;
-      document.body.style.width = width;
-      window.scrollTo(0, scrollY);
-    };
-  }, [modalSrc]);
-
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
+  const education = search.guide === "education";
+  const section = search.section ?? "bateria";
+  const closeModal = () => {
+    setModalSrc(null);
+    if (education) void navigate({ search: {}, replace: true, resetScroll: false });
+  };
+  const openEducation = () => {
+    setModalSrc(null);
+    saveGuideSnapshot({ section: "bateria", pageY: window.scrollY, frameY: 0 });
+    void navigate({
+      search: { guide: "education", section: "bateria" },
+      replace: true,
+      resetScroll: false,
+    });
+  };
 
   const openModal = (src: string, title: string) => {
     setModalTitle(title);
@@ -58,7 +59,9 @@ function Landing() {
       {/* Nav */}
       <nav className="relative z-10 mx-auto max-w-6xl px-4 pt-6 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-green-500 text-slate-950 font-black text-xs">PC</span>
+          <span className="inline-flex h-8 w-8 items-center justify-center rounded-md bg-gradient-to-br from-emerald-400 to-green-500 text-slate-950 font-black text-xs">
+            PC
+          </span>
           <span className="font-semibold tracking-tight">PURA CORRIENTE</span>
         </div>
         <Link
@@ -76,7 +79,7 @@ function Landing() {
           animate={{ opacity: 1, y: 0 }}
           className="inline-flex items-center gap-1.5 rounded-full bg-white/5 ring-1 ring-white/10 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-300"
         >
-          <Sparkles className="h-3 w-3" /> EV Explainers
+          <Sparkles className="h-3 w-3" /> Pura Academy
         </motion.span>
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
@@ -97,7 +100,8 @@ function Landing() {
           transition={{ delay: 0.1 }}
           className="mt-5 max-w-2xl mx-auto text-slate-300 text-base md:text-lg"
         >
-          Guías visuales e interactivas de cada modelo EV: batería, carga, ADAS, mantenimiento y checklist de compra. Sin tecnicismos, sin venta.
+          Guías visuales e interactivas de cada modelo EV: batería, carga, ADAS, mantenimiento y
+          checklist de compra. Sin tecnicismos, sin venta.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 12 }}
@@ -107,58 +111,65 @@ function Landing() {
         >
           <button
             type="button"
-            onClick={() => openModal("/interactivos/tesla-model-3.html", "Guía de Vehículo EV — Tesla Model 3")}
+            data-ev-guide-opener
+            onClick={openEducation}
             className="group inline-flex items-center gap-2 rounded-full bg-emerald-400 text-slate-950 font-semibold px-6 py-3 text-sm hover:bg-emerald-300 transition"
           >
-            <Car className="h-4 w-4" /> Guía de Vehículo EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            <Car className="h-4 w-4" /> Guía de Vehículo EV{" "}
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </button>
           <button
             type="button"
-            onClick={() => openModal("/interactivos/cargador-tesla.html", "Guías de Cargadores EV — Tesla Supercharger")}
+            onClick={() =>
+              openModal(
+                "/interactivos/cargador-tesla.html",
+                "Guías de Cargadores EV — Tesla Supercharger",
+              )
+            }
             className="group inline-flex items-center gap-2 rounded-full bg-white/10 ring-1 ring-emerald-400/40 text-white font-medium px-6 py-3 text-sm hover:bg-white/15 transition"
           >
-            <Plug className="h-4 w-4 text-emerald-300" /> Guías de Cargadores EV <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            <Plug className="h-4 w-4 text-emerald-300" /> Guías de Cargadores EV{" "}
+            <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </button>
         </motion.div>
 
-        {modalSrc && typeof document !== "undefined" && createPortal(
-          <div
-            role="dialog"
-            aria-modal="true"
-            aria-label={modalTitle}
-            onKeyDown={(e) => { if (e.key === "Escape") setModalSrc(null); }}
-            className="fixed inset-0 w-screen h-screen bg-slate-950"
-            style={{ zIndex: 2147483647 }}
-          >
-            <div className="absolute inset-0 bg-slate-950/95 backdrop-blur-md" />
-            <div className="absolute inset-0 flex items-center justify-center">
-              <iframe
-                src={modalSrc}
-                title={modalTitle}
-                className="w-full h-full border-0 bg-slate-950"
-              />
-            </div>
-            <button
-              type="button"
-              onClick={() => setModalSrc(null)}
-              className="fixed top-4 right-4 inline-flex items-center gap-2 rounded-full bg-slate-950/90 text-white ring-1 ring-emerald-400/50 backdrop-blur px-4 py-2 text-sm font-semibold hover:bg-emerald-400 hover:text-slate-950 transition shadow-2xl"
-              style={{ zIndex: 2147483647 }}
-              aria-label="Cerrar"
-            >
-              <X className="h-4 w-4" /> Cerrar
-            </button>
-          </div>,
-          document.body,
+        {(education || modalSrc) && (
+          <EvGuideModal
+            key={education ? "education" : modalSrc}
+            src={education ? "/interactivos/tesla-model-3.html?context=education" : modalSrc!}
+            title={
+              education ? "Guía de Vehículo EV — Sistemas de un automóvil eléctrico" : modalTitle
+            }
+            education={education}
+            section={section}
+            onClose={closeModal}
+            onSection={(next) => {
+              void navigate({
+                search: { guide: "education", section: next },
+                replace: true,
+                resetScroll: false,
+              });
+            }}
+            onLab={() => {
+              void navigate({
+                to: "/laboratorio/motor-electrico",
+                search: { from: "ev-guide" },
+                state: (previous) => ({ ...previous, evGuideReturn: true }),
+              });
+            }}
+          />
         )}
-
-
-
 
         {/* Feature bullets */}
         <div className="mt-14 grid sm:grid-cols-3 gap-3 max-w-3xl mx-auto">
           <button
             type="button"
-            onClick={() => openModal("/interactivos/bateria-en-simple.html", "Batería en simple — Guía interactiva")}
+            onClick={() =>
+              openModal(
+                "/interactivos/bateria-en-simple.html",
+                "Batería en simple — Guía interactiva",
+              )
+            }
             className="group text-left rounded-2xl bg-white/[0.04] ring-1 ring-emerald-400/30 p-4 hover:ring-emerald-400/70 hover:bg-white/[0.07] transition cursor-pointer relative overflow-hidden"
           >
             <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-400/20 blur-2xl opacity-60 group-hover:opacity-100 transition" />
@@ -167,12 +178,18 @@ function Landing() {
               Batería en simple
               <ArrowRight className="h-3.5 w-3.5 text-emerald-300 transition-transform group-hover:translate-x-0.5" />
             </div>
-            <div className="text-xs text-slate-400 mt-0.5 relative">Guía interactiva · 11 secciones para entenderla.</div>
-            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">▶ Abrir guía</div>
+            <div className="text-xs text-slate-400 mt-0.5 relative">
+              Guía interactiva · 11 secciones para entenderla.
+            </div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">
+              ▶ Abrir guía
+            </div>
           </button>
           <button
             type="button"
-            onClick={() => openModal("/interactivos/carga-ac-dc.html", "Carga AC y DC — Guía interactiva")}
+            onClick={() =>
+              openModal("/interactivos/carga-ac-dc.html", "Carga AC y DC — Guía interactiva")
+            }
             className="group text-left rounded-2xl bg-white/[0.04] ring-1 ring-emerald-400/30 p-4 hover:ring-emerald-400/70 hover:bg-white/[0.07] transition cursor-pointer relative overflow-hidden"
           >
             <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-400/20 blur-2xl opacity-60 group-hover:opacity-100 transition" />
@@ -181,12 +198,21 @@ function Landing() {
               Carga AC y DC
               <ArrowRight className="h-3.5 w-3.5 text-emerald-300 transition-transform group-hover:translate-x-0.5" />
             </div>
-            <div className="text-xs text-slate-400 mt-0.5 relative">Guía interactiva · 15 secciones sobre carga.</div>
-            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">▶ Abrir guía</div>
+            <div className="text-xs text-slate-400 mt-0.5 relative">
+              Guía interactiva · 15 secciones sobre carga.
+            </div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">
+              ▶ Abrir guía
+            </div>
           </button>
           <button
             type="button"
-            onClick={() => openModal("/interactivos/antes-de-comprar.html", "Antes de comprar — Guía interactiva")}
+            onClick={() =>
+              openModal(
+                "/interactivos/antes-de-comprar.html",
+                "Antes de comprar — Guía interactiva",
+              )
+            }
             className="group text-left rounded-2xl bg-white/[0.04] ring-1 ring-emerald-400/30 p-4 hover:ring-emerald-400/70 hover:bg-white/[0.07] transition cursor-pointer relative overflow-hidden"
           >
             <div className="absolute -right-8 -top-8 h-24 w-24 rounded-full bg-emerald-400/20 blur-2xl opacity-60 group-hover:opacity-100 transition" />
@@ -195,8 +221,12 @@ function Landing() {
               Antes de comprar
               <ArrowRight className="h-3.5 w-3.5 text-emerald-300 transition-transform group-hover:translate-x-0.5" />
             </div>
-            <div className="text-xs text-slate-400 mt-0.5 relative">Guía interactiva · EV vs gasolina, costos y checklist.</div>
-            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">▶ Abrir guía</div>
+            <div className="text-xs text-slate-400 mt-0.5 relative">
+              Guía interactiva · EV vs gasolina, costos y checklist.
+            </div>
+            <div className="mt-2 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider text-emerald-300/80 font-semibold relative">
+              ▶ Abrir guía
+            </div>
           </button>
         </div>
       </header>
@@ -205,7 +235,10 @@ function Landing() {
       <section className="relative z-10 mx-auto max-w-6xl px-4 pb-24">
         <div className="flex items-end justify-between mb-6">
           <h2 className="text-2xl md:text-3xl font-extrabold">Guías disponibles</h2>
-          <Link to="/guias" className="text-sm text-emerald-300 hover:text-emerald-200 inline-flex items-center gap-1">
+          <Link
+            to="/guias"
+            className="text-sm text-emerald-300 hover:text-emerald-200 inline-flex items-center gap-1"
+          >
             Ver todas <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -230,19 +263,41 @@ function Landing() {
                     style={{ background: accent }}
                   />
                   <div className="relative">
-                    <div className="text-[11px] uppercase tracking-wider text-slate-400">{g.brand} · {g.type}</div>
+                    <div className="text-[11px] uppercase tracking-wider text-slate-400">
+                      {g.brand} · {g.type}
+                    </div>
                     <div className="mt-1 text-2xl font-black">{g.model}</div>
-                    <p className="mt-3 text-sm text-slate-300 leading-relaxed line-clamp-3">{g.shortDescription}</p>
+                    <p className="mt-3 text-sm text-slate-300 leading-relaxed line-clamp-3">
+                      {g.shortDescription}
+                    </p>
 
                     {/* Trabajos interactivos */}
                     {(() => {
                       const interactives: Record<string, { src: string; title: string }> = {
-                        "byd-yuan-up": { src: "/interactivos/byd-yuan-up.html", title: "Modelo interactivo — BYD Yuan UP" },
-                        "tesla-model-y": { src: "/interactivos/tesla-model-y.html", title: "Modelo interactivo — Tesla Model Y" },
-                        "volvo-ex30": { src: "/interactivos/volvo-ex30.html", title: "Modelo interactivo — Volvo EX30" },
-                        "byd-dolphin-mini": { src: "/interactivos/byd-dolphin-mini.html", title: "Modelo interactivo — BYD Dolphin Mini" },
-                        "zeekr-x": { src: "/interactivos/zeekr-x.html", title: "Modelo interactivo — Zeekr X" },
-                        "tesla-model-3": { src: "/interactivos/tesla-model-3.html", title: "Modelo interactivo — Tesla Model 3" },
+                        "byd-yuan-up": {
+                          src: "/interactivos/byd-yuan-up.html",
+                          title: "Modelo interactivo — BYD Yuan UP",
+                        },
+                        "tesla-model-y": {
+                          src: "/interactivos/tesla-model-y.html",
+                          title: "Modelo interactivo — Tesla Model Y",
+                        },
+                        "volvo-ex30": {
+                          src: "/interactivos/volvo-ex30.html",
+                          title: "Modelo interactivo — Volvo EX30",
+                        },
+                        "byd-dolphin-mini": {
+                          src: "/interactivos/byd-dolphin-mini.html",
+                          title: "Modelo interactivo — BYD Dolphin Mini",
+                        },
+                        "zeekr-x": {
+                          src: "/interactivos/zeekr-x.html",
+                          title: "Modelo interactivo — Zeekr X",
+                        },
+                        "tesla-model-3": {
+                          src: "/interactivos/tesla-model-3.html",
+                          title: "Modelo interactivo — Tesla Model 3",
+                        },
                       };
                       const cfg = interactives[g.slug];
                       return cfg ? (
@@ -264,14 +319,11 @@ function Landing() {
                       );
                     })()}
 
-
                     <div className="mt-4 inline-flex items-center gap-1 text-sm text-emerald-300 group-hover:gap-2 transition-all">
                       Abrir guía <ArrowRight className="h-4 w-4" />
                     </div>
-
                   </div>
                 </Link>
-
               </motion.div>
             );
           })}
@@ -279,7 +331,7 @@ function Landing() {
       </section>
 
       <footer className="relative z-10 border-t border-white/5 py-8 text-center text-xs text-slate-500">
-        EV Explainers by PURA CORRIENTE · Hecho para entender, no para vender.
+        Pura Academy by Pura Corriente · Hecho para entender, no para vender.
       </footer>
     </div>
   );
